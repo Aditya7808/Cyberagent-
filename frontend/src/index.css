@@ -9,7 +9,127 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background-color: #020617;
-  color: #f8fafc;
+  background-color: #030712;
+  color: #f1f5f9;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  overflow-x: hidden;
 }
 
+/* Cyber Matrix Background Grid */
+.cyber-grid-bg {
+  background-color: #030712;
+  background-image: 
+    linear-gradient(rgba(14, 165, 233, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(14, 165, 233, 0.04) 1px, transparent 1px),
+    radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.08) 0%, transparent 60%);
+  background-size: 32px 32px, 32px 32px, 100% 100%;
+}
+
+/* Cyber Tactical Card */
+.cyber-card {
+  background: rgba(10, 15, 29, 0.75);
+  border: 1px solid rgba(30, 41, 59, 0.8);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  position: relative;
+}
+
+.cyber-card:hover {
+  border-color: rgba(6, 182, 212, 0.4);
+  box-shadow: 0 8px 30px -4px rgba(6, 182, 212, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Corner Reticles for Sci-Fi HUD Cards */
+.cyber-corners::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: 8px;
+  height: 8px;
+  border-top: 2px solid #06b6d4;
+  border-left: 2px solid #06b6d4;
+  pointer-events: none;
+}
+
+.cyber-corners::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 8px;
+  height: 8px;
+  border-bottom: 2px solid #10b981;
+  border-right: 2px solid #10b981;
+  pointer-events: none;
+}
+
+/* Danger Card Reticles */
+.cyber-danger-corners::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: 8px;
+  height: 8px;
+  border-top: 2px solid #f43f5e;
+  border-left: 2px solid #f43f5e;
+  pointer-events: none;
+}
+
+.cyber-danger-corners::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 8px;
+  height: 8px;
+  border-bottom: 2px solid #f43f5e;
+  border-right: 2px solid #f43f5e;
+  pointer-events: none;
+}
+
+/* Glowing text effects */
+.glow-text-emerald {
+  text-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
+}
+
+.glow-text-cyan {
+  text-shadow: 0 0 12px rgba(6, 182, 212, 0.7);
+}
+
+.glow-text-rose {
+  text-shadow: 0 0 14px rgba(244, 63, 94, 0.7);
+}
+
+/* Scanline Overlay */
+.scanline {
+  background: linear-gradient(
+    to bottom,
+    rgba(255,255,255,0),
+    rgba(255,255,255,0) 50%,
+    rgba(0, 0, 0, 0.3) 50%,
+    rgba(0, 0, 0, 0.3)
+  );
+  background-size: 100% 4px;
+}
+
+/* Sci-fi Terminal Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #020617;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 3px;
+  border: 1px solid #334155;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #0e7490;
+}
