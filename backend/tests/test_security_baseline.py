@@ -68,3 +68,4 @@ def test_adversarial_scanner_metrics():
     assert summary["attack_success_rate_percent"] <= 5.0
     assert summary["status"] == "PASSED"
     assert len(report["test_results"]) == summary["total_cases"]
+

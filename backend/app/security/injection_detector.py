@@ -85,3 +85,4 @@ class InjectionAttackDetector:
         risk_score = min(1.0, len(detected) * 0.40)
 
         return is_flagged, detected, risk_score
+

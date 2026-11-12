@@ -107,3 +107,4 @@ class AdversarialScanner:
             },
             "test_results": results,
         }
+

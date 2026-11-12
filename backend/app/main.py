@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api import (
     agents_router,
+    approvals_router,
     audit_router,
     conversations_router,
     documents_router,
@@ -67,6 +68,7 @@ app.include_router(evaluations_router, prefix=api_v1_prefix)
 app.include_router(audit_router, prefix=api_v1_prefix)
 app.include_router(conversations_router, prefix=api_v1_prefix)
 app.include_router(policies_router, prefix=api_v1_prefix)
+app.include_router(approvals_router, prefix=api_v1_prefix)
 
 
 @app.get("/")

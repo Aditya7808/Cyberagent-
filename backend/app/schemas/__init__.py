@@ -11,6 +11,11 @@ from app.schemas.conversation import (
     MessageCreate,
     MessageResponse,
 )
+from app.schemas.approval import (
+    ToolApprovalCreate,
+    ToolApprovalResolve,
+    ToolApprovalResponse,
+)
 
 __all__ = [
     "OrgCreate",
@@ -39,4 +44,7 @@ __all__ = [
     "ConversationResponse",
     "MessageCreate",
     "MessageResponse",
+    "ToolApprovalCreate",
+    "ToolApprovalResolve",
+    "ToolApprovalResponse",
 ]

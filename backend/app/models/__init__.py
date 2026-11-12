@@ -7,6 +7,7 @@ from app.models.test_run import TestRun, TestResult, RunType, RunStatus, TestOut
 from app.models.policy import Policy, PolicyType
 from app.models.audit_log import AuditLog
 from app.models.conversation import Conversation, ConversationStatus, Message, MessageRole
+from app.models.approval import ToolApproval, ApprovalStatus
 
 __all__ = [
     "Organization",
@@ -32,4 +33,6 @@ __all__ = [
     "ConversationStatus",
     "Message",
     "MessageRole",
+    "ToolApproval",
+    "ApprovalStatus",
 ]

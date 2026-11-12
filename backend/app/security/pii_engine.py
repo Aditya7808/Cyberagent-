@@ -105,3 +105,4 @@ class CustomPIIEngine:
         should_block = (policy_action == "block" and len(detected) > 0)
 
         return sanitized, detected, should_block
+

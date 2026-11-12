@@ -101,3 +101,4 @@ async def trigger_adversarial_scan(
     """
     scan_report = scanner.run_scan()
     return scan_report
+
