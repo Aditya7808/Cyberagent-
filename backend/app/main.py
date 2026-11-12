@@ -19,6 +19,7 @@ from app.api import (
 )
 from app.config import get_settings
 from app.database import Base, engine
+from app.security.hardening import RateLimitMiddleware, SecurityHeadersMiddleware
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("sentinel")
@@ -46,7 +47,11 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 
-# CORS Middleware
+# 1. Security Headers & Rate Limiting Middleware
+app.add_middleware(SecurityHeadersMiddleware)
+app.add_middleware(RateLimitMiddleware)
+
+# 2. CORS Middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.ALLOWED_ORIGINS,
@@ -55,7 +60,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# API v1 Router registrations
+# 3. API v1 Router registrations
 api_v1_prefix = "/api/v1"
 app.include_router(health_router, prefix=api_v1_prefix)
 app.include_router(organizations_router, prefix=api_v1_prefix)
@@ -77,5 +82,6 @@ async def root():
         "app": settings.APP_NAME,
         "version": "0.1.0",
         "status": "running",
+        "environment": "production" if not settings.DEBUG else "development",
         "docs": "/docs",
     }

@@ -48,3 +48,4 @@ class SentinelTracer:
                 elif isinstance(v, (str, int, float, bool)):
                     child_span.set_attribute(f"sentinel.{k}", v)
         return child_span
+

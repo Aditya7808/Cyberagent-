@@ -38,3 +38,4 @@ def test_sentinel_metrics_record_turn():
         tools_count=1,
         requires_approval=True,
     )
+

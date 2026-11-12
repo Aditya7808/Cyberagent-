@@ -73,3 +73,4 @@ class SentinelMetrics:
             tool_executions_counter.add(tools_count, attrs)
         if requires_approval:
             tool_approvals_counter.add(1, attrs)
+
