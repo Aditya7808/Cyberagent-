@@ -90,3 +90,4 @@ resource "aws_route_table_association" "pub_b" {
   subnet_id      = aws_subnet.public_b.id
   route_table_id = aws_route_table.public.id
 }
+

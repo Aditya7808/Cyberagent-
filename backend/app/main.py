@@ -29,13 +29,19 @@ settings = get_settings()
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info("Initializing SentinelAI Backend Service...")
-    # Create tables automatically in development / testing
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-    logger.info("Database schema validated and ready.")
+    try:
+        # Create tables automatically in development / testing if DB is reachable
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+        logger.info("Database schema validated and ready.")
+    except Exception as e:
+        logger.warning(f"Database connection offline: {e}. Running in standalone/mock mode.")
     yield
     logger.info("Shutting down SentinelAI Backend Service...")
-    await engine.dispose()
+    try:
+        await engine.dispose()
+    except Exception:
+        pass
 
 
 app = FastAPI(

@@ -116,7 +116,7 @@ async def list_security_incidents(
 
 @router.get("/export")
 async def export_audit_log(
-    format: str = Query("json", enum=["json", "csv"]),
+    format: str = Query("json", pattern="^(json|csv)$"),
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):

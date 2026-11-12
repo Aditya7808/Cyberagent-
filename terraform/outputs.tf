@@ -17,3 +17,4 @@ output "kms_key_arn" {
   description = "KMS Customer Managed Key ARN"
   value       = aws_kms_key.s3_key.arn
 }
+

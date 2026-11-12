@@ -46,3 +46,4 @@ async def test_concurrent_agent_stress_load():
     for r in results:
         assert len(r["content"]) > 0
         assert r["tokens"]["output"] > 0
+

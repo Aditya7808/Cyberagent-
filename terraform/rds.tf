@@ -45,3 +45,4 @@ resource "aws_db_instance" "postgres" {
     Name = "${var.app_name}-database"
   }
 }
+
