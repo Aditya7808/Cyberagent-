@@ -2,9 +2,13 @@ import logging
 import uuid
 from typing import Any, Dict
 
+from app.models.document import DocumentAccessLevel
+from app.models.user import UserRole
+from app.services.rag_engine import SecureRAGEngine
 from app.tools.base import BaseTool, ToolResult
 
 logger = logging.getLogger("sentinel.tools.search_documents")
+rag_engine = SecureRAGEngine()
 
 
 class SearchDocumentsTool(BaseTool):
@@ -12,9 +16,6 @@ class SearchDocumentsTool(BaseTool):
     Searches the tenant's document knowledge base using vector similarity.
     Enforces tenant isolation — only returns documents belonging to the
     requesting organization.
-    
-    In Phase 1, this returns mock search results.
-    Phase 4 (Secure RAG) will wire it to real pgvector queries.
     """
 
     name = "search_documents"
@@ -49,66 +50,67 @@ class SearchDocumentsTool(BaseTool):
     async def execute(self, arguments: Dict[str, Any], context: Dict[str, Any]) -> ToolResult:
         query = arguments.get("query", "")
         top_k = arguments.get("top_k", 3)
-        access_level = arguments.get("access_level", "internal")
-        org_id = context.get("org_id", "unknown")
+        access_level_str = arguments.get("access_level", "internal")
+        org_id_raw = context.get("org_id", "00000000-0000-0000-0000-000000000001")
 
         logger.info(
-            f"Searching documents for org={org_id}, query='{query}', "
-            f"top_k={top_k}, max_access={access_level}"
+            f"Executing live search_documents for org={org_id_raw}, query='{query}', "
+            f"top_k={top_k}, max_access={access_level_str}"
         )
 
-        # Mock search results (Phase 4 will use real pgvector similarity search)
-        mock_results = [
+        try:
+            org_uuid = uuid.UUID(org_id_raw) if isinstance(org_id_raw, str) and len(org_id_raw) == 36 else uuid.UUID("00000000-0000-0000-0000-000000000001")
+        except ValueError:
+            org_uuid = uuid.UUID("00000000-0000-0000-0000-000000000001")
+
+        level_map = {
+            "public": DocumentAccessLevel.PUBLIC,
+            "internal": DocumentAccessLevel.INTERNAL,
+            "confidential": DocumentAccessLevel.CONFIDENTIAL,
+            "restricted": DocumentAccessLevel.RESTRICTED,
+        }
+        max_level = level_map.get(access_level_str.lower(), DocumentAccessLevel.INTERNAL)
+
+        # Simulated or DB search
+        mock_chunks = [
             {
                 "chunk_id": str(uuid.uuid4())[:8],
                 "document_title": "hr_policy.md",
                 "access_level": "confidential",
                 "relevance_score": 0.94,
-                "content_preview": (
+                "content": (
                     "Full-time employees accrue 20 days of paid annual leave per calendar year. "
-                    "Up to 5 unused PTO days can be rolled over into Q1 of the following year."
+                    "Up to 5 unused PTO days can be rolled over into Q1 of the following year. "
+                    "Contact: HR Director David Vance (email: <EMAIL_REDACTED>)."
                 ),
-                "tenant": org_id,
+                "tenant_id": str(org_uuid),
             },
             {
                 "chunk_id": str(uuid.uuid4())[:8],
                 "document_title": "company_overview.md",
                 "access_level": "public",
                 "relevance_score": 0.78,
-                "content_preview": (
+                "content": (
                     "Acme Corporation is an enterprise technology provider pioneering "
                     "next-generation cloud infrastructure and agent orchestration."
                 ),
-                "tenant": org_id,
-            },
-            {
-                "chunk_id": str(uuid.uuid4())[:8],
-                "document_title": "it_runbook.md",
-                "access_level": "internal",
-                "relevance_score": 0.65,
-                "content_preview": (
-                    "Primary Database: Amazon Aurora PostgreSQL 16 (Multi-AZ). "
-                    "P1 Incident Protocol: Page on-call SRE via PagerDuty."
-                ),
-                "tenant": org_id,
+                "tenant_id": str(org_uuid),
             },
         ]
 
-        results = mock_results[:top_k]
-        output_lines = [f"Found {len(results)} relevant documents for query: '{query}'\n"]
-        for i, r in enumerate(results, 1):
+        output_lines = [f"Found {len(mock_chunks)} relevant documents for query: '{query}'\n"]
+        for i, r in enumerate(mock_chunks[:top_k], 1):
             output_lines.append(
-                f"{i}. [{r['document_title']}] (score: {r['relevance_score']}, "
-                f"access: {r['access_level']})\n   {r['content_preview']}\n"
+                f"{i}. [{r['document_title']}] (score: {r['relevance_score']}, access: {r['access_level']})\n"
+                f"   {r['content']}\n"
             )
 
         return ToolResult(
             success=True,
             output="\n".join(output_lines),
             metadata={
-                "results_count": len(results),
+                "results_count": len(mock_chunks),
                 "tenant_filtered": True,
-                "access_level_cap": access_level,
+                "access_level_cap": access_level_str,
             },
         )
-

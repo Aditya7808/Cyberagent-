@@ -60,3 +60,4 @@ class ToolApproval(Base):
     agent: Mapped["Agent"] = relationship("Agent")
     requester: Mapped[Optional["User"]] = relationship("User", foreign_keys=[requested_by])
     reviewer: Mapped[Optional["User"]] = relationship("User", foreign_keys=[reviewed_by])
+

@@ -40,3 +40,4 @@ class AuditService:
         await db.refresh(audit_entry)
         logger.info(f"Audit event recorded: [{action}] on [{resource_type}] by user={user_id}")
         return audit_entry
+

@@ -64,3 +64,4 @@ def test_tool_parameter_validator_type_mismatch():
     is_valid, errors = validator.validate(schema, {"limit": "not-an-int"})
     assert is_valid is False
     assert any("expected type integer" in e for e in errors)
+
