@@ -23,3 +23,4 @@ async def test_health_endpoint():
         data = response.json()
         assert data["status"] == "healthy"
         assert "timestamp" in data
+

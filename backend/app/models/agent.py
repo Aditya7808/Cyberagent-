@@ -55,3 +55,4 @@ class Agent(Base):
     creator: Mapped[Optional["User"]] = relationship("User", back_populates="agents_created")
     tools: Mapped[List["AgentTool"]] = relationship("AgentTool", back_populates="agent", cascade="all, delete-orphan")
     test_runs: Mapped[List["TestRun"]] = relationship("TestRun", back_populates="agent", cascade="all, delete-orphan")
+

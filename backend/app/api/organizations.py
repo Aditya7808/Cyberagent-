@@ -83,3 +83,4 @@ async def delete_organization(
         raise HTTPException(status_code=404, detail="Organization not found")
     await db.delete(org)
     await db.commit()
+

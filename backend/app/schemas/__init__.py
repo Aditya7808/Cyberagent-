@@ -5,6 +5,12 @@ from app.schemas.agent import AgentCreate, AgentUpdate, AgentResponse
 from app.schemas.document import DocumentCreate, DocumentResponse, DocumentChunkResponse
 from app.schemas.test_run import TestRunCreate, TestRunResponse, TestResultCreate, TestResultResponse
 from app.schemas.policy import PolicyCreate, PolicyUpdate, PolicyResponse
+from app.schemas.conversation import (
+    ConversationCreate,
+    ConversationResponse,
+    MessageCreate,
+    MessageResponse,
+)
 
 __all__ = [
     "OrgCreate",
@@ -29,4 +35,8 @@ __all__ = [
     "PolicyCreate",
     "PolicyUpdate",
     "PolicyResponse",
+    "ConversationCreate",
+    "ConversationResponse",
+    "MessageCreate",
+    "MessageResponse",
 ]

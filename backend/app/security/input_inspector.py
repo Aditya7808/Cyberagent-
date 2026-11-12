@@ -34,3 +34,4 @@ class InputSecurityInspector:
         risk_score = min(1.0, len(violations) * 0.45)
 
         return is_safe, violations, {"risk_score": risk_score, "violations_count": len(violations)}
+

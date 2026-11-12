@@ -84,3 +84,4 @@ sentinel-ai/
     │   └── types/            # TypeScript definitions
     └── package.json
 ```
+

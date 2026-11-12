@@ -66,3 +66,4 @@ def test_tool_authorizer_requires_human_approval():
     assert is_authorized is False
     assert requires_approval is True
     assert "human-in-the-loop" in reason
+

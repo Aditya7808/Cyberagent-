@@ -6,6 +6,7 @@ from app.models.document import Document, DocumentChunk, DocumentSourceType, Doc
 from app.models.test_run import TestRun, TestResult, RunType, RunStatus, TestOutcome
 from app.models.policy import Policy, PolicyType
 from app.models.audit_log import AuditLog
+from app.models.conversation import Conversation, ConversationStatus, Message, MessageRole
 
 __all__ = [
     "Organization",
@@ -27,4 +28,8 @@ __all__ = [
     "Policy",
     "PolicyType",
     "AuditLog",
+    "Conversation",
+    "ConversationStatus",
+    "Message",
+    "MessageRole",
 ]

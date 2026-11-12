@@ -48,3 +48,4 @@ class User(Base):
     # Relationships
     organization: Mapped["Organization"] = relationship("Organization", back_populates="users")
     agents_created: Mapped[list["Agent"]] = relationship("Agent", back_populates="creator")
+

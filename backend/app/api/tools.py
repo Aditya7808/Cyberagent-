@@ -64,3 +64,4 @@ async def delete_tool(tool_id: uuid.UUID, db: AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Tool not found")
     await db.delete(tool)
     await db.commit()
+

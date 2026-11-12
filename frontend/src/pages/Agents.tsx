@@ -1,7 +1,52 @@
-import React from 'react';
-import { Bot, Plus, CheckCircle2, ShieldAlert } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Bot, Plus, Terminal } from 'lucide-react';
+import { api } from '../lib/api';
 
 export const Agents: React.FC = () => {
+  const navigate = useNavigate();
+  const [agents, setAgents] = useState<any[]>([
+    {
+      id: 'agent-acme-hr',
+      name: 'Customer Support Assistant',
+      model_id: 'anthropic.claude-3-sonnet-20240229-v1:0',
+      status: 'active',
+      toolsCount: 3,
+      guardrails: 'Strict Mode',
+      description: 'Handles customer policy inquiries and ticketing with strict PII masking.',
+    },
+    {
+      id: 'agent-fin-advisory',
+      name: 'Financial Advisory Agent',
+      model_id: 'anthropic.claude-3-sonnet-20240229-v1:0',
+      status: 'active',
+      toolsCount: 2,
+      guardrails: 'Human Approval Required',
+      description: 'Queries internal quarterly financial metrics and bank ledgers.',
+    },
+    {
+      id: 'agent-devops-sre',
+      name: 'DevOps & SRE Assistant',
+      model_id: 'anthropic.claude-3-sonnet-20240229-v1:0',
+      status: 'draft',
+      toolsCount: 4,
+      guardrails: 'Execution Budget Capped',
+      description: 'Assists engineers with incident runbooks and telemetry queries.',
+    },
+  ]);
+
+  useEffect(() => {
+    api.getAgents()
+      .then((data) => {
+        if (data && data.length > 0) {
+          setAgents(data);
+        }
+      })
+      .catch(() => {
+        // Keep initial fallback agents
+      });
+  }, []);
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -18,32 +63,7 @@ export const Agents: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {[
-          {
-            name: 'Customer Support Assistant',
-            model: 'anthropic.claude-3-sonnet-20240229-v1:0',
-            status: 'active',
-            toolsCount: 3,
-            guardrails: 'Strict Mode',
-            description: 'Handles customer policy inquiries and ticketing with strict PII masking.',
-          },
-          {
-            name: 'Financial Advisory Agent',
-            model: 'anthropic.claude-3-sonnet-20240229-v1:0',
-            status: 'active',
-            toolsCount: 2,
-            guardrails: 'Human Approval Required',
-            description: 'Queries internal quarterly financial metrics and bank ledgers.',
-          },
-          {
-            name: 'DevOps & SRE Assistant',
-            model: 'anthropic.claude-3-sonnet-20240229-v1:0',
-            status: 'draft',
-            toolsCount: 4,
-            guardrails: 'Execution Budget Capped',
-            description: 'Assists engineers with incident runbooks and telemetry queries.',
-          },
-        ].map((agent, idx) => (
+        {agents.map((agent, idx) => (
           <div key={idx} className="p-6 bg-slate-900/60 border border-slate-800 rounded-xl flex flex-col justify-between space-y-4">
             <div className="space-y-3">
               <div className="flex items-start justify-between">
@@ -67,15 +87,21 @@ export const Agents: React.FC = () => {
             <div className="pt-4 border-t border-slate-800 space-y-2 text-xs text-slate-400">
               <div className="flex justify-between">
                 <span>Foundation Model</span>
-                <span className="font-mono text-slate-300">Claude 3 Sonnet</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Authorized Tools</span>
-                <span className="text-slate-300 font-semibold">{agent.toolsCount} attached</span>
+                <span className="font-mono text-slate-300">{agent.model_id?.split('.')?.pop() || 'Claude 3'}</span>
               </div>
               <div className="flex justify-between">
                 <span>Guardrail Policy</span>
-                <span className="text-teal-400 font-medium">{agent.guardrails}</span>
+                <span className="text-teal-400 font-medium">{agent.guardrails || 'Strict Mode'}</span>
+              </div>
+
+              <div className="pt-2">
+                <button
+                  onClick={() => navigate('/playground')}
+                  className="w-full flex items-center justify-center gap-2 py-2 bg-slate-800 hover:bg-slate-700/80 text-teal-400 border border-slate-700 rounded-lg text-xs font-semibold transition-colors"
+                >
+                  <Terminal className="w-3.5 h-3.5" />
+                  Launch in Playground
+                </button>
               </div>
             </div>
           </div>

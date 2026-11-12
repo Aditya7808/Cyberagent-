@@ -35,3 +35,4 @@ class ToolAuthorizer:
                 return False, False, f"User role '{user.role}' lacks permission for restricted tool '{tool.tool_name}'."
 
         return True, False, None
+

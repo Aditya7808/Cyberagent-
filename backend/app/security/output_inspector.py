@@ -36,3 +36,4 @@ class OutputSecurityInspector:
         }
 
         return sanitized_text, is_compliant, violations, metadata
+

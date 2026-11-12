@@ -35,3 +35,4 @@ class AgentResponse(AgentBase):
     tools: List[ToolResponse] = []
 
     model_config = ConfigDict(from_attributes=True)
+

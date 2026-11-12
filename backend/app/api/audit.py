@@ -64,3 +64,4 @@ async def get_audit_log(log_id: uuid.UUID, db: AsyncSession = Depends(get_db)):
         "ip_address": log.ip_address,
         "created_at": log.created_at.isoformat(),
     }
+

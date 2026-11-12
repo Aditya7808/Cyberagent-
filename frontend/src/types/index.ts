@@ -51,3 +51,4 @@ export interface Document {
   file_type?: string;
   created_at: string;
 }
+

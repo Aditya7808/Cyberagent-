@@ -80,3 +80,4 @@ async def list_document_chunks(document_id: uuid.UUID, db: AsyncSession = Depend
         raise HTTPException(status_code=404, detail="Document not found")
     result = await db.execute(select(DocumentChunk).where(DocumentChunk.document_id == document_id))
     return result.scalars().all()
+

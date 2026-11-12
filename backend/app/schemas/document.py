@@ -36,3 +36,4 @@ class DocumentResponse(DocumentBase):
     chunks: Optional[List[DocumentChunkResponse]] = None
 
     model_config = ConfigDict(from_attributes=True)
+

@@ -111,3 +111,4 @@ export const RedTeam: React.FC = () => {
     </div>
   );
 };
+

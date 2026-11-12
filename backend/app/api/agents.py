@@ -139,3 +139,4 @@ async def list_agent_tools(agent_id: uuid.UUID, db: AsyncSession = Depends(get_d
         raise HTTPException(status_code=404, detail="Agent not found")
     result = await db.execute(select(AgentTool).where(AgentTool.agent_id == agent_id))
     return result.scalars().all()
+

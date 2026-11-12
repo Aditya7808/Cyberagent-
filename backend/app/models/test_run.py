@@ -92,3 +92,4 @@ class TestResult(Base):
 
     # Relationships
     test_run: Mapped["TestRun"] = relationship("TestRun", back_populates="results")
+

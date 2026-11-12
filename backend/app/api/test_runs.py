@@ -116,3 +116,4 @@ async def complete_test_run(
     await db.commit()
     await db.refresh(test_run)
     return test_run
+

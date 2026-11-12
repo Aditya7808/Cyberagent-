@@ -41,3 +41,4 @@ class AgentTool(Base):
 
     # Relationships
     agent: Mapped["Agent"] = relationship("Agent", back_populates="tools")
+

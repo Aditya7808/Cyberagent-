@@ -66,3 +66,4 @@ class PIIDetector:
         )
 
         return anonymized_result.text, detected_entities
+
