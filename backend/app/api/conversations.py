@@ -176,3 +176,4 @@ async def delete_conversation(
         raise HTTPException(status_code=404, detail="Conversation not found")
     await db.delete(conv)
     await db.commit()
+

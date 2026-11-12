@@ -40,3 +40,4 @@ class ConversationResponse(BaseModel):
     messages: Optional[List[MessageResponse]] = None
 
     model_config = ConfigDict(from_attributes=True)
+

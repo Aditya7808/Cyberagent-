@@ -46,3 +46,4 @@ async def test_calculator_tool_execution():
     result = await calc.execute({"expression": "(12.5 * 4) + 10"}, {})
     assert result.success is True
     assert "60" in result.output
+
