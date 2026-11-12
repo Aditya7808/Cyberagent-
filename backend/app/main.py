@@ -11,6 +11,7 @@ from app.api import (
     evaluations_router,
     health_router,
     organizations_router,
+    policies_router,
     test_runs_router,
     tools_router,
     users_router,
@@ -65,6 +66,7 @@ app.include_router(test_runs_router, prefix=api_v1_prefix)
 app.include_router(evaluations_router, prefix=api_v1_prefix)
 app.include_router(audit_router, prefix=api_v1_prefix)
 app.include_router(conversations_router, prefix=api_v1_prefix)
+app.include_router(policies_router, prefix=api_v1_prefix)
 
 
 @app.get("/")

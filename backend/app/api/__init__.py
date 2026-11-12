@@ -8,6 +8,7 @@ from app.api.test_runs import router as test_runs_router
 from app.api.evaluations import router as evaluations_router
 from app.api.audit import router as audit_router
 from app.api.conversations import router as conversations_router
+from app.api.policies import router as policies_router
 
 __all__ = [
     "health_router",
@@ -20,4 +21,5 @@ __all__ = [
     "evaluations_router",
     "audit_router",
     "conversations_router",
+    "policies_router",
 ]
