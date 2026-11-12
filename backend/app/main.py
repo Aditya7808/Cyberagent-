@@ -91,3 +91,12 @@ async def root():
         "environment": "production" if not settings.DEBUG else "development",
         "docs": "/docs",
     }
+
+
+@app.get("/health")
+async def health_check():
+    return {
+        "status": "healthy",
+        "service": settings.APP_NAME,
+        "version": "0.1.0",
+    }
