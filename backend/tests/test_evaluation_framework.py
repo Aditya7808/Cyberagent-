@@ -45,3 +45,4 @@ def test_golden_set_runner():
     assert report["agent_name"] == "Support Bot"
     assert len(report["assertions"]) > 0
     assert report["summary"]["status"] == "APPROVED"
+

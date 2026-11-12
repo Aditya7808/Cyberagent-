@@ -1,7 +1,10 @@
 import logging
 import time
+import uuid
 from typing import Any, Dict, List, Optional
 
+from app.observability.metrics import SentinelMetrics
+from app.observability.tracing import SentinelTracer
 from app.orchestrator.graph import build_agent_graph
 from app.orchestrator.state import AgentMessage, AgentState
 
@@ -24,10 +27,11 @@ async def run_agent(
 ) -> Dict[str, Any]:
     """
     Executes the full LangGraph Agent Security Lifecycle for a user turn.
-    
-    Returns structured result including final answer, tool execution trace,
-    security inspection outcomes, token metrics, and latency.
+    Automatically wraps execution in OpenTelemetry traces and increments telemetry metrics.
     """
+    turn_id = str(uuid.uuid4())[:8]
+    span = SentinelTracer.start_agent_span(agent_id=agent_id, org_id=org_id, turn_id=turn_id)
+
     start_time = time.time()
     messages: List[AgentMessage] = list(history or [])
     messages.append({"role": "user", "content": prompt})
@@ -52,8 +56,12 @@ async def run_agent(
         "requires_human_approval": False,
     }
 
-    logger.info(f"Starting agent run for agent={agent_id}, input='{prompt[:40]}...'")
-    final_state = await _agent_graph.ainvoke(initial_state)
+    logger.info(f"[{turn_id}] Starting agent run for agent={agent_id}, input='{prompt[:40]}...'")
+
+    try:
+        final_state = await _agent_graph.ainvoke(initial_state)
+    finally:
+        span.end()
 
     elapsed_ms = (time.time() - start_time) * 1000
 
@@ -65,7 +73,21 @@ async def run_agent(
             "Execution is suspended pending administrator authorization."
         )
 
+    # Record telemetry metrics
+    pii_count = len(final_state.get("output_security", {}).get("pii_detected", []))
+    tools_count = len(final_state.get("tool_results", []))
+    SentinelMetrics.record_turn(
+        agent_id=agent_id,
+        org_id=org_id,
+        latency_ms=elapsed_ms,
+        is_blocked=final_state.get("is_blocked", False),
+        pii_count=pii_count,
+        tools_count=tools_count,
+        requires_approval=final_state.get("requires_human_approval", False),
+    )
+
     return {
+        "turn_id": turn_id,
         "content": response_content,
         "is_blocked": final_state.get("is_blocked", False),
         "block_reason": final_state.get("block_reason"),
@@ -81,4 +103,3 @@ async def run_agent(
         },
         "latency_ms": round(elapsed_ms, 2),
     }
-
