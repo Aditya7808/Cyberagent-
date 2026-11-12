@@ -158,3 +158,4 @@ class SecureRAGEngine:
         # Sort descending by relevance
         scored_results.sort(key=lambda x: x["relevance_score"], reverse=True)
         return scored_results[:top_k]
+

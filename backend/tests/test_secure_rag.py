@@ -49,3 +49,4 @@ def test_role_permitted_access_levels():
     # Admin gets all
     admin_levels = ROLE_PERMITTED_LEVELS[UserRole.ADMIN]
     assert DocumentAccessLevel.RESTRICTED in admin_levels
+

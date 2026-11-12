@@ -88,3 +88,4 @@ class EmbeddingGenerator:
             vector = [x / norm for x in vector]
 
         return vector
+
