@@ -75,8 +75,8 @@ export const Agents: React.FC = () => {
       {/* Agents Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         {agents.map((agent) => (
-          <div 
-            key={agent.id} 
+          <div
+            key={agent.id}
             className="enterprise-card p-6 rounded-2xl flex flex-col justify-between space-y-5 border border-slate-800 hover:border-indigo-500/40 transition-all group"
           >
             <div>

@@ -1,6 +1,20 @@
 import React from 'react';
+import {
+  Shield,
+  Search,
+  Bell,
+  Settings,
+  HelpCircle,
+  LogOut,
+  Sun,
+  Moon,
+  ChevronDown,
+  Activity,
+  ShieldCheck,
+  ShieldAlert,
+  ShieldOff
+} from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Shield, Zap, LogOut, CheckCircle2, Sun, Moon } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 
@@ -57,13 +71,13 @@ export const Header: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300">
-            <Shield className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" />
+            <ShieldCheck className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" />
             <span className="text-[11px] text-slate-500 dark:text-slate-400">PII Scrubber:</span>
             <span className="text-indigo-600 dark:text-indigo-300 font-medium text-[11px]">Armed</span>
           </div>
 
           <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300">
-            <Zap className="w-3.5 h-3.5 text-cyan-500 dark:text-cyan-400" />
+            <Activity className="w-3.5 h-3.5 text-cyan-500 dark:text-cyan-400" />
             <span className="text-[11px] text-slate-500 dark:text-slate-400">Latency:</span>
             <span className="text-cyan-600 dark:text-cyan-300 font-mono text-[11px]">14ms</span>
           </div>
@@ -73,7 +87,7 @@ export const Header: React.FC = () => {
 
         {/* Security Clearance Badge */}
         <div className={`px-2.5 py-1 rounded-md text-xs font-semibold flex items-center gap-1.5 ${getClearanceBadge(user?.role)}`}>
-          <CheckCircle2 className="w-3.5 h-3.5" />
+          <ShieldCheck className="w-3.5 h-3.5" />
           <span>{user?.clearance_level || 'LVL-1 [USER]'}</span>
         </div>
 
@@ -94,19 +108,23 @@ export const Header: React.FC = () => {
           </span>
         </button>
 
-        {/* User Identity Profile */}
-        <div className="flex items-center gap-3 pl-2 border-l border-slate-200 dark:border-slate-800">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-600 to-cyan-500 flex items-center justify-center text-xs font-bold text-white shadow-sm ring-1 ring-white/20">
-            {getInitials(user?.full_name)}
-          </div>
-          <div className="hidden sm:block text-left">
-            <div className="text-xs font-semibold text-slate-800 dark:text-slate-200 leading-tight">
-              {user?.full_name || 'Operator'}
+        {/* Operator Menu */}
+        <div className="flex items-center gap-2">
+          <button className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-900/60 transition-colors cursor-pointer group">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-600 to-cyan-500 flex items-center justify-center text-xs font-bold text-white shadow-sm ring-1 ring-white/20 group-hover:ring-indigo-400/40">
+              {getInitials(user?.full_name)}
             </div>
-            <div className="text-[11px] text-slate-500 leading-tight capitalize">
-              {user?.role ? user.role.replace('_', ' ') : 'Authenticated'}
+            <div className="hidden md:block text-left">
+              <div className="text-xs font-semibold text-slate-800 dark:text-slate-200 leading-tight">
+                {user?.full_name || 'Operator'}
+              </div>
+              <div className="text-[11px] text-slate-500 leading-tight capitalize">
+                {user?.role ? user.role.replace('_', ' ') : 'Authenticated'}
+              </div>
             </div>
-          </div>
+            <ChevronDown className="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300" />
+          </button>
+
           <button
             onClick={() => {
               logout();

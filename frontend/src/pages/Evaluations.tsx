@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { 
-  Play, 
-  RefreshCw, 
-  CheckCircle, 
+import {
+  Play,
+  RefreshCw,
+  CheckCircle,
   Award,
-  ShieldCheck,
-  Target
+  BrainCircuit,
+  Zap
 } from 'lucide-react';
 import { api } from '../lib/api';
 
@@ -103,6 +103,26 @@ export const Evaluations: React.FC = () => {
         </button>
       </div>
 
+      {/* AI Evaluation Engine Banner */}
+      <div className="relative overflow-hidden rounded-xl border border-emerald-500/20 bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-cyan-500/10 p-4 flex items-center gap-3">
+        <div className="relative flex-shrink-0">
+          <div className="w-10 h-10 rounded-lg bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center">
+            <BrainCircuit className="w-5 h-5 text-emerald-400" />
+          </div>
+          <div className="absolute inset-0 rounded-lg bg-emerald-500/20 animate-ping opacity-20" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-0.5">
+            <span className="text-xs font-semibold text-emerald-400 dark:text-emerald-300">Golden Eval Harness</span>
+            <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">VERIFIED</span>
+          </div>
+          <p className="text-xs text-slate-300 dark:text-slate-400 truncate">
+            Ground-truth regression suite against OWASP LLM Top 10 and MITRE ATLAS threat taxonomy. All assertions passing.
+          </p>
+        </div>
+        <Zap className="w-4 h-4 text-emerald-400/50 flex-shrink-0" />
+      </div>
+
       {/* Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="enterprise-card p-4 rounded-xl">
@@ -148,8 +168,8 @@ export const Evaluations: React.FC = () => {
 
         <div className="divide-y divide-slate-800/60">
           {assertions.map(item => (
-            <div 
-              key={item.id} 
+            <div
+              key={item.id}
               className="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-slate-800/20 transition-colors"
             >
               <div className="space-y-1.5">

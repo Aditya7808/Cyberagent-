@@ -1,0 +1,263 @@
+/* ==========================================================================
+   Sentinel AI - Design Tokens & Visual System
+   Premium enterprise security control plane with AI-inspired aesthetics.
+   All tokens are defined inside :root and re-declared per theme so every
+   color resolves from the same token set in both light and dark modes.
+   ========================================================================== */
+
+/* ---- Light theme (default) --------------------------------------------- */
+:root {
+  /* Semantic color palette */
+  --bg: #f8fafc;
+  --bg-subtle: #f1f5f9;
+  --fg: #0f172a;
+  --muted: #64748b;
+  --accent: #14b8a6;            /* Emerald/teal - security & protection */
+  --accent-hover: #0d9488;
+  --accent-subtle: rgba(20, 184, 166, 0.15);
+  --card: #ffffff;
+  --card-subtle: rgba(255, 255, 255, 0.8);
+  --border: #e2e8f0;
+  --border-subtle: #cbd5e1;
+  --danger: #f43f5e;            /* Rose - critical violations */
+  --danger-hover: #e82c57;
+  --warning: #f59e0b;           /* Amber - warnings */
+  --warning-hover: #d97706;
+  --info: #0891b2;              /* Cyan - system status */
+  --info-hover: #0e7490;
+
+  /* Typography families */
+  --font-display: 'Space Grotesk', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Mono', 'Consolas', 'Monaco', monospace;
+
+  /* Type scale (perfect 1.25 modular ratio) */
+  --text-xs: 0.75rem;   /* 12px */
+  --text-sm: 0.875rem;  /* 14px */
+  --text-base: 1rem;    /* 16px */
+  --text-lg: 1.125rem;  /* 18px */
+  --text-xl: 1.25rem;   /* 20px */
+  --text-2xl: 1.5rem;   /* 24px */
+  --text-3xl: 1.875rem; /* 30px */
+  --text-4xl: 2.25rem;  /* 36px */
+
+  /* Spacing */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+
+  /* Radius */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.25rem;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+
+  /* Glows */
+  --glow-sm: 0 0 8px rgba(20, 184, 166, 0.3);
+  --glow-md: 0 0 16px rgba(20, 184, 166, 0.25);
+  --glow-lg: 0 0 32px rgba(20, 184, 166, 0.2);
+
+  /* Glassmorphism */
+  --glass: rgba(255, 255, 255, 0.05);
+  --glass-dark: rgba(15, 23, 42, 0.7);
+
+  /* Sizing */
+  --btn-height: 36px;
+  --btn-height-lg: 44px;
+  --input-height: 40px;
+
+  /* Transitions */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 250ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ---- Dark theme (primary enterprise mode) ------------------------------ */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #080c14;
+    --bg-subtle: #0e1420;
+    --fg: #f8fafc;
+    --muted: #94a3b8;
+    --accent: #14b8a6;
+    --accent-hover: #0d9488;
+    --accent-subtle: rgba(20, 184, 166, 0.15);
+    --card: #15202b;
+    --card-subtle: rgba(15, 23, 42, 0.7);
+    --border: #1e293b;
+    --border-subtle: #334155;
+    --danger: #f87171;
+    --danger-hover: #e85d6e;
+    --warning: #fbbf24;
+    --warning-hover: #f59e0b;
+    --info: #67e8f9;
+    --info-hover: #a5f3fc;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #080c14;
+  --bg-subtle: #0e1420;
+  --fg: #f8fafc;
+  --muted: #94a3b8;
+  --accent: #14b8a6;
+  --accent-hover: #0d9488;
+  --accent-subtle: rgba(20, 184, 166, 0.15);
+  --card: #15202b;
+  --card-subtle: rgba(15, 23, 42, 0.7);
+  --border: #1e293b;
+  --border-subtle: #334155;
+  --danger: #f87171;
+  --danger-hover: #e85d6e;
+  --warning: #fbbf24;
+  --warning-hover: #f59e0b;
+  --info: #67e8f9;
+  --info-hover: #a5f3fc;
+  color-scheme: dark;
+}
+
+/* ---- Explicit light theme override ------------------------------------- */
+:root[data-theme="light"] {
+  --bg: #f8fafc;
+  --bg-subtle: #f1f5f9;
+  --fg: #0f172a;
+  --muted: #64748b;
+  --accent: #14b8a6;
+  --accent-hover: #0d9488;
+  --accent-subtle: rgba(20, 184, 166, 0.15);
+  --card: #ffffff;
+  --card-subtle: rgba(255, 255, 255, 0.8);
+  --border: #e2e8f0;
+  --border-subtle: #cbd5e1;
+  --danger: #f43f5e;
+  --danger-hover: #e82c57;
+  --warning: #f59e0b;
+  --warning-hover: #d97706;
+  --info: #0891b2;
+  --info-hover: #0e7490;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #f8fafc;
+    --bg-subtle: #f1f5f9;
+    --fg: #0f172a;
+    --muted: #64748b;
+    --accent: #14b8a6;
+    --accent-hover: #0d9488;
+    --accent-subtle: rgba(20, 184, 166, 0.15);
+    --card: #ffffff;
+    --card-subtle: rgba(255, 255, 255, 0.8);
+    --border: #e2e8f0;
+    --border-subtle: #cbd5e1;
+    --danger: #f43f5e;
+    --danger-hover: #e82c57;
+    --warning: #f59e0b;
+    --warning-hover: #d97706;
+    --info: #0891b2;
+    --info-hover: #0e7490;
+    color-scheme: light;
+  }
+}
+
+/* ==========================================================================
+   GLOBAL UTILITIES DERIVED FROM TOKENS
+   ========================================================================== */
+
+/* Typography roles */
+.font-display { font-family: var(--font-display); }
+.font-body { font-family: var(--font-body); }
+.font-mono { font-family: var(--font-mono); }
+
+/* Semantic text colors */
+.text-fg { color: var(--fg); }
+.text-muted { color: var(--muted); }
+.text-accent { color: var(--accent); }
+.text-danger { color: var(--danger); }
+.text-warning { color: var(--warning); }
+.text-info { color: var(--info); }
+
+/* Status dot indicators */
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-dot.online {
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+  animation: statusPulse 2s ease-in-out infinite;
+}
+
+.status-dot.warning {
+  background: var(--warning);
+  box-shadow: 0 0 8px var(--warning);
+}
+
+.status-dot.critical {
+  background: var(--danger);
+  box-shadow: 0 0 8px var(--danger);
+  animation: statusPulse 1s ease-in-out infinite;
+}
+
+@keyframes statusPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* AI glow effects */
+.ai-glow {
+  box-shadow: 0 0 20px rgba(20, 184, 166, 0.3), 0 0 40px rgba(20, 184, 166, 0.1);
+}
+
+.ai-glow-subtle {
+  box-shadow: 0 0 12px rgba(20, 184, 166, 0.2);
+}
+
+.ai-glow-danger {
+  box-shadow: 0 0 20px rgba(244, 63, 94, 0.3), 0 0 40px rgba(244, 63, 94, 0.1);
+}
+
+.ai-pulse {
+  animation: aiPulse 2s ease-in-out infinite;
+}
+
+@keyframes aiPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(20, 184, 166, 0.4); }
+  50% { box-shadow: 0 0 0 10px rgba(20, 184, 166, 0); }
+}
+
+/* Glassmorphism surface */
+.glass {
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-subtle);
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

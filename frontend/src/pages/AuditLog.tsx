@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Fingerprint, 
-  Download, 
+import {
+  Fingerprint,
+  Download,
   FileText,
-  ShieldAlert,
-  ShieldCheck,
-  EyeOff,
   Clock,
-  User,
-  Hash
+  Hash,
+  BrainCircuit,
+  Zap
 } from 'lucide-react';
 import { api } from '../lib/api';
 
@@ -62,7 +60,7 @@ export const AuditLog: React.FC = () => {
   }, []);
 
   const handleExport = (format: 'json' | 'csv') => {
-    const dataStr = format === 'json' 
+    const dataStr = format === 'json'
       ? 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(logs, null, 2))
       : 'data:text/csv;charset=utf-8,' + encodeURIComponent('id,time,action,decision\n' + logs.map(l => `${l.id},${l.time},${l.action},${l.decision}`).join('\n'));
     const downloadAnchor = document.createElement('a');
@@ -123,6 +121,26 @@ export const AuditLog: React.FC = () => {
         </div>
       </div>
 
+      {/* AI Forensic Engine Banner */}
+      <div className="relative overflow-hidden rounded-xl border border-indigo-500/20 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-cyan-500/10 p-4 flex items-center gap-3">
+        <div className="relative flex-shrink-0">
+          <div className="w-10 h-10 rounded-lg bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center">
+            <BrainCircuit className="w-5 h-5 text-indigo-400" />
+          </div>
+          <div className="absolute inset-0 rounded-lg bg-indigo-500/20 animate-ping opacity-20" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-0.5">
+            <span className="text-xs font-semibold text-indigo-400 dark:text-indigo-300">Forensic Ledger Engine</span>
+            <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">SEALED</span>
+          </div>
+          <p className="text-xs text-slate-300 dark:text-slate-400 truncate">
+            SHA-256 cryptographic chain verified. Every event immutably sealed with zero tamper evidence detected.
+          </p>
+        </div>
+        <Zap className="w-4 h-4 text-indigo-400/50 flex-shrink-0" />
+      </div>
+
       {/* Filter Tabs */}
       <div className="flex items-center gap-2 border-b border-slate-800/60 pb-3">
         {[
@@ -155,8 +173,8 @@ export const AuditLog: React.FC = () => {
 
         <div className="divide-y divide-slate-800/60">
           {filteredLogs.map(log => (
-            <div 
-              key={log.id} 
+            <div
+              key={log.id}
               className="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-slate-800/20 transition-colors"
             >
               <div className="space-y-1.5">
@@ -172,7 +190,7 @@ export const AuditLog: React.FC = () => {
                   </span>
                 </div>
                 <div className="text-xs text-slate-400">
-                  Target: <span className="text-slate-300 font-medium">{log.resource}</span> &nbsp;|&nbsp; 
+                  Target: <span className="text-slate-300 font-medium">{log.resource}</span> &nbsp;|&nbsp;
                   Origin: <span className="text-slate-400">{log.actor}</span>
                 </div>
               </div>

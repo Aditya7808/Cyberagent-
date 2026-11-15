@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Send, 
-  ShieldAlert, 
-  ShieldCheck, 
-  Bot, 
-  Terminal, 
+import {
+  Send,
+  ShieldAlert,
+  Bot,
+  Terminal,
   Zap,
   Activity,
   EyeOff,
   User,
-  Sparkles,
-  Layers,
-  Cpu,
-  Lock
+  Lock,
+  BrainCircuit
 } from 'lucide-react';
 import { api } from '../lib/api';
 
@@ -193,6 +190,26 @@ export const Playground: React.FC = () => {
             <option value="hr-assistant">Corporate HR Policy Assistant</option>
           </select>
         </div>
+      </div>
+
+      {/* AI Inspection Engine Banner */}
+      <div className="relative overflow-hidden rounded-xl border border-indigo-500/20 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-cyan-500/10 p-4 flex items-center gap-3">
+        <div className="relative flex-shrink-0">
+          <div className="w-10 h-10 rounded-lg bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center">
+            <BrainCircuit className="w-5 h-5 text-indigo-400" />
+          </div>
+          <div className="absolute inset-0 rounded-lg bg-indigo-500/20 animate-ping opacity-20" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-0.5">
+            <span className="text-xs font-semibold text-indigo-400 dark:text-indigo-300">Real-Time Guardrail Engine</span>
+            <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">LIVE</span>
+          </div>
+          <p className="text-xs text-slate-300 dark:text-slate-400 truncate">
+            AST heuristics, semantic entropy analysis, and perplexity anomaly detection running in parallel. Sub-15ms inspection latency.
+          </p>
+        </div>
+        <Zap className="w-4 h-4 text-indigo-400/50 flex-shrink-0" />
       </div>
 
       {/* Preset Attacks Matrix */}

@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Users as UsersIcon, 
-  ShieldCheck, 
-  UserPlus, 
-  Trash2, 
-  RefreshCw, 
-  Key, 
-  CheckCircle2, 
+import {
+  Users as UsersIcon,
+  ShieldCheck,
+  UserPlus,
+  Trash2,
+  RefreshCw,
+  Key,
+  CheckCircle2,
   AlertTriangle,
   Mail,
   Shield,
   Lock,
-  X
+  X,
+  BrainCircuit,
+  Zap
 } from 'lucide-react';
 import { api } from '../lib/api';
 import { useAuth } from '../context/AuthContext';
@@ -170,6 +172,26 @@ export const Users: React.FC = () => {
             Provision User
           </button>
         </div>
+      </div>
+
+      {/* AI Identity Governance Banner */}
+      <div className="relative overflow-hidden rounded-xl border border-indigo-500/20 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-cyan-500/10 p-4 flex items-center gap-3">
+        <div className="relative flex-shrink-0">
+          <div className="w-10 h-10 rounded-lg bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center">
+            <BrainCircuit className="w-5 h-5 text-indigo-400" />
+          </div>
+          <div className="absolute inset-0 rounded-lg bg-indigo-500/20 animate-ping opacity-20" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-0.5">
+            <span className="text-xs font-semibold text-indigo-400 dark:text-indigo-300">Zero-Trust Identity Governance</span>
+            <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">ENFORCED</span>
+          </div>
+          <p className="text-xs text-slate-300 dark:text-slate-400 truncate">
+            Bcrypt cost-10 hashing with signed HS256 JWT. Least-privilege RBAC with HITL escalation gates on all privileged mutations.
+          </p>
+        </div>
+        <Zap className="w-4 h-4 text-indigo-400/50 flex-shrink-0" />
       </div>
 
       {/* Metrics Row */}
