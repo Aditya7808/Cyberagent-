@@ -99,7 +99,28 @@ async def init_db_and_seed():
                     )
                     session.add(new_user)
             await session.commit()
-            logger.info("Database security identities successfully verified and seeded.")
+
+            from app.models.agent import Agent, AgentStatus
+            from sqlalchemy import func
+            stmt_all_agents = select(func.count(Agent.id)).where(Agent.org_id == default_org_id)
+            existing_agent_count = (await session.execute(stmt_all_agents)).scalar() or 0
+            if existing_agent_count == 0:
+                initial_agents = [
+                    ("DevOps Autonomous SRE", "anthropic.claude-3-sonnet", "You are an autonomous SRE agent operating under SentinelAI runtime boundaries."),
+                    ("Financial Advisory Agent", "anthropic.claude-3-sonnet", "You are an enterprise financial risk analyst operating under strict PII controls."),
+                    ("Customer Support Tier-2", "anthropic.claude-3-haiku", "You are a customer support agent with least privilege document access."),
+                ]
+                for ag_name, model, sp in initial_agents:
+                    session.add(Agent(
+                        id=uuid.uuid4(),
+                        org_id=default_org_id,
+                        name=ag_name,
+                        model_id=model,
+                        system_prompt=sp,
+                        status=AgentStatus.ACTIVE,
+                    ))
+                await session.commit()
+            logger.info("Database security identities and agents successfully verified and seeded.")
     except Exception as e:
         logger.error(f"Error initializing database: {e}")
 

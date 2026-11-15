@@ -12,51 +12,33 @@ import { api } from '../lib/api';
 
 export const AuditLog: React.FC = () => {
   const [filterType, setFilterType] = useState('all');
-  const [logs, setLogs] = useState<any[]>([
-    {
-      id: 'AUD-8841-A',
-      time: '2026-11-12 11:24:02 UTC',
-      action: 'Direct Prompt Injection Blocked',
-      resource: 'DevOps Autonomous SRE',
-      actor: '198.51.100.42 (Anonymous)',
-      decision: 'Blocked',
-      sha256: '4a8f9c...e291',
-    },
-    {
-      id: 'AUD-8840-B',
-      time: '2026-11-12 11:18:33 UTC',
-      action: 'AWS Credential Scrubbed & Masked',
-      resource: 'Financial Risk Analyst',
-      actor: 'Aditya Yadav [Admin]',
-      decision: 'Masked',
-      sha256: '9920bf...882a',
-    },
-    {
-      id: 'AUD-8839-C',
-      time: '2026-11-12 11:10:10 UTC',
-      action: 'Tool Authorization Hold (HITL Triggered)',
-      resource: 'delete_backup_snapshot',
-      actor: 'Autonomous Agent #2',
-      decision: 'Approval Required',
-      sha256: 'c371aa...ff01',
-    },
-    {
-      id: 'AUD-8838-D',
-      time: '2026-11-12 10:55:40 UTC',
-      action: 'Tenant Isolation Enforced',
-      resource: 'Document: HR_Compensation.pdf',
-      actor: '10.0.14.88 (Internal)',
-      decision: 'Allowed',
-      sha256: '1184ee...339b',
-    },
-  ]);
+  const [logs, setLogs] = useState<any[]>([]);
 
-  useEffect(() => {
+  const fetchLogs = () => {
     api.getAuditLogs()
       .then((data) => {
-        if (data && data.length > 0) setLogs(data);
+        const formatted = (data || []).map((l: any) => ({
+          id: l.id || `AUD-${Date.now()}`,
+          time: l.created_at ? new Date(l.created_at).toLocaleString() : l.timestamp || 'Just now',
+          action: l.action || 'Security Telemetry Event',
+          resource: l.resource_type || 'Agent Sandbox',
+          actor: l.user_id ? `User: ${l.user_id}` : l.ip_address || 'Gateway Intercept',
+          decision: (l.action && (l.action.includes('block') || l.action.includes('injection')))
+            ? 'Blocked'
+            : (l.action && l.action.includes('pii'))
+            ? 'Masked'
+            : (l.action && l.action.includes('approval'))
+            ? 'Approval Required'
+            : 'Allowed',
+          sha256: l.id ? `${String(l.id).slice(0, 8)}...${String(l.id).slice(-4)}` : 'sha256:verified',
+        }));
+        setLogs(formatted);
       })
-      .catch(() => {});
+      .catch(() => setLogs([]));
+  };
+
+  useEffect(() => {
+    fetchLogs();
   }, []);
 
   const handleExport = (format: 'json' | 'csv') => {
@@ -172,36 +154,46 @@ export const AuditLog: React.FC = () => {
         </div>
 
         <div className="divide-y divide-slate-800/60">
-          {filteredLogs.map(log => (
-            <div
-              key={log.id}
-              className="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-slate-800/20 transition-colors"
-            >
-              <div className="space-y-1.5">
-                <div className="flex items-center gap-2.5">
-                  <span className="font-semibold text-white text-sm">{log.action}</span>
-                  <span className="text-xs text-slate-400 flex items-center gap-1">
-                    <Clock className="w-3 h-3 text-slate-500" />
-                    {log.time}
-                  </span>
-                  <span className="text-xs font-mono text-slate-500 flex items-center gap-1">
-                    <Hash className="w-3 h-3 text-slate-600" />
-                    {log.sha256}
-                  </span>
-                </div>
-                <div className="text-xs text-slate-400">
-                  Target: <span className="text-slate-300 font-medium">{log.resource}</span> &nbsp;|&nbsp;
-                  Origin: <span className="text-slate-400">{log.actor}</span>
-                </div>
-              </div>
-
-              <div className="shrink-0">
-                <span className={`px-3 py-1.5 rounded-lg text-xs font-semibold ${getDecisionBadge(log.decision)}`}>
-                  {log.decision}
-                </span>
-              </div>
+          {filteredLogs.length === 0 ? (
+            <div className="py-14 text-center text-slate-500 text-xs flex flex-col items-center justify-center">
+              <Fingerprint className="w-9 h-9 text-indigo-400/50 mb-2.5" />
+              <p className="font-semibold text-slate-700 dark:text-slate-300 text-sm">No audit records logged yet</p>
+              <p className="text-slate-500 text-xs mt-1 max-w-sm">
+                Telemetry is currently at zero baseline. Test prompts in the Injection Playground or trigger attacks in Red Team War Room to record real events.
+              </p>
             </div>
-          ))}
+          ) : (
+            filteredLogs.map(log => (
+              <div
+                key={log.id}
+                className="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-slate-800/20 transition-colors"
+              >
+                <div className="space-y-1.5">
+                  <div className="flex items-center gap-2.5">
+                    <span className="font-semibold text-slate-900 dark:text-white text-sm">{log.action}</span>
+                    <span className="text-xs text-slate-400 flex items-center gap-1">
+                      <Clock className="w-3 h-3 text-slate-500" />
+                      {log.time}
+                    </span>
+                    <span className="text-xs font-mono text-slate-500 flex items-center gap-1">
+                      <Hash className="w-3 h-3 text-slate-600" />
+                      {log.sha256}
+                    </span>
+                  </div>
+                  <div className="text-xs text-slate-500 dark:text-slate-400">
+                    Target: <span className="text-slate-700 dark:text-slate-300 font-medium">{log.resource}</span> &nbsp;|&nbsp;
+                    Origin: <span className="text-slate-500 dark:text-slate-400">{log.actor}</span>
+                  </div>
+                </div>
+
+                <div className="shrink-0">
+                  <span className={`px-3 py-1.5 rounded-lg text-xs font-semibold ${getDecisionBadge(log.decision)}`}>
+                    {log.decision}
+                  </span>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </div>

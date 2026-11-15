@@ -14,6 +14,7 @@ import {
   CheckCircle2,
   FileText,
   Clock,
+  RotateCcw,
   Sparkles,
   Cpu,
   BrainCircuit,
@@ -42,20 +43,20 @@ import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 
 const threatTimelineData = [
-  { time: '00:00', injections: 14, pii_leaks: 38, jailbreaks: 4 },
-  { time: '04:00', injections: 22, pii_leaks: 51, jailbreaks: 8 },
-  { time: '08:00', injections: 68, pii_leaks: 142, jailbreaks: 19 },
-  { time: '12:00', injections: 94, pii_leaks: 189, jailbreaks: 28 },
-  { time: '16:00', injections: 128, pii_leaks: 245, jailbreaks: 35 },
-  { time: '20:00', injections: 84, pii_leaks: 162, jailbreaks: 16 },
-  { time: '23:59', injections: 45, pii_leaks: 98, jailbreaks: 9 },
+  { time: '00:00', injections: 0, pii_leaks: 0, jailbreaks: 0 },
+  { time: '04:00', injections: 0, pii_leaks: 0, jailbreaks: 0 },
+  { time: '08:00', injections: 0, pii_leaks: 0, jailbreaks: 0 },
+  { time: '12:00', injections: 0, pii_leaks: 0, jailbreaks: 0 },
+  { time: '16:00', injections: 0, pii_leaks: 0, jailbreaks: 0 },
+  { time: '20:00', injections: 0, pii_leaks: 0, jailbreaks: 0 },
+  { time: 'Live', injections: 0, pii_leaks: 0, jailbreaks: 0 },
 ];
 
-const attackDistributionData = [
-  { name: 'Direct Injection', value: 42, color: '#f43f5e' },
-  { name: 'PII Exfiltration', value: 28, color: '#06b6d4' },
-  { name: 'Jailbreak Attempt', value: 18, color: '#f59e0b' },
-  { name: 'Tool Hijack', value: 12, color: '#8b5cf6' },
+const defaultAttackDistribution = [
+  { name: 'Direct Injection', value: 0, color: '#f43f5e' },
+  { name: 'PII Exfiltration', value: 0, color: '#06b6d4' },
+  { name: 'Jailbreak Attempt', value: 0, color: '#f59e0b' },
+  { name: 'Tool Hijack', value: 0, color: '#8b5cf6' },
 ];
 
 export const Dashboard: React.FC = () => {
@@ -65,42 +66,44 @@ export const Dashboard: React.FC = () => {
   const [approvals, setApprovals] = useState<any[]>([]);
   const [activeRange, setActiveRange] = useState<'24h' | '7d' | '30d'>('24h');
   const [loading, setLoading] = useState(false);
-  const [aiInsight, setAiInsight] = useState<string>('Analyzing threat patterns...');
+  const [resetting, setResetting] = useState(false);
+  const [aiInsight, setAiInsight] = useState<string>('Sentinel AI Gateway armed. Ready for live adversarial tests.');
 
   const [metrics, setMetrics] = useState<any>({
     prompt_injection_defense: {
-      rate_percent: 99.8,
-      intercepted_count: 542,
+      rate_percent: 100.0,
+      intercepted_count: 0,
       breaches_count: 0,
-      change_percent: '+14.2%',
+      change_percent: '+0.0%',
     },
     pii_redactions: {
-      total_entities_masked: 4892,
+      total_entities_masked: 0,
       detected_recent: 0,
       engines: 'Presidio + spaCy NER',
       formats: 'AWS, SSN, PAN',
     },
     guarded_agents: {
-      active_count: 12,
-      total_count: 12,
+      active_count: 3,
+      total_count: 3,
       health_status: '100% Healthy',
       sandboxes: '3 Tenant Sandboxes',
     },
     inspection_latency: {
-      avg_ms: 14,
+      avg_ms: 12,
       label: 'Avg MTTI',
       engine: 'In-Memory Heuristic',
     },
     timeline: threatTimelineData,
+    distribution: defaultAttackDistribution,
   });
 
   // Simulate AI insight generation
   useEffect(() => {
     const insights = [
-      'Threat velocity increased 23% in the last hour. Heuristic engine auto-scaled.',
-      'PII scrubber blocked 3 credential leaks in financial agent sandbox.',
-      'Zero jailbreak successes across 1,247 adversarial probes today.',
-      'AST anomaly detector flagged 2 obfuscated payloads for review.',
+      'Sentinel AI Gateway armed. Ready for live adversarial probes in Playground.',
+      'Heuristic AST parser active. Zero-LLM delay active on all prompt boundaries.',
+      'PII scrubber armed with Presidio + spaCy NER regex filters.',
+      'Human-in-the-Loop gatekeeper standing by for destructive tool invocations.',
     ];
     let idx = 0;
     setAiInsight(insights[0]);
@@ -119,33 +122,24 @@ export const Dashboard: React.FC = () => {
         setMetrics(data);
       }
       const apprs = await api.getApprovals('pending');
-      if (apprs && apprs.length > 0) {
-        setApprovals(apprs);
-      } else {
-        // Fallback default sample approvals if fresh
-        setApprovals([
-          {
-            id: 'APPR-SEC-091',
-            tool_name: 'delete_backup_snapshot',
-            agent_name: 'DevOps Autonomous SRE',
-            parameters: { snapshot_id: 'snap-09941a', force: true, target_env: 'production' },
-            requested_at: '2m ago',
-            risk_tier: 'CRITICAL',
-          },
-          {
-            id: 'APPR-SEC-092',
-            tool_name: 'export_employee_payroll',
-            agent_name: 'Financial Advisory Agent',
-            parameters: { format: 'csv', fiscal_year: 2026, mask_ssn: false },
-            requested_at: '14m ago',
-            risk_tier: 'HIGH',
-          },
-        ]);
-      }
+      setApprovals(apprs || []);
     } catch {
       // Keep state if offline
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleResetTelemetry = async () => {
+    if (!window.confirm('Reset all dashboard telemetry, attack counts, and audit logs to zero?')) return;
+    try {
+      setResetting(true);
+      await api.resetTelemetry();
+      await fetchDashboardData();
+    } catch (err) {
+      console.error('Failed to reset telemetry', err);
+    } finally {
+      setResetting(false);
     }
   };
 
@@ -199,7 +193,7 @@ export const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5">
           <button
             onClick={fetchDashboardData}
             disabled={loading}
@@ -207,6 +201,15 @@ export const Dashboard: React.FC = () => {
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-indigo-500' : ''}`} />
             Refresh Radar
+          </button>
+          <button
+            onClick={handleResetTelemetry}
+            disabled={resetting || loading}
+            className="px-3 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-xs font-medium text-rose-600 dark:text-rose-400 flex items-center gap-1.5 transition-colors disabled:opacity-50"
+            title="Reset telemetry counters and audit events back to zero"
+          >
+            <RotateCcw className={`w-3.5 h-3.5 ${resetting ? 'animate-spin' : ''}`} />
+            Reset to Zero
           </button>
         </div>
       </div>
@@ -242,15 +245,15 @@ export const Dashboard: React.FC = () => {
           </div>
           <div className="mt-3 flex items-baseline gap-2">
             <span className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
-              {metrics.prompt_injection_defense?.rate_percent || 99.8}%
+              {metrics.prompt_injection_defense?.rate_percent ?? 100}%
             </span>
             <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium flex items-center">
-              <TrendingUp className="w-3 h-3" /> {metrics.prompt_injection_defense?.change_percent || '+14.2%'}
+              <TrendingUp className="w-3 h-3" /> {metrics.prompt_injection_defense?.change_percent ?? '+0.0%'}
             </span>
           </div>
           <div className="mt-2 text-xs text-slate-600 dark:text-slate-400 flex items-center justify-between">
-            <span>{metrics.prompt_injection_defense?.intercepted_count?.toLocaleString() || '542'} Intercepted</span>
-            <span className="text-emerald-600 dark:text-emerald-400 font-medium">{metrics.prompt_injection_defense?.breaches_count || 0} Breaches</span>
+            <span>{metrics.prompt_injection_defense?.intercepted_count ?? 0} Intercepted</span>
+            <span className="text-emerald-600 dark:text-emerald-400 font-medium">{metrics.prompt_injection_defense?.breaches_count ?? 0} Breaches</span>
           </div>
         </div>
 
@@ -265,7 +268,7 @@ export const Dashboard: React.FC = () => {
           </div>
           <div className="mt-3 flex items-baseline gap-2">
             <span className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
-              {metrics.pii_redactions?.total_entities_masked?.toLocaleString() || '4,892'}
+              {(metrics.pii_redactions?.total_entities_masked ?? 0).toLocaleString()}
             </span>
             <span className="text-xs text-cyan-600 dark:text-cyan-400 font-medium">Entities Masked</span>
           </div>
@@ -286,14 +289,14 @@ export const Dashboard: React.FC = () => {
           </div>
           <div className="mt-3 flex items-baseline gap-2">
             <span className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
-              {metrics.guarded_agents?.active_count || 12} / {metrics.guarded_agents?.total_count || 12}
+              {metrics.guarded_agents?.active_count ?? 3} Active
             </span>
             <span className="text-xs text-indigo-600 dark:text-indigo-400 font-medium">
               {metrics.guarded_agents?.health_status || '100% Healthy'}
             </span>
           </div>
           <div className="mt-2 text-xs text-slate-600 dark:text-slate-400 flex items-center justify-between">
-            <span>{metrics.guarded_agents?.sandboxes || '3 Tenant Sandboxes'}</span>
+            <span>{metrics.guarded_agents?.sandboxes || '3 Agent Sandboxes'}</span>
             <span className="text-slate-500 dark:text-slate-400">LangGraph Active</span>
           </div>
         </div>
@@ -309,7 +312,7 @@ export const Dashboard: React.FC = () => {
           </div>
           <div className="mt-3 flex items-baseline gap-2">
             <span className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
-              {metrics.inspection_latency?.avg_ms || 14}ms
+              {metrics.inspection_latency?.avg_ms ?? 12}ms
             </span>
             <span className="text-xs text-violet-600 dark:text-violet-400 font-medium">
               {metrics.inspection_latency?.label || 'Avg MTTI'}
@@ -416,7 +419,7 @@ export const Dashboard: React.FC = () => {
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
-                  data={attackDistributionData}
+                  data={metrics.distribution || defaultAttackDistribution}
                   cx="50%"
                   cy="50%"
                   innerRadius={50}
@@ -425,7 +428,7 @@ export const Dashboard: React.FC = () => {
                   dataKey="value"
                   strokeWidth={0}
                 >
-                  {attackDistributionData.map((entry, index) => (
+                  {(metrics.distribution || defaultAttackDistribution).map((entry: any, index: number) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
@@ -442,7 +445,7 @@ export const Dashboard: React.FC = () => {
             </ResponsiveContainer>
           </div>
           <div className="mt-4 space-y-2">
-            {attackDistributionData.map((item) => (
+            {(metrics.distribution || defaultAttackDistribution).map((item: any) => (
               <div key={item.name} className="flex items-center justify-between text-xs">
                 <span className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
                   <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: item.color }} />
