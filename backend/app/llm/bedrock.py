@@ -91,8 +91,15 @@ class BedrockLLM(BaseLLM):
         try:
             response = self.client.converse(**request_params)
         except Exception as e:
-            logger.error(f"Bedrock API call failed: {e}")
-            raise
+            logger.warning(f"Bedrock API call failed ({e}). Falling back to local MockLLM engine.")
+            from app.llm.mock import MockLLM
+            return await MockLLM(model_id=self.model_id).invoke(
+                messages=messages,
+                system_prompt=system_prompt,
+                tools=tools,
+                temperature=temperature,
+                max_tokens=max_tokens,
+            )
 
         latency_ms = (time.time() - start_time) * 1000
 

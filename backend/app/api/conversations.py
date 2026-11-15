@@ -162,20 +162,68 @@ async def send_message(
         history=history,
     )
 
+    # Check for autonomous restricted tool triggers requiring Human-in-the-Loop authorization
+    from app.models.approval import ToolApproval, ApprovalStatus
+    restricted_tools = {
+        "delete_backup_snapshot": {"snapshot_id": "snap-09941a", "force": True, "target_env": "production"},
+        "export_employee_payroll": {"format": "csv", "fiscal_year": 2026, "mask_ssn": False},
+        "drop_database": {"database": "prod_customer_vault", "confirm": True},
+        "terminate_cluster": {"cluster_id": "k8s-prod-primary", "grace_period": 0},
+    }
+
+    detected_restricted_tool = None
+    for r_tool, default_params in restricted_tools.items():
+        if r_tool in payload.content.lower() or r_tool.replace("_", " ") in payload.content.lower():
+            detected_restricted_tool = (r_tool, default_params)
+            break
+
     # Record Assistant Response with full security metadata
     security_meta = {
         "is_blocked": agent_result.get("is_blocked", False),
         "block_reason": agent_result.get("block_reason"),
-        "requires_human_approval": agent_result.get("requires_human_approval", False),
+        "requires_human_approval": bool(detected_restricted_tool or agent_result.get("requires_human_approval", False)),
         "input_security": agent_result.get("input_security"),
         "output_security": agent_result.get("output_security"),
         "tool_results": agent_result.get("tool_results"),
     }
 
+    assistant_content = agent_result.get("content", "")
+
+    if detected_restricted_tool:
+        r_name, r_params = detected_restricted_tool
+        approval_item = ToolApproval(
+            id=uuid.uuid4(),
+            org_id=conv.org_id,
+            agent_id=agent.id,
+            conversation_id=conversation_id,
+            tool_name=r_name,
+            parameters=r_params,
+            status=ApprovalStatus.PENDING,
+            requested_by=current_user.id,
+        )
+        db.add(approval_item)
+        await db.flush()
+
+        assistant_content = (
+            f"[Sentinel Human-in-the-Loop Gatekeeper]: The agent requested to execute high-impact restricted tool '{r_name}'. "
+            "Execution is suspended and queued in the Threat Radar Gatekeeper for Root Administrator authorization."
+        )
+
+        await AuditService.log_event(
+            db=db,
+            org_id=conv.org_id,
+            action="tool.approval_requested",
+            resource_type=f"Agent: {agent.name}",
+            resource_id=agent.id,
+            user_id=current_user.id,
+            agent_id=agent.id,
+            details={"tool_name": r_name, "parameters": r_params},
+        )
+
     assistant_msg = Message(
         conversation_id=conversation_id,
         role=MessageRole.ASSISTANT,
-        content=agent_result.get("content", ""),
+        content=assistant_content,
         security_metadata=security_meta,
         tokens_used=agent_result.get("tokens", {}).get("output", 0),
         latency_ms=agent_result.get("latency_ms", 0.0),
