@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { ShieldAlert, ArrowLeft, KeyRound } from 'lucide-react';
+import { ShieldAlert, ArrowLeft, Lock } from 'lucide-react';
 import { useAuth, UserRoleType } from '../../context/AuthContext';
 
 interface ProtectedRouteProps {
@@ -9,7 +9,7 @@ interface ProtectedRouteProps {
 }
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedRoles }) => {
-  const { user, isAuthenticated, isRole, impersonateRole } = useAuth();
+  const { user, isAuthenticated, isRole } = useAuth();
   const navigate = useNavigate();
 
   if (!isAuthenticated) {
@@ -38,9 +38,15 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowe
             Your current authenticated profile <span className="text-cyan-300 font-bold">[{user?.clearance_level}]</span> does not possess the requisite operational privileges to access this tactical console. Required roles: <span className="text-rose-400 font-bold">{allowedRoles.join(', ').toUpperCase()}</span>.
           </p>
 
-          <div className="p-3 rounded bg-slate-950 border border-slate-900 text-xs text-slate-500 space-y-1">
-            <div>AUDIT EVENT: 403_FORBIDDEN_INTERCEPT</div>
+          <div className="p-3.5 rounded bg-slate-950 border border-slate-900 text-xs text-slate-500 space-y-1.5">
+            <div className="flex items-center justify-between">
+              <span className="text-slate-400">AUDIT EVENT: 403_FORBIDDEN_INTERCEPT</span>
+              <span className="text-rose-400 font-bold">LOGGED TO TAMPER-PROOF LEDGER</span>
+            </div>
             <div>ACTOR: {user?.email}</div>
+            <div className="text-[10px] text-slate-600">
+              SHA-256 signature generated and dispatched to Security Operations Center.
+            </div>
           </div>
 
           <div className="pt-3 border-t border-slate-800 flex items-center justify-between">
@@ -55,16 +61,13 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowe
               className="px-4 py-2 rounded bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs text-slate-300 flex items-center gap-1.5 transition-colors"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
-              RETURN TO SAFETY
+              RETURN TO AUTHORIZED CONSOLE
             </button>
 
-            <button
-              onClick={() => impersonateRole('super_admin')}
-              className="px-4 py-2 rounded bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-xs font-bold flex items-center gap-1.5 transition-all shadow-[0_0_10px_rgba(6,182,212,0.3)]"
-            >
-              <KeyRound className="w-3.5 h-3.5" />
-              OVERRIDE WITH ROOT [L5]
-            </button>
+            <div className="flex items-center gap-1.5 text-[11px] text-slate-500">
+              <Lock className="w-3.5 h-3.5 text-slate-600" />
+              Contact Root Admin to request privilege elevation
+            </div>
           </div>
         </div>
       </div>
@@ -73,4 +76,3 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowe
 
   return children;
 };
-

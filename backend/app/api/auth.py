@@ -245,22 +245,18 @@ async def delete_user(
 async def impersonate_role(
     req: UserRoleUpdateRequest,
     db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(require_role(UserRole.SUPER_ADMIN)),
 ):
     """
-    Tactical Demo Switcher:
-    Finds a real user from the database matching the requested role,
-    or falls back to creating one on the fly if needed.
+    Authorized Role Auditing:
+    Strictly restricted to Level 5 Root Security Administrators.
+    Non-super-admins cannot impersonate or elevate privileges.
     """
     stmt = select(User).where(User.role == req.role).limit(1)
     result = await db.execute(stmt)
     user = result.scalars().first()
 
     if not user:
-        # Fallback to root user if role has no persona yet
-        stmt_root = select(User).where(User.role == UserRole.SUPER_ADMIN).limit(1)
-        user = (await db.execute(stmt_root)).scalars().first()
-
-    if not user:
-        raise HTTPException(status_code=500, detail="Database has no users seeded.")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No user found matching requested clearance tier.")
 
     return build_profile_and_token(user)

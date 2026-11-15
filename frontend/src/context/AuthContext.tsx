@@ -114,47 +114,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const impersonateRole = async (targetRole: UserRoleType) => {
-    try {
-      const data = await api.impersonate(targetRole);
-      setToken(data.access_token);
-      setUser(data.user);
-      localStorage.setItem('sentinel_token', data.access_token);
-      localStorage.setItem('sentinel_user', JSON.stringify(data.user));
-    } catch {
-      // Local fallback for instantaneous UI switching
-      const clearanceMap: Record<UserRoleType, string> = {
-        super_admin: 'LVL-5 [ROOT]',
-        admin: 'LVL-5 [ROOT]',
-        developer: 'LVL-3 [DEV]',
-        operator: 'LVL-3 [DEV]',
-        auditor: 'LVL-2 [AUDIT]',
-        end_user: 'LVL-1 [USER]',
-        viewer: 'LVL-1 [USER]',
-      };
-
-      const nameMap: Record<UserRoleType, string> = {
-        super_admin: 'Aditya Yadav (Root)',
-        admin: 'Aditya Yadav (Root)',
-        developer: 'Alex Vance (AI Dev)',
-        operator: 'Alex Vance (AI Dev)',
-        auditor: 'Elena Rostova (Compliance)',
-        end_user: 'Marcus Kane (Analyst)',
-        viewer: 'Marcus Kane (Analyst)',
-      };
-
-      const switchedUser: UserProfile = {
-        id: 'user-' + targetRole,
-        email: `${targetRole}@sentinelai.dev`,
-        full_name: nameMap[targetRole],
-        role: targetRole,
-        org_id: '11111111-1111-1111-1111-111111111111',
-        clearance_level: clearanceMap[targetRole] || 'LVL-1 [USER]',
-        permissions: targetRole === 'super_admin' || targetRole === 'admin' ? ['*'] : [targetRole],
-      };
-
-      setUser(switchedUser);
-      localStorage.setItem('sentinel_user', JSON.stringify(switchedUser));
+    if (user?.role !== 'super_admin' && user?.role !== 'admin') {
+      throw new Error('Access Denied: Only Root Security Administrator can perform role auditing.');
     }
+    const data = await api.impersonate(targetRole);
+    setToken(data.access_token);
+    setUser(data.user);
+    localStorage.setItem('sentinel_token', data.access_token);
+    localStorage.setItem('sentinel_user', JSON.stringify(data.user));
   };
 
   const logout = () => {
