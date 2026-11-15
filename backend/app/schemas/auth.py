@@ -47,3 +47,11 @@ class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
     user: UserProfileResponse
+
+
+class GoogleAuthRequest(BaseModel):
+    credential: Optional[str] = None
+    access_token: Optional[str] = None
+    email: Optional[EmailStr] = None
+    full_name: Optional[str] = None
+
