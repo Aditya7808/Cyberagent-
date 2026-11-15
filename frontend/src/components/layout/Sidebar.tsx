@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import {
-  Activity,
+  Radar,
   Bot,
   Terminal,
   Crosshair,
@@ -11,7 +11,6 @@ import {
   Users,
   Shield,
   Layers,
-  Sparkles,
   ChevronRight,
   Cpu
 } from 'lucide-react';
@@ -35,7 +34,7 @@ const navSections: NavSection[] = [
   {
     title: 'OPERATIONAL DEFENSE',
     items: [
-      { name: 'Threat Radar', href: '/', icon: Activity, roles: ['super_admin', 'admin', 'developer', 'auditor'], accent: 'indigo' },
+      { name: 'Threat Radar', href: '/', icon: Radar, roles: ['super_admin', 'admin', 'developer', 'auditor'], accent: 'indigo' },
       { name: 'Agent Registry', href: '/agents', icon: Bot, roles: ['super_admin', 'admin', 'developer', 'operator'], badge: '12 Active', accent: 'emerald' },
       { name: 'Injection Playground', href: '/playground', icon: Terminal, roles: ['super_admin', 'admin', 'developer', 'operator', 'end_user', 'viewer'], accent: 'cyan' },
     ],
@@ -132,8 +131,7 @@ export const Sidebar: React.FC = () => {
 
           return (
             <div key={section.title} className="space-y-1">
-              <div className="px-3 pb-1 text-[10px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 flex items-center gap-1.5">
-                <Sparkles className="w-3 h-3" />
+              <div className="px-3 pb-1 text-[10px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
                 {section.title}
               </div>
 

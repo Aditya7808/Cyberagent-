@@ -5,7 +5,6 @@ import {
   Check,
   X,
   Terminal,
-  Activity,
   Zap,
   Lock,
   ArrowUpRight,
@@ -15,9 +14,7 @@ import {
   FileText,
   Clock,
   RotateCcw,
-  Sparkles,
   Cpu,
-  BrainCircuit,
   ShieldCheck,
   ShieldOff,
   ChevronRight,
@@ -67,7 +64,6 @@ export const Dashboard: React.FC = () => {
   const [activeRange, setActiveRange] = useState<'24h' | '7d' | '30d'>('24h');
   const [loading, setLoading] = useState(false);
   const [resetting, setResetting] = useState(false);
-  const [aiInsight, setAiInsight] = useState<string>('Sentinel AI Gateway armed. Ready for live adversarial tests.');
 
   const [metrics, setMetrics] = useState<any>({
     prompt_injection_defense: {
@@ -96,23 +92,6 @@ export const Dashboard: React.FC = () => {
     timeline: threatTimelineData,
     distribution: defaultAttackDistribution,
   });
-
-  // Simulate AI insight generation
-  useEffect(() => {
-    const insights = [
-      'Sentinel AI Gateway armed. Ready for live adversarial probes in Playground.',
-      'Heuristic AST parser active. Zero-LLM delay active on all prompt boundaries.',
-      'PII scrubber armed with Presidio + spaCy NER regex filters.',
-      'Human-in-the-Loop gatekeeper standing by for destructive tool invocations.',
-    ];
-    let idx = 0;
-    setAiInsight(insights[0]);
-    const interval = setInterval(() => {
-      idx = (idx + 1) % insights.length;
-      setAiInsight(insights[idx]);
-    }, 8000);
-    return () => clearInterval(interval);
-  }, []);
 
   const fetchDashboardData = async () => {
     try {
@@ -175,31 +154,26 @@ export const Dashboard: React.FC = () => {
     <div className="space-y-6 max-w-7xl mx-auto">
       {/* Top Banner / Threat Radar Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 shadow-sm backdrop-blur-md">
-        <div className="flex items-center gap-3.5">
-          <div className="w-10 h-10 rounded-lg bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-indigo-500 dark:text-indigo-400">
-            <Activity className="w-5 h-5" />
+        <div>
+          <div className="flex items-center gap-2.5">
+            <h1 className="text-base font-bold text-slate-900 dark:text-white tracking-tight">
+              Defense Command & Threat Radar
+            </h1>
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse" />
+              Active Intercept
+            </span>
           </div>
-          <div>
-            <div className="flex items-center gap-2.5">
-              <h1 className="text-base font-bold text-slate-900 dark:text-white tracking-tight">
-                Defense Command & Threat Radar
-              </h1>
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse" />
-                Active Intercept
-              </span>
-            </div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              Sub-15ms heuristic inspection scanning LLM inputs, tool invocations, and RAG embeddings.
-            </p>
-          </div>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            Sub-15ms heuristic inspection scanning LLM inputs, tool invocations, and RAG embeddings.
+          </p>
         </div>
 
         <div className="flex items-center gap-2.5">
           <button
             onClick={fetchDashboardData}
             disabled={loading}
-            className="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800/80 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700/60 text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center gap-1.5 transition-colors disabled:opacity-50"
+            className="px-3.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800/80 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700/60 text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center gap-1.5 transition-colors disabled:opacity-50 cursor-pointer"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-indigo-500' : ''}`} />
             Refresh Radar
@@ -207,31 +181,13 @@ export const Dashboard: React.FC = () => {
           <button
             onClick={handleResetTelemetry}
             disabled={resetting || loading}
-            className="px-3 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-xs font-medium text-rose-600 dark:text-rose-400 flex items-center gap-1.5 transition-colors disabled:opacity-50"
+            className="px-3.5 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-xs font-medium text-rose-600 dark:text-rose-400 flex items-center gap-1.5 transition-colors disabled:opacity-50 cursor-pointer"
             title="Reset telemetry counters and audit events back to zero"
           >
             <RotateCcw className={`w-3.5 h-3.5 ${resetting ? 'animate-spin' : ''}`} />
             Reset to Zero
           </button>
         </div>
-      </div>
-
-      {/* AI Insight Banner */}
-      <div className="relative overflow-hidden rounded-xl border border-indigo-500/20 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-cyan-500/10 p-4 flex items-center gap-3">
-        <div className="relative flex-shrink-0">
-          <div className="w-10 h-10 rounded-lg bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center">
-            <BrainCircuit className="w-5 h-5 text-indigo-400" />
-          </div>
-          <div className="absolute inset-0 rounded-lg bg-indigo-500/20 animate-ping opacity-20" />
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-0.5">
-            <span className="text-xs font-semibold text-indigo-400 dark:text-indigo-300">Sentinel AI Insight</span>
-            <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">LIVE</span>
-          </div>
-          <p className="text-xs text-slate-300 dark:text-slate-400 truncate">{aiInsight}</p>
-        </div>
-        <Sparkles className="w-4 h-4 text-indigo-400/50 flex-shrink-0" />
       </div>
 
       {/* 4 High-Impact KPI Stat Cards */}

@@ -4,9 +4,7 @@ import {
   Play,
   ShieldAlert,
   ShieldCheck,
-  RefreshCw,
-  BrainCircuit,
-  Zap
+  RefreshCw
 } from 'lucide-react';
 import { api } from '../lib/api';
 
@@ -112,14 +110,9 @@ export const RedTeam: React.FC = () => {
       {/* Header Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800/80">
         <div>
-          <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400">
-              <Crosshair className="w-5 h-5" />
-            </div>
-            <h1 className="text-xl font-bold text-white tracking-tight">
-              Adversarial Red Teaming
-            </h1>
-          </div>
+          <h1 className="text-xl font-bold text-white tracking-tight">
+            Adversarial Red Teaming
+          </h1>
           <p className="text-sm text-slate-400 mt-1">
             Automated penetration testing against MITRE ATLAS & OWASP LLM Top 10 threat vectors.
           </p>
@@ -175,26 +168,6 @@ export const RedTeam: React.FC = () => {
           </span>
         </div>
       )}
-
-      {/* AI Analysis Banner */}
-      <div className="relative overflow-hidden rounded-xl border border-rose-500/20 bg-gradient-to-r from-rose-500/10 via-orange-500/10 to-amber-500/10 p-4 flex items-center gap-3">
-        <div className="relative flex-shrink-0">
-          <div className="w-10 h-10 rounded-lg bg-rose-500/20 border border-rose-500/30 flex items-center justify-center">
-            <BrainCircuit className="w-5 h-5 text-rose-400" />
-          </div>
-          <div className="absolute inset-0 rounded-lg bg-rose-500/20 animate-ping opacity-20" />
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-0.5">
-            <span className="text-xs font-semibold text-rose-400 dark:text-rose-300">Adversarial Intelligence Engine</span>
-            <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">ACTIVE</span>
-          </div>
-          <p className="text-xs text-slate-300 dark:text-slate-400 truncate">
-            Continuous adversarial probe generation against MITRE ATLAS threat taxonomy. Zero breaches detected in current cycle.
-          </p>
-        </div>
-        <Zap className="w-4 h-4 text-rose-400/50 flex-shrink-0" />
-      </div>
 
       {/* Telemetry Scores */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

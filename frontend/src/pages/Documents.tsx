@@ -7,9 +7,7 @@ import {
   Building,
   HardDrive,
   Layers,
-  ShieldCheck,
-  BrainCircuit,
-  Zap
+  ShieldCheck
 } from 'lucide-react';
 
 export const Documents: React.FC = () => {
@@ -76,14 +74,9 @@ export const Documents: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800/80">
         <div>
-          <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400">
-              <Database className="w-5 h-5" />
-            </div>
-            <h1 className="text-xl font-bold text-white tracking-tight">
-              Secure RAG Vector Vault
-            </h1>
-          </div>
+          <h1 className="text-xl font-bold text-white tracking-tight">
+            Secure RAG Vector Vault
+          </h1>
           <p className="text-sm text-slate-400 mt-1">
             Multi-tenant document isolation with automatic PII sanitization and role-governed semantic retrieval.
           </p>
@@ -102,26 +95,6 @@ export const Documents: React.FC = () => {
             <option value="Wayne">Wayne Enterprises</option>
           </select>
         </div>
-      </div>
-
-      {/* AI Semantic Search Banner */}
-      <div className="relative overflow-hidden rounded-xl border border-indigo-500/20 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-cyan-500/10 p-4 flex items-center gap-3">
-        <div className="relative flex-shrink-0">
-          <div className="w-10 h-10 rounded-lg bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center">
-            <BrainCircuit className="w-5 h-5 text-indigo-400" />
-          </div>
-          <div className="absolute inset-0 rounded-lg bg-indigo-500/20 animate-ping opacity-20" />
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-0.5">
-            <span className="text-xs font-semibold text-indigo-400 dark:text-indigo-300">Semantic Vector Engine</span>
-            <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">ARMED</span>
-          </div>
-          <p className="text-xs text-slate-300 dark:text-slate-400 truncate">
-            1,536-dimensional embedding space with tenant-isolated cosine similarity search. PII scrubbed at ingestion.
-          </p>
-        </div>
-        <Zap className="w-4 h-4 text-indigo-400/50 flex-shrink-0" />
       </div>
 
       {/* Semantic Vector Search */}
