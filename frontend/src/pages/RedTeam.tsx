@@ -1,80 +1,55 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Crosshair,
   Play,
   ShieldAlert,
+  ShieldCheck,
   RefreshCw,
   BrainCircuit,
   Zap
 } from 'lucide-react';
 import { api } from '../lib/api';
 
+const categoryMitreMap: Record<string, { mitre_id: string; severity: string; label: string }> = {
+  DIRECT_INJECTION: { mitre_id: 'AML.T0051', severity: 'Critical', label: 'Direct Injection' },
+  JAILBREAK_ROLEPLAY: { mitre_id: 'AML.T0054', severity: 'Critical', label: 'Jailbreak Roleplay' },
+  DATA_EXTRACTION: { mitre_id: 'AML.T0053', severity: 'Critical', label: 'Data Extraction' },
+  DELIMITER_INJECTION: { mitre_id: 'AML.T0052', severity: 'High', label: 'Delimiter Bypass' },
+  PII_LEAKAGE: { mitre_id: 'AML.T0055', severity: 'Medium', label: 'PII Exfiltration' },
+  BENIGN: { mitre_id: 'AML.T0000', severity: 'Low', label: 'Benign Query' },
+};
+
 export const RedTeam: React.FC = () => {
   const [scanning, setScanning] = useState(false);
   const [scanSummary, setScanSummary] = useState({
-    total_attacks: 12,
-    blocked_attacks: 12,
-    block_rate_percent: 100.0,
+    total_attacks: 0,
+    blocked_attacks: 0,
+    block_rate_percent: 0.0,
     attack_success_rate_percent: 0.0,
-    status: 'Hardened',
+    status: 'Ready',
   });
 
-  const [testResults, setTestResults] = useState<any[]>([
-    {
-      id: 'VEC-001',
-      name: 'System Prompt Extraction via Hypnotic Token',
-      category: 'Data Extraction',
-      mitre_id: 'AML.T0054',
-      outcome: 'Blocked',
-      detected_vectors: ['Direct Injection', 'System Prompt Leak'],
-      severity: 'Critical',
-    },
-    {
-      id: 'VEC-002',
-      name: 'DAN 11.0 Persona Escalation Jailbreak',
-      category: 'Jailbreak Roleplay',
-      mitre_id: 'AML.T0051',
-      outcome: 'Blocked',
-      detected_vectors: ['Jailbreak Roleplay'],
-      severity: 'High',
-    },
-    {
-      id: 'VEC-003',
-      name: 'Base64 Encoded Toxic Instruction',
-      category: 'Obfuscation Bypass',
-      mitre_id: 'AML.T0052',
-      outcome: 'Blocked',
-      detected_vectors: ['Base64 Payload Decoded', 'Toxic Injection'],
-      severity: 'Critical',
-    },
-    {
-      id: 'VEC-004',
-      name: 'Privilege Escalation Tool Hijack',
-      category: 'Rogue Tool Call',
-      mitre_id: 'AML.T0053',
-      outcome: 'Blocked',
-      detected_vectors: ['Unauthorized Tool Invocation'],
-      severity: 'Critical',
-    },
-    {
-      id: 'VEC-005',
-      name: 'Confidential Salary & SSN Harvest',
-      category: 'PII Exfiltration',
-      mitre_id: 'AML.T0055',
-      outcome: 'Masked',
-      detected_vectors: ['SSN Redacted', 'Email Redacted'],
-      severity: 'Medium',
-    },
-    {
-      id: 'VEC-006',
-      name: 'RAG Context Poisoning via Document Insertion',
-      category: 'Indirect Injection',
-      mitre_id: 'AML.T0050',
-      outcome: 'Blocked',
-      detected_vectors: ['Indirect Injection Flagged'],
-      severity: 'High',
-    },
-  ]);
+  const [testResults, setTestResults] = useState<any[]>([]);
+
+  const formatResults = (rawResults: any[]) => {
+    return rawResults.map((item) => {
+      const meta = categoryMitreMap[item.category] || {
+        mitre_id: item.mitre_id || 'AML.T0050',
+        severity: item.severity || 'High',
+        label: item.category || 'Adversarial Probe',
+      };
+      return {
+        ...item,
+        category: meta.label,
+        mitre_id: item.mitre_id || meta.mitre_id,
+        severity: item.severity || meta.severity,
+        outcome: item.outcome ? item.outcome.charAt(0).toUpperCase() + item.outcome.slice(1).toLowerCase() : 'Blocked',
+        detected_vectors: item.detected_vectors && item.detected_vectors.length > 0 
+          ? item.detected_vectors 
+          : [item.category || 'Heuristic Flag'],
+      };
+    });
+  };
 
   const handleRunScan = async () => {
     setScanning(true);
@@ -82,16 +57,20 @@ export const RedTeam: React.FC = () => {
       const result = await api.triggerAdversarialScan();
       if (result) {
         setScanSummary(result.summary || scanSummary);
-        if (result.results) setTestResults(result.results);
+        const rawList = result.test_results || result.results || [];
+        setTestResults(formatResults(rawList));
       }
-    } catch {
-      setTimeout(() => {
-        setScanning(false);
-      }, 1500);
-      return;
+    } catch (err) {
+      console.error('Failed to run adversarial scan', err);
+    } finally {
+      setScanning(false);
     }
-    setScanning(false);
   };
+
+  // Run live scan on mount so real automated assessment data appears without dummy mock state
+  useEffect(() => {
+    handleRunScan();
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -218,9 +197,19 @@ export const RedTeam: React.FC = () => {
 
               <div className="shrink-0">
                 <span className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 ${
-                  test.outcome === 'Blocked' ? 'badge-rose' : 'badge-indigo'
+                  test.outcome?.toLowerCase() === 'blocked' 
+                    ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
+                    : test.outcome?.toLowerCase() === 'vulnerable'
+                    ? 'bg-rose-500/10 text-rose-400 border border-rose-500/30'
+                    : test.outcome?.toLowerCase() === 'masked'
+                    ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/30'
+                    : 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/30'
                 }`}>
-                  <ShieldAlert className="w-3.5 h-3.5" />
+                  {test.outcome?.toLowerCase() === 'blocked' ? (
+                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                  ) : (
+                    <ShieldAlert className="w-3.5 h-3.5" />
+                  )}
                   {test.outcome}
                 </span>
               </div>
