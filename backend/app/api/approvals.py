@@ -96,7 +96,7 @@ async def resolve_tool_approval(
     approval_id: uuid.UUID,
     payload: ToolApprovalResolve,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(require_role(UserRole.ADMIN, UserRole.OPERATOR)),
+    current_user: User = Depends(require_role(UserRole.SUPER_ADMIN, UserRole.ADMIN)),
 ):
     approval = await db.get(ToolApproval, approval_id)
     if not approval or approval.org_id != current_user.org_id:

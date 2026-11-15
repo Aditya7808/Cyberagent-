@@ -44,6 +44,8 @@ dist-ssr/
 
 # Database & Storage
 data/
+*.db
+*.sqlite
 *.sqlite3
 pgdata/
 

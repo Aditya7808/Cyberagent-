@@ -18,7 +18,7 @@ scanner = AdversarialScanner()
 async def create_policy(
     payload: PolicyCreate,
     db: AsyncSession = Depends(get_db),
-    _user=Depends(require_role(UserRole.ADMIN)),
+    _user=Depends(require_role(UserRole.SUPER_ADMIN, UserRole.ADMIN)),
 ):
     policy = Policy(
         org_id=payload.org_id,
@@ -82,7 +82,7 @@ async def update_policy(
 async def delete_policy(
     policy_id: uuid.UUID,
     db: AsyncSession = Depends(get_db),
-    _user=Depends(require_role(UserRole.ADMIN)),
+    _user=Depends(require_role(UserRole.SUPER_ADMIN, UserRole.ADMIN)),
 ):
     policy = await db.get(Policy, policy_id)
     if not policy:
@@ -93,7 +93,7 @@ async def delete_policy(
 
 @router.post("/scan/adversarial", response_model=Dict[str, Any])
 async def trigger_adversarial_scan(
-    _user=Depends(get_current_user),
+    _user=Depends(require_role(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DEVELOPER)),
 ):
     """
     Executes the versioned red-team attack suite against the security layer

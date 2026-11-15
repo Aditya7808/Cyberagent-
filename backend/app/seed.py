@@ -123,6 +123,32 @@ async def seed_data():
                 )
                 session.add(policy)
 
+        # Seed Sentinel v2.0 Global Personas
+        v2_personas = [
+            ("root@sentinelai.dev", "Aditya Yadav", UserRole.SUPER_ADMIN, "SentinelRoot2026!"),
+            ("dev@sentinelai.dev", "Alex Vance", UserRole.DEVELOPER, "SentinelDev2026!"),
+            ("auditor@sentinelai.dev", "Elena Rostova", UserRole.AUDITOR, "SentinelAudit2026!"),
+            ("user@sentinelai.dev", "Marcus Kane", UserRole.END_USER, "SentinelUser2026!"),
+        ]
+        
+        # Get first org to attach personas
+        first_org_res = await session.execute(select(Organization).limit(1))
+        first_org = first_org_res.scalars().first()
+        if first_org:
+            for email, name, role, pwd in v2_personas:
+                u_chk = await session.execute(select(User).where(User.email == email))
+                if not u_chk.scalars().first():
+                    session.add(
+                        User(
+                            org_id=first_org.id,
+                            email=email,
+                            full_name=name,
+                            hashed_password=pwd_context.hash(pwd),
+                            role=role,
+                        )
+                    )
+                    logger.info(f"Seeded Sentinel Persona: {email} ({role.value})")
+
         await session.commit()
         logger.info("Database seeding completed successfully!")
 

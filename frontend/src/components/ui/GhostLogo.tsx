@@ -121,3 +121,4 @@ export const GhostLogo: React.FC<GhostLogoProps> = ({
     </div>
   );
 };
+

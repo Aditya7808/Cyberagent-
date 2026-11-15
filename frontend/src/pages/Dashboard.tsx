@@ -23,6 +23,7 @@ import {
   ResponsiveContainer 
 } from 'recharts';
 import { api } from '../lib/api';
+import { useAuth } from '../context/AuthContext';
 
 const threatTimelineData = [
   { time: '06:00', injections: 12, pii_leaks: 45, jailbreaks: 3 },
@@ -35,6 +36,7 @@ const threatTimelineData = [
 ];
 
 export const Dashboard: React.FC = () => {
+  const { user } = useAuth();
   const [approvals, setApprovals] = useState<any[]>([
     {
       id: 'APPR-SEC-091',
@@ -295,20 +297,29 @@ export const Dashboard: React.FC = () => {
                 </div>
 
                 <div className="flex items-center gap-2 shrink-0">
-                  <button
-                    onClick={() => handleResolve(appr.id, true)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/50 text-emerald-300 text-xs font-bold transition-all shadow-[0_0_10px_rgba(16,185,129,0.2)]"
-                  >
-                    <Check className="w-3.5 h-3.5" />
-                    AUTHORIZE
-                  </button>
-                  <button
-                    onClick={() => handleResolve(appr.id, false)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/50 text-rose-300 text-xs font-bold transition-all"
-                  >
-                    <X className="w-3.5 h-3.5" />
-                    DENY & KILL
-                  </button>
+                  {user?.role === 'super_admin' || user?.role === 'admin' ? (
+                    <>
+                      <button
+                        onClick={() => handleResolve(appr.id, true)}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/50 text-emerald-300 text-xs font-bold transition-all shadow-[0_0_10px_rgba(16,185,129,0.2)]"
+                      >
+                        <Check className="w-3.5 h-3.5" />
+                        AUTHORIZE
+                      </button>
+                      <button
+                        onClick={() => handleResolve(appr.id, false)}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/50 text-rose-300 text-xs font-bold transition-all"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                        DENY & KILL
+                      </button>
+                    </>
+                  ) : (
+                    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-slate-900 border border-slate-800 text-[10px] text-slate-500 font-bold">
+                      <Lock className="w-3 h-3 text-amber-500" />
+                      ROOT L5 CLEARANCE REQUIRED
+                    </div>
+                  )}
                 </div>
               </div>
             ))}

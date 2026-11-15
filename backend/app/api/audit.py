@@ -4,9 +4,9 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Response
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.deps import get_current_user, get_db
+from app.api.deps import get_current_user, get_db, require_role
 from app.models.audit_log import AuditLog
-from app.models.user import User
+from app.models.user import User, UserRole
 
 router = APIRouter(prefix="/audit", tags=["Audit"])
 
@@ -118,7 +118,7 @@ async def list_security_incidents(
 async def export_audit_log(
     format: str = Query("json", pattern="^(json|csv)$"),
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.AUDITOR)),
 ):
     """
     Exports immutable audit records for regulatory compliance and forensics.

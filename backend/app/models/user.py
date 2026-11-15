@@ -6,7 +6,7 @@ from sqlalchemy import Boolean, DateTime, Enum, ForeignKey, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.database import Base
+from app.database import Base, GUID
 
 if TYPE_CHECKING:
     from app.models.organization import Organization
@@ -14,6 +14,11 @@ if TYPE_CHECKING:
 
 
 class UserRole(str, enum.Enum):
+    SUPER_ADMIN = "super_admin"
+    DEVELOPER = "developer"
+    AUDITOR = "auditor"
+    END_USER = "end_user"
+    # Legacy aliases
     ADMIN = "admin"
     OPERATOR = "operator"
     VIEWER = "viewer"
@@ -22,9 +27,9 @@ class UserRole(str, enum.Enum):
 class User(Base):
     __tablename__ = "users"
 
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id: Mapped[uuid.UUID] = mapped_column(GUID, primary_key=True, default=uuid.uuid4)
     org_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("organizations.id", ondelete="CASCADE"), nullable=False, index=True
+        GUID, ForeignKey("organizations.id", ondelete="CASCADE"), nullable=False, index=True
     )
     email: Mapped[str] = mapped_column(String(255), unique=True, index=True, nullable=False)
     full_name: Mapped[str] = mapped_column(String(255), nullable=False)
@@ -37,12 +42,12 @@ class User(Base):
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
 
     created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
+        DateTime, default=datetime.utcnow
     )
     updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        default=lambda: datetime.now(timezone.utc),
-        onupdate=lambda: datetime.now(timezone.utc),
+        DateTime,
+        default=datetime.utcnow,
+        onupdate=datetime.utcnow,
     )
 
     # Relationships
