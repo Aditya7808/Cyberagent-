@@ -40,7 +40,7 @@ export const Agents: React.FC = () => {
       .then((data) => {
         if (data && data.length > 0) setAgents(data);
       })
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   return (

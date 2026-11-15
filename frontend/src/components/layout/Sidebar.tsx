@@ -58,22 +58,22 @@ export const Sidebar: React.FC = () => {
   const { user, isRole } = useAuth();
 
   return (
-    <aside className="w-64 border-r border-slate-800/80 bg-slate-950/80 backdrop-blur-xl flex flex-col h-screen sticky top-0 z-30 select-none">
+    <aside className="w-64 border-r border-slate-200 dark:border-slate-800/80 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl flex flex-col h-screen sticky top-0 z-30 select-none transition-colors duration-200">
       {/* Brand Header */}
-      <div className="h-16 flex items-center px-5 gap-3 border-b border-slate-800/80">
+      <div className="h-16 flex items-center px-5 gap-3 border-b border-slate-200 dark:border-slate-800/80">
         <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 flex items-center justify-center text-white shadow-md shadow-indigo-500/20 ring-1 ring-white/20">
           <Shield className="w-5 h-5 fill-white/20" />
         </div>
         <div>
           <div className="flex items-center gap-1.5">
-            <span className="font-bold text-base tracking-tight text-white">
-              Sentinel<span className="text-indigo-400">AI</span>
+            <span className="font-bold text-base tracking-tight text-slate-900 dark:text-white">
+              Sentinel<span className="text-indigo-600 dark:text-indigo-400">AI</span>
             </span>
-            <span className="px-1.5 py-0.2 rounded text-[10px] font-semibold bg-indigo-500/10 border border-indigo-500/30 text-indigo-300">
+            <span className="px-1.5 py-0.2 rounded text-[10px] font-semibold bg-indigo-500/10 border border-indigo-500/30 text-indigo-600 dark:text-indigo-300">
               v2.0
             </span>
           </div>
-          <div className="text-[11px] text-slate-400 font-medium">
+          <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
             AI Agent Security Control
           </div>
         </div>
@@ -87,7 +87,7 @@ export const Sidebar: React.FC = () => {
 
           return (
             <div key={section.title} className="space-y-1">
-              <div className="px-3 pb-1 text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+              <div className="px-3 pb-1 text-[10px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
                 {section.title}
               </div>
 
@@ -98,17 +98,17 @@ export const Sidebar: React.FC = () => {
                   className={({ isActive }) =>
                     `flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-all ${
                       isActive
-                        ? 'bg-indigo-600/15 text-indigo-300 border border-indigo-500/30 font-semibold shadow-sm'
-                        : 'text-slate-300 hover:text-white hover:bg-slate-900/60 border border-transparent'
+                        ? 'bg-indigo-600/10 dark:bg-indigo-600/15 text-indigo-600 dark:text-indigo-300 border border-indigo-500/30 font-semibold shadow-sm'
+                        : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-900/60 border border-transparent'
                     }`
                   }
                 >
                   <div className="flex items-center gap-2.5">
-                    <item.icon className="w-4 h-4 text-slate-400 group-hover:text-white" />
+                    <item.icon className="w-4 h-4 text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white" />
                     <span>{item.name}</span>
                   </div>
                   {item.badge && (
-                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-slate-800 text-slate-400 font-normal">
+                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-normal">
                       {item.badge}
                     </span>
                   )}
@@ -120,18 +120,18 @@ export const Sidebar: React.FC = () => {
       </nav>
 
       {/* Tenant / Organization Footer Card */}
-      <div className="p-3 border-t border-slate-800/80 bg-slate-900/40">
-        <div className="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800 flex items-center justify-between">
+      <div className="p-3 border-t border-slate-200 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-900/40">
+        <div className="p-2.5 rounded-lg bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 flex items-center justify-between shadow-sm">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-md bg-slate-800 flex items-center justify-center text-slate-400">
+            <div className="w-6 h-6 rounded-md bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400">
               <Layers className="w-3.5 h-3.5" />
             </div>
             <div>
-              <div className="text-[11px] font-semibold text-slate-200">Acme Defense Corp</div>
-              <div className="text-[10px] text-slate-500">Tenant: ACME_CORP_01</div>
+              <div className="text-[11px] font-semibold text-slate-800 dark:text-slate-200">Acme Defense Corp</div>
+              <div className="text-[10px] text-slate-400 dark:text-slate-500">Tenant: ACME_CORP_01</div>
             </div>
           </div>
-          <span className="w-2 h-2 rounded-full bg-emerald-400" title="Connected" />
+          <span className="w-2 h-2 rounded-full bg-emerald-500" title="Connected" />
         </div>
       </div>
     </aside>

@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Lock, Shield, ArrowRight, UserPlus, CheckCircle2, AlertCircle, KeyRound, Mail, User } from 'lucide-react';
+import { Lock, Shield, ArrowRight, UserPlus, CheckCircle2, AlertCircle, KeyRound, Mail, User, Sun, Moon } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 
 export const Login: React.FC = () => {
   const navigate = useNavigate();
   const { login, register } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   
   const [mode, setMode] = useState<'login' | 'register'>('login');
   const [fullName, setFullName] = useState('');
@@ -46,7 +48,24 @@ export const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen enterprise-bg flex items-center justify-center p-4 selection:bg-indigo-500/30">
+    <div className="min-h-screen enterprise-bg flex items-center justify-center p-4 selection:bg-indigo-500/30 relative">
+      {/* Top Right Theme Toggle */}
+      <div className="absolute top-6 right-6">
+        <button
+          type="button"
+          onClick={toggleTheme}
+          title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} theme`}
+          className="px-3 py-1.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-slate-700/80 text-slate-300 hover:text-white transition-all flex items-center gap-2 shadow-sm text-xs font-semibold cursor-pointer"
+        >
+          {theme === 'dark' ? (
+            <Sun className="w-4 h-4 text-amber-400" />
+          ) : (
+            <Moon className="w-4 h-4 text-indigo-400" />
+          )}
+          <span className="capitalize">{theme === 'dark' ? 'Dark' : 'Light'} Mode</span>
+        </button>
+      </div>
+
       <div className="w-full max-w-md enterprise-card p-8 rounded-2xl relative shadow-2xl space-y-6">
         {/* Brand Header */}
         <div className="flex flex-col items-center text-center space-y-2.5">

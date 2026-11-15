@@ -1,4 +1,4 @@
-# 🛡️ SentinelAI — Enterprise AI Agent Security & Reliability Platform
+# SentinelAI — Enterprise AI Agent Security & Reliability Platform
 
 [![CI/CD Pipeline](https://github.com/Aditya7808/Cyberagent-/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/Aditya7808/Cyberagent-/actions)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/)
@@ -11,22 +11,22 @@ SentinelAI is an enterprise platform designed to **assess, protect, and monitor 
 
 ---
 
-## 🗺️ Completed 8-Phase Delivery Roadmap
+## Completed 8-Phase Delivery Roadmap
 
 | Phase | Milestone | Deliverables | Status |
 |-------|-----------|--------------|--------|
-| **P0** | **Foundation** | Monorepo structure, FastAPI, PostgreSQL + `pgvector`, Alembic, 3-tenant synthetic RAG data (`Acme`, `Globex`, `Wayne`) | ✅ Done |
-| **P1** | **Agent Playground** | LangGraph stateful workflow, Bedrock + Mock LLM providers, tool execution engine, conversation history, interactive Playground UI | ✅ Done |
-| **P2** | **Security Baseline** | Custom PII/Secrets engine (AWS keys, SSNs, Badges), multi-vector injection detector (DAN, Developer mode, zero-width obfuscation), dynamic policies API | ✅ Done |
-| **P3** | **Tool Authorization** | Parameter schema validator, approval state machine (`pending`, `approved`, `rejected`), audit logging service, Human-in-the-Loop UI | ✅ Done |
-| **P4** | **Secure RAG** | Semantic text chunker, 1536-dim vector embeddings, role-based document ACLs, hard tenant isolation queries, live RAG query UI | ✅ Done |
-| **P5** | **Red Team & Evaluation** | Golden benchmark dataset (`golden_dataset.json`), ASR / PII / RAGAS metrics calculator, regression runner, evaluation dashboard | ✅ Done |
-| **P6** | **Observability & Audit** | OpenTelemetry traces with telemetry redaction, runtime metric counters, audit query & export APIs, tamper-evident audit table | ✅ Done |
-| **P7** | **Deployment & Hardening**| Production security headers (CSP, HSTS), rate limiter, Terraform AWS IaC (VPC, ECS Fargate, ALB, RDS, KMS), GitHub Actions CI/CD | ✅ Done |
+| **P0** | **Foundation** | Monorepo structure, FastAPI, PostgreSQL + `pgvector`, Alembic, 3-tenant synthetic RAG data (`Acme`, `Globex`, `Wayne`) | Complete |
+| **P1** | **Agent Playground** | LangGraph stateful workflow, Bedrock + Mock LLM providers, tool execution engine, conversation history, interactive Playground UI | Complete |
+| **P2** | **Security Baseline** | Custom PII/Secrets engine (AWS keys, SSNs, Badges), multi-vector injection detector (DAN, Developer mode, zero-width obfuscation), dynamic policies API | Complete |
+| **P3** | **Tool Authorization** | Parameter schema validator, approval state machine (`pending`, `approved`, `rejected`), audit logging service, Human-in-the-Loop UI | Complete |
+| **P4** | **Secure RAG** | Semantic text chunker, 1536-dim vector embeddings, role-based document ACLs, hard tenant isolation queries, live RAG query UI | Complete |
+| **P5** | **Red Team & Evaluation** | Golden benchmark dataset (`golden_dataset.json`), ASR / PII / RAGAS metrics calculator, regression runner, evaluation dashboard | Complete |
+| **P6** | **Observability & Audit** | OpenTelemetry traces with telemetry redaction, runtime metric counters, audit query & export APIs, tamper-evident audit table | Complete |
+| **P7** | **Deployment & Hardening**| Production security headers (CSP, HSTS), rate limiter, Terraform AWS IaC (VPC, ECS Fargate, ALB, RDS, KMS), GitHub Actions CI/CD | Complete |
 
 ---
 
-## 🏗️ Request Lifecycle Architecture
+## Request Lifecycle Architecture
 
 ```
 User Request
@@ -58,7 +58,7 @@ User Request
 
 ---
 
-## 🚀 Quickstart Guide
+## Quickstart Guide
 
 ### 1. Run Full Stack with Docker Compose
 ```bash
@@ -89,7 +89,7 @@ docker-compose exec backend pytest backend/tests -v
 
 ---
 
-## ☁️ Production AWS Deployment with Terraform
+## Production AWS Deployment with Terraform
 
 Terraform Infrastructure as Code (IaC) is included under `terraform/`:
 - **Amazon ECS Fargate**: Serverless container execution for backend & frontend
@@ -106,7 +106,7 @@ terraform apply -auto-approve
 
 ---
 
-## 🔒 Security Compliance & Guardrails
+## Security Compliance & Guardrails
 
 - **Zero-Trust Tool Policy**: Deny-by-default execution. Restricted tools pause for explicit human administrator sign-off.
 - **Tenant Isolation**: Database-level queries enforce strict `org_id` boundaries. Cross-tenant retrieval attempts are intercepted and audited.

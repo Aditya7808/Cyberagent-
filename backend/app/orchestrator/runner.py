@@ -69,7 +69,7 @@ async def run_agent(
     if final_state.get("requires_human_approval"):
         tool_name = final_state.get("approval_tool_name", "tool")
         response_content = (
-            f"⏸️ [Sentinel Human-in-the-Loop Required]: The agent requested to execute restricted tool '{tool_name}'. "
+            f"[Sentinel Human-in-the-Loop Required]: The agent requested to execute restricted tool '{tool_name}'. "
             "Execution is suspended pending administrator authorization."
         )
 

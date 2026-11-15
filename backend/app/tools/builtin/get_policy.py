@@ -95,7 +95,7 @@ class GetPolicyTool(BaseTool):
 
         output_lines = [f"Active security policies for organization ({org_id}):\n"]
         for ptype, policy in result_policies.items():
-            output_lines.append(f"📋 {policy['name']} ({ptype})")
+            output_lines.append(f"Policy: {policy['name']} ({ptype})")
             output_lines.append(f"   Enabled: {policy['enabled']}")
             for rule_key, rule_val in policy["rules"].items():
                 output_lines.append(f"   • {rule_key}: {rule_val}")

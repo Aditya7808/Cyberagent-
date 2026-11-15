@@ -74,7 +74,7 @@ class ToolExecutor:
                     return ToolResult(
                         success=False,
                         output="",
-                        error=f"⏸️ APPROVAL REQUIRED: {reason}",
+                        error=f"APPROVAL REQUIRED: {reason}",
                         metadata={
                             "execution_id": execution_id,
                             "phase": "authorization",
@@ -88,7 +88,7 @@ class ToolExecutor:
                     return ToolResult(
                         success=False,
                         output="",
-                        error=f"🚫 ACCESS DENIED: {reason}",
+                        error=f"ACCESS DENIED: {reason}",
                         metadata={
                             "execution_id": execution_id,
                             "phase": "authorization",

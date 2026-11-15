@@ -41,7 +41,7 @@ async def input_security_node(state: AgentState) -> Dict[str, Any]:
             "is_blocked": True,
             "block_reason": f"Input inspection blocked request: {violation_msg}",
             "final_response": (
-                "🛡️ [Sentinel Security Alert]: Your prompt was flagged by runtime input inspection "
+                "[Sentinel Security Alert]: Your prompt was flagged by runtime input inspection "
                 f"for potential adversarial behavior. Violation: {violation_msg}"
             ),
         }

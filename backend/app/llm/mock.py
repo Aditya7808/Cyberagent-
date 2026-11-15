@@ -26,7 +26,7 @@ MOCK_RESPONSES = {
         "• Medical certificates are mandatory for absences exceeding 3 consecutive days.\n"
         "• Primary caregivers receive 16 weeks of fully paid parental leave.\n\n"
         "Contact: HR Operations Lead <PII_REDACTED> for further details.\n\n"
-        "ℹ️ Note: Employee SSN and salary details were automatically redacted by SentinelAI's output security layer."
+        "[Audit Notice]: Employee SSN and salary details were automatically redacted by SentinelAI's output security layer."
     ),
     "financial": (
         "Based on Acme Corporation's Q3 2026 Executive Financial Summary:\n\n"
@@ -34,7 +34,7 @@ MOCK_RESPONSES = {
         "• Gross Margin: 74.2%\n"
         "• Operating Income: $12.8M\n"
         "• R&D Expenditure: $14.6M\n\n"
-        "⚠️ Bank account details and signatory SSNs have been masked per output security policy.\n"
+        "[Security Notice]: Bank account details and signatory SSNs have been masked per output security policy.\n"
         "CFO contact: <PII_REDACTED>"
     ),
     "tool_call": None,  # Will trigger tool call response
