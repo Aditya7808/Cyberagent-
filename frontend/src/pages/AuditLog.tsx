@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Fingerprint, 
-  Search, 
-  Filter, 
   Download, 
-  AlertTriangle, 
-  CheckCircle2, 
-  Activity,
-  Terminal,
-  Lock,
-  FileText
+  FileText,
+  ShieldAlert,
+  ShieldCheck,
+  EyeOff,
+  Clock,
+  User,
+  Hash
 } from 'lucide-react';
 import { api } from '../lib/api';
 
@@ -19,37 +18,37 @@ export const AuditLog: React.FC = () => {
     {
       id: 'AUD-8841-A',
       time: '2026-11-12 11:24:02 UTC',
-      action: 'INPUT_SECURITY.DIRECT_INJECTION_BLOCKED',
+      action: 'Direct Prompt Injection Blocked',
       resource: 'DevOps Autonomous SRE',
       actor: '198.51.100.42 (Anonymous)',
-      decision: 'BLOCKED',
+      decision: 'Blocked',
       sha256: '4a8f9c...e291',
     },
     {
       id: 'AUD-8840-B',
       time: '2026-11-12 11:18:33 UTC',
-      action: 'PII_SCRUBBER.AWS_CREDENTIAL_MASKED',
+      action: 'AWS Credential Scrubbed & Masked',
       resource: 'Financial Risk Analyst',
-      actor: 'Aditya Yadav [Root]',
-      decision: 'MASKED',
+      actor: 'Aditya Yadav [Admin]',
+      decision: 'Masked',
       sha256: '9920bf...882a',
     },
     {
       id: 'AUD-8839-C',
       time: '2026-11-12 11:10:10 UTC',
-      action: 'TOOL_AUTHORIZER.APPROVAL_HELD',
+      action: 'Tool Authorization Hold (HITL Triggered)',
       resource: 'delete_backup_snapshot',
       actor: 'Autonomous Agent #2',
-      decision: 'APPROVAL_REQUIRED',
+      decision: 'Approval Required',
       sha256: 'c371aa...ff01',
     },
     {
       id: 'AUD-8838-D',
       time: '2026-11-12 10:55:40 UTC',
-      action: 'RAG_VAULT.TENANT_ISOLATION_ENFORCED',
+      action: 'Tenant Isolation Enforced',
       resource: 'Document: HR_Compensation.pdf',
       actor: '10.0.14.88 (Internal)',
-      decision: 'ALLOWED',
+      decision: 'Allowed',
       sha256: '1184ee...339b',
     },
   ]);
@@ -75,93 +74,111 @@ export const AuditLog: React.FC = () => {
   };
 
   const filteredLogs = logs.filter(l => {
-    if (filterType === 'blocked') return l.decision === 'BLOCKED';
-    if (filterType === 'masked') return l.decision === 'MASKED';
+    if (filterType === 'blocked') return l.decision.toLowerCase().includes('block');
+    if (filterType === 'masked') return l.decision.toLowerCase().includes('mask');
     return true;
   });
 
+  const getDecisionBadge = (decision: string) => {
+    const d = decision.toLowerCase();
+    if (d.includes('block')) return 'badge-rose';
+    if (d.includes('mask')) return 'badge-amber';
+    if (d.includes('approval')) return 'badge-indigo';
+    return 'badge-emerald';
+  };
+
   return (
-    <div className="space-y-6 font-mono">
+    <div className="space-y-6">
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 rounded-lg border border-slate-800 bg-slate-950/80 cyber-corners">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded bg-cyan-950/60 border border-cyan-500/50 flex items-center justify-center text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.3)]">
-            <Fingerprint className="w-6 h-6" />
-          </div>
-          <div>
-            <h1 className="text-base font-bold text-slate-100 uppercase tracking-wider">
-              CRYPTOGRAPHIC AUDIT & FORENSICS
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800/80">
+        <div>
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400">
+              <Fingerprint className="w-5 h-5" />
+            </div>
+            <h1 className="text-xl font-bold text-white tracking-tight">
+              Cryptographic Audit & Forensics
             </h1>
-            <p className="text-xs text-slate-500 mt-0.5">
-              Immutable tamper-proof record of every prompt evaluation, block event, and tool execution.
-            </p>
           </div>
+          <p className="text-sm text-slate-400 mt-1">
+            Immutable, tamper-evident ledger tracking prompt evaluations, intercept decisions, and human approvals.
+          </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
           <button
             onClick={() => handleExport('json')}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs text-cyan-300 font-bold transition-all"
+            className="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-semibold text-slate-200 transition-all"
           >
-            <Download className="w-3.5 h-3.5" />
-            EXPORT JSON
+            <Download className="w-4 h-4 text-slate-400" />
+            Export JSON
           </button>
           <button
             onClick={() => handleExport('csv')}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs text-emerald-300 font-bold transition-all"
+            className="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-semibold text-slate-200 transition-all"
           >
-            <FileText className="w-3.5 h-3.5" />
-            EXPORT CSV
+            <FileText className="w-4 h-4 text-slate-400" />
+            Export CSV
           </button>
         </div>
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex items-center gap-2">
-        {['all', 'blocked', 'masked'].map(type => (
+      <div className="flex items-center gap-2 border-b border-slate-800/60 pb-3">
+        {[
+          { id: 'all', label: 'All Audit Events' },
+          { id: 'blocked', label: 'Interceptions (Blocked)' },
+          { id: 'masked', label: 'Sanitizations (PII Masked)' },
+        ].map(tab => (
           <button
-            key={type}
-            onClick={() => setFilterType(type)}
-            className={`px-3 py-1.5 rounded text-xs font-mono uppercase tracking-wider transition-all ${
-              filterType === type
-                ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/50 shadow-[0_0_10px_rgba(6,182,212,0.2)]'
-                : 'text-slate-400 hover:text-slate-200 border border-transparent'
+            key={tab.id}
+            onClick={() => setFilterType(tab.id)}
+            className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+              filterType === tab.id
+                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/20'
+                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
             }`}
           >
-            {type === 'all' ? 'ALL EVENTS' : type.toUpperCase()}
+            {tab.label}
           </button>
         ))}
       </div>
 
       {/* Forensic Table */}
-      <div className="cyber-card cyber-corners rounded-lg overflow-hidden">
-        <div className="p-4 border-b border-slate-800 bg-slate-900/60 flex items-center justify-between text-xs text-slate-400">
-          <span>SHA-256 HASH VERIFIED RECORD LOG</span>
-          <span>COMPLIANCE: SOC2 // HIPAA // ISO27001</span>
+      <div className="enterprise-card rounded-xl overflow-hidden border border-slate-800">
+        <div className="px-5 py-3.5 border-b border-slate-800/80 bg-slate-900/60 flex items-center justify-between text-xs text-slate-400 font-medium">
+          <span>SHA-256 Verified Immutable Records</span>
+          <span className="badge-indigo px-2.5 py-0.5 rounded text-[11px] font-semibold">
+            SOC2 Type II • HIPAA • ISO 27001
+          </span>
         </div>
 
-        <div className="divide-y divide-slate-800/80">
+        <div className="divide-y divide-slate-800/60">
           {filteredLogs.map(log => (
-            <div key={log.id} className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-slate-900/30 transition-colors">
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-slate-200">{log.action}</span>
-                  <span className="text-[10px] text-slate-500">[{log.time}]</span>
-                  <span className="text-[10px] text-slate-600 font-mono">HASH: {log.sha256}</span>
+            <div 
+              key={log.id} 
+              className="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-slate-800/20 transition-colors"
+            >
+              <div className="space-y-1.5">
+                <div className="flex items-center gap-2.5">
+                  <span className="font-semibold text-white text-sm">{log.action}</span>
+                  <span className="text-xs text-slate-400 flex items-center gap-1">
+                    <Clock className="w-3 h-3 text-slate-500" />
+                    {log.time}
+                  </span>
+                  <span className="text-xs font-mono text-slate-500 flex items-center gap-1">
+                    <Hash className="w-3 h-3 text-slate-600" />
+                    {log.sha256}
+                  </span>
                 </div>
                 <div className="text-xs text-slate-400">
-                  Target: <span className="text-cyan-300">{log.resource}</span> | Origin: <span className="text-slate-500">{log.actor}</span>
+                  Target: <span className="text-slate-300 font-medium">{log.resource}</span> &nbsp;|&nbsp; 
+                  Origin: <span className="text-slate-400">{log.actor}</span>
                 </div>
               </div>
 
               <div className="shrink-0">
-                <span className={`px-2.5 py-1 rounded text-xs font-bold ${
-                  log.decision === 'BLOCKED'
-                    ? 'bg-rose-500/20 text-rose-400 border border-rose-500/40'
-                    : log.decision === 'MASKED'
-                    ? 'bg-amber-500/20 text-amber-400 border border-amber-500/40'
-                    : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
-                }`}>
+                <span className={`px-3 py-1.5 rounded-lg text-xs font-semibold ${getDecisionBadge(log.decision)}`}>
                   {log.decision}
                 </span>
               </div>

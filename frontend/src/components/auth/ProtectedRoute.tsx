@@ -18,38 +18,40 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowe
 
   if (allowedRoles && !isRole(allowedRoles)) {
     return (
-      <div className="p-8 font-mono">
-        <div className="cyber-card cyber-danger-corners p-8 rounded-xl max-w-2xl mx-auto space-y-5 border-rose-500/40">
+      <div className="min-h-[70vh] flex items-center justify-center p-6">
+        <div className="enterprise-card p-8 rounded-2xl max-w-xl w-full border border-rose-500/30 bg-slate-900/80 shadow-2xl space-y-6">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded bg-rose-950/80 border border-rose-500/60 flex items-center justify-center text-rose-400 shadow-[0_0_20px_rgba(244,63,94,0.4)]">
-              <ShieldAlert className="w-8 h-8 animate-pulse" />
+            <div className="w-12 h-12 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400 shrink-0">
+              <ShieldAlert className="w-6 h-6" />
             </div>
             <div>
-              <div className="text-xs text-rose-500 font-bold tracking-widest uppercase">
-                SECURITY VIOLATION // RESTRICTED PERIMETER
+              <div className="text-xs font-semibold uppercase tracking-wider text-rose-400">
+                Restricted Perimeter
               </div>
-              <h2 className="text-lg font-black text-rose-200 tracking-wide mt-0.5">
-                ACCESS DENIED: INSUFFICIENT SECURITY CLEARANCE
+              <h2 className="text-xl font-bold text-white mt-0.5">
+                Access Denied: Insufficient Clearance
               </h2>
             </div>
           </div>
 
-          <p className="text-xs text-slate-400 leading-relaxed">
-            Your current authenticated profile <span className="text-cyan-300 font-bold">[{user?.clearance_level}]</span> does not possess the requisite operational privileges to access this tactical console. Required roles: <span className="text-rose-400 font-bold">{allowedRoles.join(', ').toUpperCase()}</span>.
+          <p className="text-sm text-slate-300 leading-relaxed">
+            Your current authenticated profile <span className="text-indigo-300 font-semibold">[{user?.clearance_level}]</span> does not possess the requisite operational privileges to access this console. Required roles: <span className="text-rose-400 font-semibold">{allowedRoles.join(', ')}</span>.
           </p>
 
-          <div className="p-3.5 rounded bg-slate-950 border border-slate-900 text-xs text-slate-500 space-y-1.5">
+          <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800/80 text-xs text-slate-400 space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-slate-400">AUDIT EVENT: 403_FORBIDDEN_INTERCEPT</span>
-              <span className="text-rose-400 font-bold">LOGGED TO TAMPER-PROOF LEDGER</span>
+              <span className="font-medium text-slate-300">Audit Incident</span>
+              <span className="badge-rose px-2 py-0.5 rounded text-[11px] font-semibold">403_FORBIDDEN_INTERCEPT</span>
             </div>
-            <div>ACTOR: {user?.email}</div>
-            <div className="text-[10px] text-slate-600">
-              SHA-256 signature generated and dispatched to Security Operations Center.
+            <div className="text-slate-400">
+              Authenticated Identity: <span className="text-slate-200 font-medium">{user?.email}</span>
+            </div>
+            <div className="text-[11px] text-slate-500">
+              Event logged in tamper-evident compliance audit trail.
             </div>
           </div>
 
-          <div className="pt-3 border-t border-slate-800 flex items-center justify-between">
+          <div className="pt-2 border-t border-slate-800 flex items-center justify-between">
             <button
               onClick={() => {
                 if (isRole(['end_user', 'viewer'])) {
@@ -58,15 +60,15 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowe
                   navigate('/');
                 }
               }}
-              className="px-4 py-2 rounded bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs text-slate-300 flex items-center gap-1.5 transition-colors"
+              className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-sm font-medium text-white flex items-center gap-2 transition-colors border border-slate-700"
             >
-              <ArrowLeft className="w-3.5 h-3.5" />
-              RETURN TO AUTHORIZED CONSOLE
+              <ArrowLeft className="w-4 h-4" />
+              Return to Authorized Workspace
             </button>
 
-            <div className="flex items-center gap-1.5 text-[11px] text-slate-500">
-              <Lock className="w-3.5 h-3.5 text-slate-600" />
-              Contact Root Admin to request privilege elevation
+            <div className="flex items-center gap-1.5 text-xs text-slate-400">
+              <Lock className="w-3.5 h-3.5 text-slate-500" />
+              Contact Admin for Elevation
             </div>
           </div>
         </div>

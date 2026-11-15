@@ -6,9 +6,12 @@ import {
   Trash2, 
   RefreshCw, 
   Key, 
-  Radio, 
   CheckCircle2, 
-  AlertTriangle 
+  AlertTriangle,
+  Mail,
+  Shield,
+  Lock,
+  X
 } from 'lucide-react';
 import { api } from '../lib/api';
 import { useAuth } from '../context/AuthContext';
@@ -45,7 +48,7 @@ export const Users: React.FC = () => {
       const data = await api.getUsers();
       setUsers(data);
     } catch (err: any) {
-      setError(err.message || 'Failed to fetch registered identities from database.');
+      setError(err.message || 'Failed to fetch directory from database.');
     } finally {
       setLoading(false);
     }
@@ -59,7 +62,7 @@ export const Users: React.FC = () => {
     try {
       setActionLoading(true);
       await api.updateUserRole(userId, newRoleValue);
-      setSuccess(`Clearance level updated for user identity.`);
+      setSuccess(`Security role and clearance level updated successfully.`);
       setTimeout(() => setSuccess(''), 3000);
       await fetchUsers();
     } catch (err: any) {
@@ -70,11 +73,11 @@ export const Users: React.FC = () => {
   };
 
   const handleDeleteUser = async (userId: string, email: string) => {
-    if (confirm(`Revoke and delete identity for "${email}" from the security perimeter?`)) {
+    if (confirm(`Are you sure you want to revoke access and delete identity for "${email}"?`)) {
       try {
         setActionLoading(true);
         await api.deleteUser(userId);
-        setSuccess(`Identity for ${email} revoked.`);
+        setSuccess(`User "${email}" has been removed.`);
         setTimeout(() => setSuccess(''), 3000);
         await fetchUsers();
       } catch (err: any) {
@@ -91,7 +94,7 @@ export const Users: React.FC = () => {
     setError('');
     try {
       await api.register(newEmail, newPassword, newFullName, newRole);
-      setSuccess(`New identity successfully provisioned for ${newEmail}!`);
+      setSuccess(`New identity provisioned successfully for ${newEmail}`);
       setShowAddModal(false);
       setNewEmail('');
       setNewFullName('');
@@ -105,34 +108,48 @@ export const Users: React.FC = () => {
     }
   };
 
-  const getClearanceBadge = (role: string) => {
+  const getRoleBadge = (role: string) => {
     switch (role) {
       case 'super_admin':
       case 'admin':
-        return 'bg-cyan-500/10 border-cyan-500/40 text-cyan-400';
+        return 'badge-indigo';
       case 'developer':
       case 'operator':
-        return 'bg-emerald-500/10 border-emerald-500/40 text-emerald-400';
+        return 'badge-emerald';
       case 'auditor':
-        return 'bg-amber-500/10 border-amber-500/40 text-amber-400';
+        return 'badge-amber';
       default:
-        return 'bg-slate-800 border-slate-700 text-slate-400';
+        return 'badge-cyan';
+    }
+  };
+
+  const formatRoleLabel = (role: string) => {
+    switch (role) {
+      case 'super_admin': return 'Root Super Admin';
+      case 'admin': return 'Security Administrator';
+      case 'developer': return 'AI Engineer / Dev';
+      case 'auditor': return 'Compliance Auditor';
+      case 'operator': return 'Operations Specialist';
+      case 'end_user': return 'Business User';
+      default: return role;
     }
   };
 
   return (
-    <div className="space-y-6 font-mono text-xs">
-      {/* Top Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+    <div className="space-y-6">
+      {/* Top Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800/80">
         <div>
-          <div className="flex items-center gap-2">
-            <UsersIcon className="w-5 h-5 text-cyan-400" />
-            <h1 className="text-lg font-black tracking-wider text-white glow-text-cyan">
-              IDENTITY & ACCESS MANAGEMENT // RBAC VAULT
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400">
+              <UsersIcon className="w-5 h-5" />
+            </div>
+            <h1 className="text-xl font-bold text-white tracking-tight">
+              Identity & Access Management (IAM)
             </h1>
           </div>
-          <p className="text-slate-400 text-[11px] mt-1">
-            Dynamic database directory of authenticated identities, clearance tiers, and zero-trust credentials.
+          <p className="text-sm text-slate-400 mt-1">
+            Database-backed Zero-Trust directory. Enforce cryptographic role-based access control and security clearances.
           </p>
         </div>
 
@@ -140,146 +157,150 @@ export const Users: React.FC = () => {
           <button
             onClick={fetchUsers}
             disabled={loading}
-            className="px-3 py-1.5 rounded bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 flex items-center gap-1.5 transition-colors"
+            className="px-3.5 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-sm font-medium text-slate-300 flex items-center gap-2 transition-colors disabled:opacity-50"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-cyan-400' : ''}`} />
-            SYNC DB
+            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin text-indigo-400' : ''}`} />
+            Sync Directory
           </button>
           <button
             onClick={() => setShowAddModal(true)}
-            className="px-3.5 py-1.5 rounded bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold flex items-center gap-1.5 transition-all shadow-[0_0_12px_rgba(6,182,212,0.3)]"
+            className="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-sm font-semibold text-white flex items-center gap-2 transition-all shadow-lg shadow-indigo-600/20"
           >
-            <UserPlus className="w-3.5 h-3.5" />
-            PROVISION IDENTITY
+            <UserPlus className="w-4 h-4" />
+            Provision User
           </button>
         </div>
       </div>
 
       {/* Metrics Row */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <div className="cyber-card p-4 rounded-lg border border-slate-800">
-          <div className="text-[10px] text-slate-500 tracking-wider">TOTAL REGISTERED IDENTITIES</div>
-          <div className="text-xl font-bold text-white mt-1">{users.length}</div>
-          <div className="text-[10px] text-cyan-400 mt-1 flex items-center gap-1">
-            <Radio className="w-2.5 h-2.5 animate-pulse" />
-            Persistent in SQLite DB
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="enterprise-card p-4 rounded-xl">
+          <div className="text-xs font-medium text-slate-400">Total Registered Identities</div>
+          <div className="text-2xl font-bold text-white mt-1.5">{users.length}</div>
+          <div className="text-xs text-indigo-400 mt-1 flex items-center gap-1.5 font-medium">
+            <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
+            Active in SQLite Database
           </div>
         </div>
 
-        <div className="cyber-card p-4 rounded-lg border border-slate-800">
-          <div className="text-[10px] text-slate-500 tracking-wider">ROOT ADMINISTRATORS (L5)</div>
-          <div className="text-xl font-bold text-cyan-400 mt-1">
+        <div className="enterprise-card p-4 rounded-xl">
+          <div className="text-xs font-medium text-slate-400">Security Administrators</div>
+          <div className="text-2xl font-bold text-indigo-300 mt-1.5">
             {users.filter(u => u.role === 'super_admin' || u.role === 'admin').length}
           </div>
-          <div className="text-[10px] text-slate-500 mt-1">Full HITL write privileges</div>
+          <div className="text-xs text-slate-400 mt-1">Full HITL write privileges</div>
         </div>
 
-        <div className="cyber-card p-4 rounded-lg border border-slate-800">
-          <div className="text-[10px] text-slate-500 tracking-wider">AI DEVELOPERS (L3)</div>
-          <div className="text-xl font-bold text-emerald-400 mt-1">
+        <div className="enterprise-card p-4 rounded-xl">
+          <div className="text-xs font-medium text-slate-400">AI Engineers & Developers</div>
+          <div className="text-2xl font-bold text-emerald-400 mt-1.5">
             {users.filter(u => u.role === 'developer').length}
           </div>
-          <div className="text-[10px] text-slate-500 mt-1">Agent registry & sandbox access</div>
+          <div className="text-xs text-slate-400 mt-1">Agent registry & sandbox access</div>
         </div>
 
-        <div className="cyber-card p-4 rounded-lg border border-slate-800">
-          <div className="text-[10px] text-slate-500 tracking-wider">ZERO-TRUST ENFORCEMENT</div>
-          <div className="text-xl font-bold text-emerald-400 mt-1">100%</div>
-          <div className="text-[10px] text-slate-500 mt-1">Bcrypt (cost 10) + Signed JWT</div>
+        <div className="enterprise-card p-4 rounded-xl">
+          <div className="text-xs font-medium text-slate-400">Authentication Guard</div>
+          <div className="text-2xl font-bold text-emerald-400 mt-1.5">Zero-Trust</div>
+          <div className="text-xs text-slate-400 mt-1">Bcrypt (cost 10) + Signed JWT</div>
         </div>
       </div>
 
       {/* Alerts */}
       {error && (
-        <div className="p-3 rounded bg-rose-950/60 border border-rose-500/50 text-rose-300 flex items-center gap-2">
-          <AlertTriangle className="w-4 h-4 text-rose-400" />
-          {error}
+        <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 flex items-center gap-3 text-sm">
+          <AlertTriangle className="w-5 h-5 text-rose-400 shrink-0" />
+          <span>{error}</span>
         </div>
       )}
 
       {success && (
-        <div className="p-3 rounded bg-emerald-950/60 border border-emerald-500/50 text-emerald-300 flex items-center gap-2">
-          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-          {success}
+        <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 flex items-center gap-3 text-sm">
+          <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
+          <span>{success}</span>
         </div>
       )}
 
-      {/* Users Table */}
-      <div className="cyber-card cyber-corners rounded-lg overflow-hidden border border-slate-800">
-        <div className="px-4 py-3 bg-slate-900/80 border-b border-slate-800 flex items-center justify-between">
-          <div className="font-bold text-white tracking-wider flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-cyan-400" />
-            REGISTERED OPERATOR DIRECTORY
+      {/* Directory Table */}
+      <div className="enterprise-card rounded-xl overflow-hidden border border-slate-800">
+        <div className="px-5 py-4 bg-slate-900/60 border-b border-slate-800/80 flex items-center justify-between">
+          <div className="font-semibold text-white flex items-center gap-2">
+            <ShieldCheck className="w-4 h-4 text-indigo-400" />
+            Registered Identity Directory
           </div>
-          <span className="text-[10px] text-slate-500">
-            SHOWING {users.length} SECURED IDENTITIES
+          <span className="text-xs text-slate-400 font-medium">
+            {users.length} Active Accounts
           </span>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left">
-            <thead className="bg-slate-950/60 text-slate-400 text-[10px] uppercase tracking-wider border-b border-slate-800">
+            <thead className="bg-slate-950/40 text-slate-400 text-xs font-semibold uppercase tracking-wider border-b border-slate-800/60">
               <tr>
-                <th className="px-4 py-2.5">Operator Callsign & Email</th>
-                <th className="px-4 py-2.5">Clearance Tier</th>
-                <th className="px-4 py-2.5">Dynamic Role Assignment</th>
-                <th className="px-4 py-2.5">Status</th>
-                <th className="px-4 py-2.5 text-right">Actions</th>
+                <th className="px-5 py-3.5">User & Email</th>
+                <th className="px-5 py-3.5">Security Clearance</th>
+                <th className="px-5 py-3.5">Assigned Role</th>
+                <th className="px-5 py-3.5">Status</th>
+                <th className="px-5 py-3.5 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60">
+            <tbody className="divide-y divide-slate-800/40 text-sm">
               {users.map((u) => {
                 const isCurrent = currentUser?.id === u.id;
                 return (
-                  <tr key={u.id} className="hover:bg-slate-900/40 transition-colors">
-                    <td className="px-4 py-3">
-                      <div className="font-bold text-slate-200 flex items-center gap-2">
+                  <tr key={u.id} className="hover:bg-slate-800/30 transition-colors">
+                    <td className="px-5 py-4">
+                      <div className="font-semibold text-white flex items-center gap-2">
                         {u.full_name}
                         {isCurrent && (
-                          <span className="px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-300 text-[9px] border border-cyan-500/40">
-                            YOU
+                          <span className="badge-indigo px-2 py-0.5 rounded text-[11px] font-semibold">
+                            You
                           </span>
                         )}
                       </div>
-                      <div className="text-[10px] text-slate-500 mt-0.5">{u.email}</div>
+                      <div className="text-xs text-slate-400 mt-0.5 flex items-center gap-1.5">
+                        <Mail className="w-3.5 h-3.5 text-slate-500" />
+                        {u.email}
+                      </div>
                     </td>
 
-                    <td className="px-4 py-3">
-                      <span className={`px-2 py-0.5 rounded border text-[10px] font-bold ${getClearanceBadge(u.role)}`}>
+                    <td className="px-5 py-4">
+                      <span className={`px-2.5 py-1 rounded-md text-xs font-semibold inline-flex items-center gap-1.5 ${getRoleBadge(u.role)}`}>
+                        <Shield className="w-3 h-3" />
                         {u.clearance_level}
                       </span>
                     </td>
 
-                    <td className="px-4 py-3">
+                    <td className="px-5 py-4">
                       <select
                         value={u.role}
                         disabled={actionLoading || isCurrent}
                         onChange={(e) => handleRoleChange(u.id, e.target.value)}
-                        className="bg-slate-900 border border-slate-700/80 rounded px-2 py-1 text-[11px] text-cyan-300 focus:outline-none focus:border-cyan-500 disabled:opacity-50 cursor-pointer"
+                        className="bg-slate-900 border border-slate-700/80 rounded-lg px-3 py-1.5 text-xs font-medium text-slate-200 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 disabled:opacity-50 cursor-pointer"
                       >
                         <option value="super_admin">Level 5 — Root Security Admin</option>
                         <option value="developer">Level 3 — AI Developer</option>
-                        <option value="auditor">Level 2 — Compliance & Auditor</option>
+                        <option value="auditor">Level 2 — Compliance Auditor</option>
                         <option value="end_user">Level 1 — Business End-User</option>
                       </select>
                     </td>
 
-                    <td className="px-4 py-3">
-                      <span className="flex items-center gap-1.5 text-emerald-400 text-[10px] font-bold">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                        ACTIVE
+                    <td className="px-5 py-4">
+                      <span className="inline-flex items-center gap-1.5 text-emerald-400 text-xs font-medium">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                        Active
                       </span>
                     </td>
 
-                    <td className="px-4 py-3 text-right">
+                    <td className="px-5 py-4 text-right">
                       {!isCurrent && (
                         <button
                           onClick={() => handleDeleteUser(u.id, u.email)}
                           disabled={actionLoading}
-                          className="p-1.5 rounded bg-rose-950/40 hover:bg-rose-900/60 text-rose-400 border border-rose-800/40 hover:border-rose-500 transition-colors"
+                          className="p-2 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 hover:border-rose-500/40 transition-colors"
                           title="Revoke Identity"
                         >
-                          <Trash2 className="w-3.5 h-3.5" />
+                          <Trash2 className="w-4 h-4" />
                         </button>
                       )}
                     </td>
@@ -291,89 +312,97 @@ export const Users: React.FC = () => {
         </div>
       </div>
 
-      {/* Modal: Provision New Identity */}
+      {/* Modal: Provision New User */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-md cyber-card cyber-corners p-6 rounded-xl border border-cyan-500/40 space-y-4 shadow-[0_0_30px_rgba(6,182,212,0.2)]">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <div className="font-bold text-white flex items-center gap-2">
-                <UserPlus className="w-4 h-4 text-cyan-400" />
-                PROVISION NEW SECURITY IDENTITY
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="w-full max-w-md enterprise-card p-6 rounded-2xl border border-slate-700/80 bg-slate-900 shadow-2xl space-y-5">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+              <div className="font-bold text-white text-base flex items-center gap-2">
+                <UserPlus className="w-5 h-5 text-indigo-400" />
+                Provision New Team Identity
               </div>
               <button
                 onClick={() => setShowAddModal(false)}
-                className="text-slate-400 hover:text-white"
+                className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors"
               >
-                ✕
+                <X className="w-5 h-5" />
               </button>
             </div>
 
-            <form onSubmit={handleCreateUser} className="space-y-3">
-              <div className="space-y-1">
-                <label className="text-[10px] text-slate-400">OPERATOR CALLSIGN / FULL NAME</label>
+            <form onSubmit={handleCreateUser} className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                  Full Name / Callsign
+                </label>
                 <input
                   type="text"
                   required
                   value={newFullName}
                   onChange={(e) => setNewFullName(e.target.value)}
-                  placeholder="Security Specialist Zero"
-                  className="w-full bg-slate-900 border border-slate-700 rounded px-3 py-1.5 text-xs text-cyan-200 focus:outline-none focus:border-cyan-500"
+                  placeholder="e.g. Maya Lin"
+                  className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
                 />
               </div>
 
-              <div className="space-y-1">
-                <label className="text-[10px] text-slate-400">OPERATOR EMAIL</label>
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                  Corporate Email
+                </label>
                 <input
                   type="email"
                   required
                   value={newEmail}
                   onChange={(e) => setNewEmail(e.target.value)}
-                  placeholder="specialist@sentinelai.dev"
-                  className="w-full bg-slate-900 border border-slate-700 rounded px-3 py-1.5 text-xs text-cyan-200 focus:outline-none focus:border-cyan-500"
+                  placeholder="maya@company.com"
+                  className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
                 />
               </div>
 
-              <div className="space-y-1">
-                <label className="text-[10px] text-slate-400">INITIAL CIPHER KEY (PASSWORD)</label>
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                  Temporary Password
+                </label>
                 <input
                   type="password"
                   required
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  placeholder="••••••••••••"
-                  className="w-full bg-slate-900 border border-slate-700 rounded px-3 py-1.5 text-xs text-cyan-200 focus:outline-none focus:border-cyan-500"
+                  placeholder="Minimum 8 characters"
+                  className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
                 />
               </div>
 
-              <div className="space-y-1">
-                <label className="text-[10px] text-slate-400">SECURITY CLEARANCE LEVEL</label>
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                  Initial Clearance & Role
+                </label>
                 <select
                   value={newRole}
                   onChange={(e) => setNewRole(e.target.value)}
-                  className="w-full bg-slate-900 border border-slate-700 rounded px-3 py-1.5 text-xs text-cyan-300 focus:outline-none focus:border-cyan-500"
+                  className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 cursor-pointer"
                 >
                   <option value="end_user">Level 1 — Business End-User</option>
                   <option value="developer">Level 3 — AI Developer</option>
-                  <option value="auditor">Level 2 — Compliance & Auditor</option>
+                  <option value="auditor">Level 2 — Compliance Auditor</option>
                   <option value="super_admin">Level 5 — Root Security Admin</option>
                 </select>
               </div>
 
-              <div className="pt-2 flex items-center justify-end gap-2">
+              <div className="pt-3 flex items-center justify-end gap-3 border-t border-slate-800">
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="px-3 py-1.5 rounded bg-slate-900 hover:bg-slate-800 text-slate-400"
+                  className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-sm font-medium text-slate-300 transition-colors"
                 >
-                  CANCEL
+                  Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={actionLoading}
-                  className="px-4 py-1.5 rounded bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold flex items-center gap-1.5"
+                  className="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-sm font-semibold text-white flex items-center gap-2 shadow-lg shadow-indigo-600/20 transition-all disabled:opacity-50"
                 >
-                  <Key className="w-3.5 h-3.5" />
-                  {actionLoading ? 'PROVISIONING...' : 'CONFIRM & COMMIT TO DB'}
+                  <Key className="w-4 h-4" />
+                  {actionLoading ? 'Provisioning...' : 'Confirm & Provision'}
                 </button>
               </div>
             </form>

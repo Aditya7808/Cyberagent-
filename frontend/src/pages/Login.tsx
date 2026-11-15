@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Terminal, Lock, Shield, ArrowRight, Radio, KeyRound, UserPlus, CheckCircle2 } from 'lucide-react';
-import { GhostLogo } from '../components/ui/GhostLogo';
+import { Lock, Shield, ArrowRight, UserPlus, CheckCircle2, AlertCircle, KeyRound, Mail, User } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export const Login: React.FC = () => {
@@ -28,47 +27,44 @@ export const Login: React.FC = () => {
         navigate('/');
       } else {
         if (!fullName.trim()) {
-          throw new Error('Full Name / Operator callsign is required.');
+          throw new Error('Please enter your full name or callsign.');
         }
         await register(email, password, fullName);
-        setSuccessMsg('IDENTITY CREATED & PROVISIONED! ENTERING PERIMETER...');
-        setTimeout(() => navigate('/'), 800);
+        setSuccessMsg('Account provisioned successfully. Accessing console...');
+        setTimeout(() => navigate('/'), 700);
       }
     } catch (err: any) {
-      setError(err.message || 'Authentication failed. Please verify credentials.');
+      setError(err.message || 'Authentication failed. Please check your credentials.');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleQuickLogin = (pEmail: string, pPass: string) => {
+  const handleSelectDemo = (pEmail: string, pPass: string) => {
     setEmail(pEmail);
     setPassword(pPass);
-    login(pEmail, pPass).then(() => navigate('/'));
   };
 
   return (
-    <div className="min-h-screen cyber-grid-bg flex items-center justify-center p-4 font-mono select-none">
-      <div className="w-full max-w-md cyber-card cyber-corners p-8 rounded-xl relative overflow-hidden space-y-6">
-        {/* Glow Header */}
-        <div className="flex flex-col items-center text-center space-y-3">
-          <GhostLogo size={56} glowColor="cyan" />
+    <div className="min-h-screen enterprise-bg flex items-center justify-center p-4 selection:bg-indigo-500/30">
+      <div className="w-full max-w-md enterprise-card p-8 rounded-2xl relative shadow-2xl space-y-6">
+        {/* Brand Header */}
+        <div className="flex flex-col items-center text-center space-y-2.5">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 flex items-center justify-center text-white shadow-lg shadow-indigo-500/25 ring-1 ring-white/20">
+            <Shield className="w-6 h-6 fill-white/20" />
+          </div>
           <div>
-            <h1 className="text-xl font-black tracking-wider text-white glow-text-cyan">
-              SENTINEL<span className="text-cyan-400">.AI</span> // PORTAL
+            <h1 className="text-xl font-bold tracking-tight text-white">
+              Sentinel<span className="text-indigo-400">AI</span>
             </h1>
             <p className="text-xs text-slate-400 mt-1">
-              ZERO-TRUST AGENT GOVERNANCE & IDENTITY GATEWAY
+              Zero-Trust Autonomous Agent Security & Governance
             </p>
-          </div>
-          <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[10px] font-bold">
-            <Radio className="w-3 h-3 animate-pulse" />
-            CIPHER TUNNEL: SECURE // DB PERSISTENT
           </div>
         </div>
 
-        {/* Mode Switcher Tabs */}
-        <div className="grid grid-cols-2 p-1 rounded bg-slate-900 border border-slate-800 text-xs font-bold text-center">
+        {/* Tab Switcher */}
+        <div className="grid grid-cols-2 p-1 rounded-xl bg-slate-900 border border-slate-800 text-xs font-semibold">
           <button
             type="button"
             onClick={() => {
@@ -77,14 +73,14 @@ export const Login: React.FC = () => {
               setEmail('root@sentinelai.dev');
               setPassword('SentinelRoot2026!');
             }}
-            className={`py-1.5 rounded transition-all flex items-center justify-center gap-1.5 ${
+            className={`py-2 rounded-lg transition-all flex items-center justify-center gap-1.5 ${
               mode === 'login'
-                ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/50 shadow-[0_0_10px_rgba(6,182,212,0.3)]'
-                : 'text-slate-400 hover:text-slate-200'
+                ? 'bg-indigo-600 text-white shadow-sm font-bold'
+                : 'text-slate-400 hover:text-white'
             }`}
           >
             <Lock className="w-3.5 h-3.5" />
-            AUTHENTICATE
+            Sign In
           </button>
           <button
             type="button"
@@ -95,68 +91,69 @@ export const Login: React.FC = () => {
               setPassword('');
               setFullName('');
             }}
-            className={`py-1.5 rounded transition-all flex items-center justify-center gap-1.5 ${
+            className={`py-2 rounded-lg transition-all flex items-center justify-center gap-1.5 ${
               mode === 'register'
-                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/50 shadow-[0_0_10px_rgba(16,185,129,0.3)]'
-                : 'text-slate-400 hover:text-slate-200'
+                ? 'bg-indigo-600 text-white shadow-sm font-bold'
+                : 'text-slate-400 hover:text-white'
             }`}
           >
             <UserPlus className="w-3.5 h-3.5" />
-            REGISTER IDENTITY
+            Create Identity
           </button>
         </div>
 
         {error && (
-          <div className="p-3 rounded bg-rose-950/60 border border-rose-500/50 text-rose-300 text-xs">
-            {error}
+          <div className="p-3.5 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+            <span>{error}</span>
           </div>
         )}
 
         {successMsg && (
-          <div className="p-3 rounded bg-emerald-950/60 border border-emerald-500/50 text-emerald-300 text-xs flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-            {successMsg}
+          <div className="p-3.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+            <span>{successMsg}</span>
           </div>
         )}
 
-        {/* Credentials Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="space-y-4 text-left">
           {mode === 'register' && (
-            <div className="space-y-1">
-              <label className="text-[11px] text-slate-400 flex items-center gap-1.5">
-                <Shield className="w-3.5 h-3.5 text-emerald-400" />
-                OPERATOR CALLSIGN / FULL NAME
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium text-slate-300 flex items-center gap-1.5">
+                <User className="w-3.5 h-3.5 text-slate-400" />
+                Full Name / Operator Callsign
               </label>
               <input
                 type="text"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                placeholder="Agent Sarah Connor"
+                placeholder="e.g. Alex Mercer"
                 required
-                className="w-full bg-slate-900 border border-slate-700/80 rounded px-3.5 py-2 text-xs text-emerald-200 placeholder-slate-600 focus:outline-none focus:border-emerald-500"
+                className="w-full bg-slate-900 border border-slate-700/80 rounded-lg px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all shadow-sm"
               />
             </div>
           )}
 
-          <div className="space-y-1">
-            <label className="text-[11px] text-slate-400 flex items-center gap-1.5">
-              <Terminal className="w-3.5 h-3.5 text-cyan-400" />
-              OPERATOR IDENTITY (EMAIL)
+          <div className="space-y-1.5">
+            <label className="text-xs font-medium text-slate-300 flex items-center gap-1.5">
+              <Mail className="w-3.5 h-3.5 text-slate-400" />
+              Corporate Email Address
             </label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="operator@sentinelai.dev"
+              placeholder="operator@company.com"
               required
-              className="w-full bg-slate-900 border border-slate-700/80 rounded px-3.5 py-2 text-xs text-cyan-200 placeholder-slate-600 focus:outline-none focus:border-cyan-500"
+              className="w-full bg-slate-900 border border-slate-700/80 rounded-lg px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all shadow-sm"
             />
           </div>
 
-          <div className="space-y-1">
-            <label className="text-[11px] text-slate-400 flex items-center gap-1.5">
-              <Lock className="w-3.5 h-3.5 text-cyan-400" />
-              CIPHER KEY (PASSWORD)
+          <div className="space-y-1.5">
+            <label className="text-xs font-medium text-slate-300 flex items-center gap-1.5">
+              <Lock className="w-3.5 h-3.5 text-slate-400" />
+              Account Password
             </label>
             <input
               type="password"
@@ -164,61 +161,48 @@ export const Login: React.FC = () => {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••••••"
               required
-              className="w-full bg-slate-900 border border-slate-700/80 rounded px-3.5 py-2 text-xs text-cyan-200 placeholder-slate-600 focus:outline-none focus:border-cyan-500"
+              className="w-full bg-slate-900 border border-slate-700/80 rounded-lg px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all shadow-sm font-mono"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className={`w-full py-2.5 rounded text-slate-950 text-xs font-bold font-mono transition-all flex items-center justify-center gap-2 disabled:opacity-50 mt-2 ${
-              mode === 'register'
-                ? 'bg-emerald-500 hover:bg-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.4)]'
-                : 'bg-cyan-500 hover:bg-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.4)]'
-            }`}
+            className="w-full py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition-all flex items-center justify-center gap-2 shadow-md shadow-indigo-600/25 disabled:opacity-50 mt-2"
           >
-            {loading
-              ? 'PROCESSING CIPHER...'
-              : mode === 'register'
-              ? 'PROVISION & ENTER PERIMETER'
-              : 'AUTHENTICATE & ENTER'}
-            <ArrowRight className="w-3.5 h-3.5" />
+            {loading ? 'Authenticating...' : mode === 'register' ? 'Provision Identity' : 'Sign In to Console'}
+            <ArrowRight className="w-4 h-4" />
           </button>
         </form>
 
-        {/* 1-Click Quick Demo Personas */}
-        <div className="pt-4 border-t border-slate-800 space-y-2">
-          <div className="text-[10px] text-slate-500 text-center tracking-wider uppercase">
-            QUICK ACCESS SEEDED PERSONAS (DB VERIFIED)
+        {/* Demo Credentials Reference Box */}
+        <div className="pt-4 border-t border-slate-800/80 space-y-2">
+          <div className="text-[11px] font-semibold text-slate-400 text-center uppercase tracking-wider">
+            Pre-Seeded Security Identities
           </div>
-          <div className="grid grid-cols-2 gap-2 text-[10px]">
+          <div className="grid grid-cols-2 gap-2 text-xs">
             <button
-              onClick={() => handleQuickLogin('root@sentinelai.dev', 'SentinelRoot2026!')}
-              className="p-2 rounded bg-slate-900/80 hover:bg-cyan-950/60 border border-slate-800 hover:border-cyan-500/50 text-cyan-300 text-left transition-colors flex items-center gap-1.5"
+              type="button"
+              onClick={() => handleSelectDemo('root@sentinelai.dev', 'SentinelRoot2026!')}
+              className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800/80 border border-slate-800 text-left transition-colors flex items-center gap-2"
             >
-              <KeyRound className="w-3 h-3 text-cyan-400" />
-              ROOT ADMIN [L5]
+              <div className="w-2 h-2 rounded-full bg-rose-500" />
+              <div>
+                <div className="font-semibold text-slate-200 text-[11px]">Root Admin (L5)</div>
+                <div className="text-[10px] text-slate-500">root@sentinelai.dev</div>
+              </div>
             </button>
+
             <button
-              onClick={() => handleQuickLogin('dev@sentinelai.dev', 'SentinelDev2026!')}
-              className="p-2 rounded bg-slate-900/80 hover:bg-emerald-950/60 border border-slate-800 hover:border-emerald-500/50 text-emerald-300 text-left transition-colors flex items-center gap-1.5"
+              type="button"
+              onClick={() => handleSelectDemo('dev@sentinelai.dev', 'SentinelDev2026!')}
+              className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800/80 border border-slate-800 text-left transition-colors flex items-center gap-2"
             >
-              <Terminal className="w-3 h-3 text-emerald-400" />
-              AI DEV [L3]
-            </button>
-            <button
-              onClick={() => handleQuickLogin('auditor@sentinelai.dev', 'SentinelAudit2026!')}
-              className="p-2 rounded bg-slate-900/80 hover:bg-amber-950/60 border border-slate-800 hover:border-amber-500/50 text-amber-300 text-left transition-colors flex items-center gap-1.5"
-            >
-              <Shield className="w-3 h-3 text-amber-400" />
-              AUDITOR [L2]
-            </button>
-            <button
-              onClick={() => handleQuickLogin('user@sentinelai.dev', 'SentinelUser2026!')}
-              className="p-2 rounded bg-slate-900/80 hover:bg-slate-800 border border-slate-800 hover:border-slate-600 text-slate-300 text-left transition-colors flex items-center gap-1.5"
-            >
-              <Lock className="w-3 h-3 text-slate-400" />
-              END-USER [L1]
+              <div className="w-2 h-2 rounded-full bg-emerald-400" />
+              <div>
+                <div className="font-semibold text-slate-200 text-[11px]">AI Developer (L3)</div>
+                <div className="text-[10px] text-slate-500">dev@sentinelai.dev</div>
+              </div>
             </button>
           </div>
         </div>
