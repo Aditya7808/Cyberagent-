@@ -63,24 +63,7 @@ export const Dashboard: React.FC = () => {
   const { user } = useAuth();
   const { theme } = useTheme();
   const isLight = theme === 'light';
-  const [approvals, setApprovals] = useState<any[]>([
-    {
-      id: 'APPR-SEC-091',
-      tool_name: 'delete_backup_snapshot',
-      agent_name: 'DevOps Autonomous SRE',
-      parameters: { snapshot_id: 'snap-09941a', force: true, target_env: 'production' },
-      requested_at: '2m ago',
-      risk_tier: 'CRITICAL',
-    },
-    {
-      id: 'APPR-SEC-092',
-      tool_name: 'export_employee_payroll',
-      agent_name: 'Financial Advisory Agent',
-      parameters: { format: 'csv', fiscal_year: 2026, mask_ssn: false },
-      requested_at: '14m ago',
-      risk_tier: 'HIGH',
-    },
-  ]);
+  const [approvals, setApprovals] = useState<any[]>([]);
   const [activeRange, setActiveRange] = useState<'24h' | '7d' | '30d'>('24h');
   const [loading, setLoading] = useState(false);
   const [resetting, setResetting] = useState(false);
@@ -139,28 +122,8 @@ export const Dashboard: React.FC = () => {
         setMetrics(data);
       }
       const apprs = await api.getApprovals('pending').catch(() => []);
-      if (apprs && apprs.length > 0) {
+      if (apprs) {
         setApprovals(apprs);
-      } else {
-        // Fallback default sample approvals so Root Admin always has high-risk actions to review/approve/deny
-        setApprovals([
-          {
-            id: 'APPR-SEC-091',
-            tool_name: 'delete_backup_snapshot',
-            agent_name: 'DevOps Autonomous SRE',
-            parameters: { snapshot_id: 'snap-09941a', force: true, target_env: 'production' },
-            requested_at: '2m ago',
-            risk_tier: 'CRITICAL',
-          },
-          {
-            id: 'APPR-SEC-092',
-            tool_name: 'export_employee_payroll',
-            agent_name: 'Financial Advisory Agent',
-            parameters: { format: 'csv', fiscal_year: 2026, mask_ssn: false },
-            requested_at: '14m ago',
-            risk_tier: 'HIGH',
-          },
-        ]);
       }
     } catch {
       // Keep state if offline

@@ -4,6 +4,7 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
 from app.api.deps import get_current_user, get_db, require_role
 from app.models.approval import ApprovalStatus, ToolApproval
@@ -70,14 +71,37 @@ async def list_tool_approvals(
     try:
         query = (
             select(ToolApproval)
+            .options(selectinload(ToolApproval.agent))
             .order_by(ToolApproval.created_at.desc())
         )
         if status_filter:
             query = query.where(ToolApproval.status == status_filter)
 
         result = await db.execute(query.offset(skip).limit(limit))
-        return result.scalars().all()
-    except Exception:
+        approvals = result.scalars().all()
+
+        enriched = []
+        for a in approvals:
+            a_dict = {
+                "id": a.id,
+                "org_id": a.org_id,
+                "agent_id": a.agent_id,
+                "agent_name": a.agent.name if a.agent else "Autonomous SRE Agent",
+                "risk_tier": "CRITICAL" if any(w in a.tool_name.lower() for w in ["delete", "drop", "purge", "kill"]) else "HIGH",
+                "requested_at": "Just now",
+                "conversation_id": a.conversation_id,
+                "tool_name": a.tool_name,
+                "parameters": a.parameters,
+                "status": a.status,
+                "requested_by": a.requested_by,
+                "reviewed_by": a.reviewed_by,
+                "review_comment": a.review_comment,
+                "created_at": a.created_at,
+                "resolved_at": a.resolved_at,
+            }
+            enriched.append(ToolApprovalResponse(**a_dict))
+        return enriched
+    except Exception as e:
         return []
 
 

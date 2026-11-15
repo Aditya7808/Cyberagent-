@@ -21,6 +21,9 @@ class ToolApprovalResponse(BaseModel):
     id: uuid.UUID
     org_id: uuid.UUID
     agent_id: uuid.UUID
+    agent_name: Optional[str] = "DevOps Autonomous SRE"
+    risk_tier: Optional[str] = "CRITICAL"
+    requested_at: Optional[str] = "Just now"
     conversation_id: Optional[uuid.UUID] = None
     tool_name: str
     parameters: Dict[str, Any]

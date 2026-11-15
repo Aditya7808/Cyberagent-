@@ -120,7 +120,36 @@ async def init_db_and_seed():
                         status=AgentStatus.ACTIVE,
                     ))
                 await session.commit()
-            logger.info("Database security identities and agents successfully verified and seeded.")
+
+            # Seed initial high-risk pending tool actions for Privilege Escalation & Gatekeeper testing
+            from app.models.approval import ToolApproval, ApprovalStatus
+            stmt_approvals = select(func.count(ToolApproval.id)).where(ToolApproval.status == ApprovalStatus.PENDING)
+            existing_approvals = (await session.execute(stmt_approvals)).scalar() or 0
+            if existing_approvals == 0:
+                sre_agent = (await session.execute(select(Agent).where(Agent.name == "DevOps Autonomous SRE"))).scalars().first()
+                fin_agent = (await session.execute(select(Agent).where(Agent.name == "Financial Advisory Agent"))).scalars().first()
+                if sre_agent:
+                    session.add(ToolApproval(
+                        id=uuid.uuid4(),
+                        org_id=default_org_id,
+                        agent_id=sre_agent.id,
+                        tool_name="delete_backup_snapshot",
+                        parameters={"snapshot_id": "snap-09941a", "force": True, "target_env": "production"},
+                        status=ApprovalStatus.PENDING,
+                        requested_by=uuid.UUID("00000000-0000-0000-0000-000000000001"),
+                    ))
+                if fin_agent:
+                    session.add(ToolApproval(
+                        id=uuid.uuid4(),
+                        org_id=default_org_id,
+                        agent_id=fin_agent.id,
+                        tool_name="export_employee_payroll",
+                        parameters={"format": "csv", "fiscal_year": 2026, "mask_ssn": False},
+                        status=ApprovalStatus.PENDING,
+                        requested_by=uuid.UUID("00000000-0000-0000-0000-000000000001"),
+                    ))
+                await session.commit()
+            logger.info("Database security identities, agents, and gatekeeper approvals successfully verified and seeded.")
     except Exception as e:
         logger.error(f"Error initializing database: {e}")
 
