@@ -45,7 +45,13 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowe
 
           <div className="pt-3 border-t border-slate-800 flex items-center justify-between">
             <button
-              onClick={() => navigate('/')}
+              onClick={() => {
+                if (isRole(['end_user', 'viewer'])) {
+                  navigate('/playground');
+                } else {
+                  navigate('/');
+                }
+              }}
               className="px-4 py-2 rounded bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs text-slate-300 flex items-center gap-1.5 transition-colors"
             >
               <ArrowLeft className="w-3.5 h-3.5" />

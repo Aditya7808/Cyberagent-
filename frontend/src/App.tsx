@@ -12,6 +12,16 @@ import { Documents } from './pages/Documents';
 import { Evaluations } from './pages/Evaluations';
 import { AuditLog } from './pages/AuditLog';
 import { Users } from './pages/Users';
+import { useAuth } from './context/AuthContext';
+
+const HomeRoute: React.FC = () => {
+  const { isRole } = useAuth();
+  // End users land directly on their conversational Playground, while Admins/Auditors see Threat Radar
+  if (isRole(['end_user', 'viewer'])) {
+    return <Navigate to="/playground" replace />;
+  }
+  return <Dashboard />;
+};
 
 export const App: React.FC = () => {
   return (
@@ -30,15 +40,8 @@ export const App: React.FC = () => {
               </ProtectedRoute>
             }
           >
-            {/* Threat Radar: Admin & Auditor */}
-            <Route
-              index
-              element={
-                <ProtectedRoute allowedRoles={['super_admin', 'admin', 'auditor']}>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
+            {/* Dynamic Home: Threat Radar for Admins/Devs/Auditors, Assistant Playground for End Users */}
+            <Route index element={<HomeRoute />} />
 
             {/* Agent Registry: Admin & Developer */}
             <Route
