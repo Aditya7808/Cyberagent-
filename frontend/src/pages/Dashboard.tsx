@@ -44,44 +44,80 @@ export const Dashboard: React.FC = () => {
   const { user } = useAuth();
   const { theme } = useTheme();
   const isLight = theme === 'light';
-  const [approvals, setApprovals] = useState<any[]>([
-    {
-      id: 'APPR-SEC-091',
-      tool_name: 'delete_backup_snapshot',
-      agent_name: 'DevOps Autonomous SRE',
-      parameters: { snapshot_id: 'snap-09941a', force: true, target_env: 'production' },
-      requested_at: '2m ago',
-      risk_tier: 'CRITICAL',
-    },
-    {
-      id: 'APPR-SEC-092',
-      tool_name: 'export_employee_payroll',
-      agent_name: 'Financial Advisory Agent',
-      parameters: { format: 'csv', fiscal_year: 2026, mask_ssn: false },
-      requested_at: '14m ago',
-      risk_tier: 'HIGH',
-    },
-    {
-      id: 'APPR-SEC-093',
-      tool_name: 'execute_sql_migration',
-      agent_name: 'Database Optimizer Bot',
-      parameters: { table: 'users_auth', statement: 'ALTER TABLE users DROP COLUMN mfa_enforced' },
-      requested_at: '28m ago',
-      risk_tier: 'CRITICAL',
-    },
-  ]);
-
+  const [approvals, setApprovals] = useState<any[]>([]);
   const [activeRange, setActiveRange] = useState<'24h' | '7d' | '30d'>('24h');
+  const [loading, setLoading] = useState(false);
+
+  const [metrics, setMetrics] = useState<any>({
+    prompt_injection_defense: {
+      rate_percent: 99.8,
+      intercepted_count: 542,
+      breaches_count: 0,
+      change_percent: '+14.2%',
+    },
+    pii_redactions: {
+      total_entities_masked: 4892,
+      detected_recent: 0,
+      engines: 'Presidio + spaCy NER',
+      formats: 'AWS, SSN, PAN',
+    },
+    guarded_agents: {
+      active_count: 12,
+      total_count: 12,
+      health_status: '100% Healthy',
+      sandboxes: '3 Tenant Sandboxes',
+    },
+    inspection_latency: {
+      avg_ms: 14,
+      label: 'Avg MTTI',
+      engine: 'In-Memory Heuristic',
+    },
+    timeline: threatTimelineData,
+  });
+
+  const fetchDashboardData = async () => {
+    try {
+      setLoading(true);
+      const data = await api.getDashboardMetrics(activeRange);
+      if (data) {
+        setMetrics(data);
+      }
+      const apprs = await api.getApprovals('pending');
+      if (apprs && apprs.length > 0) {
+        setApprovals(apprs);
+      } else {
+        // Fallback default sample approvals if fresh
+        setApprovals([
+          {
+            id: 'APPR-SEC-091',
+            tool_name: 'delete_backup_snapshot',
+            agent_name: 'DevOps Autonomous SRE',
+            parameters: { snapshot_id: 'snap-09941a', force: true, target_env: 'production' },
+            requested_at: '2m ago',
+            risk_tier: 'CRITICAL',
+          },
+          {
+            id: 'APPR-SEC-092',
+            tool_name: 'export_employee_payroll',
+            agent_name: 'Financial Advisory Agent',
+            parameters: { format: 'csv', fiscal_year: 2026, mask_ssn: false },
+            requested_at: '14m ago',
+            risk_tier: 'HIGH',
+          },
+        ]);
+      }
+    } catch {
+      // Keep state if offline
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    api.getApprovals('pending')
-      .then((data) => {
-        if (data && data.length > 0) {
-          setApprovals(data);
-        }
-      })
-      .catch(() => {});
-  }, []);
+    fetchDashboardData();
+    const interval = setInterval(fetchDashboardData, 6000); // Live poll every 6s
+    return () => clearInterval(interval);
+  }, [activeRange]);
 
   const handleResolve = async (id: string, approved: boolean) => {
     try {
@@ -129,10 +165,11 @@ export const Dashboard: React.FC = () => {
 
         <div className="flex items-center gap-3">
           <button 
-            onClick={() => window.location.reload()}
-            className="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800/80 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700/60 text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center gap-1.5 transition-colors"
+            onClick={fetchDashboardData}
+            disabled={loading}
+            className="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800/80 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700/60 text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center gap-1.5 transition-colors disabled:opacity-50"
           >
-            <RefreshCw className="w-3.5 h-3.5" />
+            <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-indigo-500' : ''}`} />
             Refresh Radar
           </button>
         </div>
@@ -143,73 +180,85 @@ export const Dashboard: React.FC = () => {
         {/* Metric 1 */}
         <div className="enterprise-card p-5">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-400">Prompt Injection Defense</span>
-            <div className="w-7 h-7 rounded-md bg-emerald-500/10 flex items-center justify-center text-emerald-400">
+            <span className="text-xs font-medium text-slate-500 dark:text-slate-400">Prompt Injection Defense</span>
+            <div className="w-7 h-7 rounded-md bg-emerald-500/10 flex items-center justify-center text-emerald-500 dark:text-emerald-400">
               <ShieldAlert className="w-4 h-4" />
             </div>
           </div>
           <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-white tracking-tight">99.8%</span>
-            <span className="text-xs text-emerald-400 font-medium flex items-center">
-              <ArrowUpRight className="w-3 h-3" /> +14.2%
+            <span className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
+              {metrics.prompt_injection_defense?.rate_percent || 99.8}%
+            </span>
+            <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium flex items-center">
+              <ArrowUpRight className="w-3 h-3" /> {metrics.prompt_injection_defense?.change_percent || '+14.2%'}
             </span>
           </div>
-          <div className="mt-2 text-xs text-slate-500 flex items-center justify-between">
-            <span>542 Intercepted</span>
-            <span className="text-emerald-400/90 font-medium">0 Breaches</span>
+          <div className="mt-2 text-xs text-slate-600 dark:text-slate-400 flex items-center justify-between">
+            <span>{metrics.prompt_injection_defense?.intercepted_count?.toLocaleString() || '542'} Intercepted</span>
+            <span className="text-emerald-600 dark:text-emerald-400 font-medium">{metrics.prompt_injection_defense?.breaches_count || 0} Breaches</span>
           </div>
         </div>
 
         {/* Metric 2 */}
         <div className="enterprise-card p-5">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-400">PII & Secret Redactions</span>
-            <div className="w-7 h-7 rounded-md bg-cyan-500/10 flex items-center justify-center text-cyan-400">
+            <span className="text-xs font-medium text-slate-500 dark:text-slate-400">PII & Secret Redactions</span>
+            <div className="w-7 h-7 rounded-md bg-cyan-500/10 flex items-center justify-center text-cyan-500 dark:text-cyan-400">
               <Lock className="w-4 h-4" />
             </div>
           </div>
           <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-white tracking-tight">4,892</span>
-            <span className="text-xs text-cyan-400 font-medium">Entities Masked</span>
+            <span className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
+              {metrics.pii_redactions?.total_entities_masked?.toLocaleString() || '4,892'}
+            </span>
+            <span className="text-xs text-cyan-600 dark:text-cyan-400 font-medium">Entities Masked</span>
           </div>
-          <div className="mt-2 text-xs text-slate-500 flex items-center justify-between">
-            <span>Presidio + spaCy NER</span>
-            <span>AWS, SSN, PAN</span>
+          <div className="mt-2 text-xs text-slate-600 dark:text-slate-400 flex items-center justify-between">
+            <span>{metrics.pii_redactions?.engines || 'Presidio + spaCy NER'}</span>
+            <span>{metrics.pii_redactions?.formats || 'AWS, SSN, PAN'}</span>
           </div>
         </div>
 
         {/* Metric 3 */}
         <div className="enterprise-card p-5">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-400">Guarded Agents</span>
-            <div className="w-7 h-7 rounded-md bg-indigo-500/10 flex items-center justify-center text-indigo-400">
+            <span className="text-xs font-medium text-slate-500 dark:text-slate-400">Guarded Agents</span>
+            <div className="w-7 h-7 rounded-md bg-indigo-500/10 flex items-center justify-center text-indigo-500 dark:text-indigo-400">
               <Terminal className="w-4 h-4" />
             </div>
           </div>
           <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-white tracking-tight">12 / 12</span>
-            <span className="text-xs text-indigo-400 font-medium">100% Healthy</span>
+            <span className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
+              {metrics.guarded_agents?.active_count || 12} / {metrics.guarded_agents?.total_count || 12}
+            </span>
+            <span className="text-xs text-indigo-600 dark:text-indigo-400 font-medium">
+              {metrics.guarded_agents?.health_status || '100% Healthy'}
+            </span>
           </div>
-          <div className="mt-2 text-xs text-slate-500 flex items-center justify-between">
-            <span>3 Tenant Sandboxes</span>
-            <span className="text-slate-400">LangGraph Active</span>
+          <div className="mt-2 text-xs text-slate-600 dark:text-slate-400 flex items-center justify-between">
+            <span>{metrics.guarded_agents?.sandboxes || '3 Tenant Sandboxes'}</span>
+            <span className="text-slate-500 dark:text-slate-400">LangGraph Active</span>
           </div>
         </div>
 
         {/* Metric 4 */}
         <div className="enterprise-card p-5">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-400">Inspection Latency</span>
-            <div className="w-7 h-7 rounded-md bg-violet-500/10 flex items-center justify-center text-violet-400">
+            <span className="text-xs font-medium text-slate-500 dark:text-slate-400">Inspection Latency</span>
+            <div className="w-7 h-7 rounded-md bg-violet-500/10 flex items-center justify-center text-violet-500 dark:text-violet-400">
               <Zap className="w-4 h-4" />
             </div>
           </div>
           <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-white tracking-tight">14ms</span>
-            <span className="text-xs text-violet-400 font-medium">Avg MTTI</span>
+            <span className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
+              {metrics.inspection_latency?.avg_ms || 14}ms
+            </span>
+            <span className="text-xs text-violet-600 dark:text-violet-400 font-medium">
+              {metrics.inspection_latency?.label || 'Avg MTTI'}
+            </span>
           </div>
-          <div className="mt-2 text-xs text-slate-500 flex items-center justify-between">
-            <span>In-Memory Heuristic</span>
+          <div className="mt-2 text-xs text-slate-600 dark:text-slate-400 flex items-center justify-between">
+            <span>{metrics.inspection_latency?.engine || 'In-Memory Heuristic'}</span>
             <span>Zero-LLM Delay</span>
           </div>
         </div>
@@ -264,7 +313,7 @@ export const Dashboard: React.FC = () => {
 
         <div className="h-72 w-full">
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={threatTimelineData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+            <AreaChart data={metrics.timeline || threatTimelineData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
               <defs>
                 <linearGradient id="colorInj" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#f43f5e" stopOpacity={0.35}/>
