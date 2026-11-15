@@ -29,3 +29,4 @@ Instead, please report vulnerabilities privately:
 - **Initial Acknowledgement**: Within 24 hours.
 - **Triage & Severity Assessment**: Within 48 hours.
 - **Patch Release & Public Advisory**: Coordinated disclosure within 30 days of confirmed fix.
+

@@ -28,6 +28,7 @@ import {
 } from 'recharts';
 import { api } from '../lib/api';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 
 const threatTimelineData = [
   { time: '00:00', injections: 14, pii_leaks: 38, jailbreaks: 4 },
@@ -41,6 +42,8 @@ const threatTimelineData = [
 
 export const Dashboard: React.FC = () => {
   const { user } = useAuth();
+  const { theme } = useTheme();
+  const isLight = theme === 'light';
   const [approvals, setApprovals] = useState<any[]>([
     {
       id: 'APPR-SEC-091',
@@ -103,22 +106,22 @@ export const Dashboard: React.FC = () => {
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
       {/* Top Banner / Threat Radar Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 rounded-xl border border-slate-800 bg-slate-900/60 backdrop-blur-md">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 shadow-sm backdrop-blur-md">
         <div className="flex items-center gap-3.5">
-          <div className="w-10 h-10 rounded-lg bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
+          <div className="w-10 h-10 rounded-lg bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-indigo-500 dark:text-indigo-400">
             <Activity className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center gap-2.5">
-              <h1 className="text-base font-bold text-white tracking-tight">
+              <h1 className="text-base font-bold text-slate-900 dark:text-white tracking-tight">
                 Defense Command & Threat Radar
               </h1>
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse" />
                 Active Intercept
               </span>
             </div>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               Sub-15ms heuristic inspection scanning LLM inputs, tool invocations, and RAG embeddings.
             </p>
           </div>
@@ -127,7 +130,7 @@ export const Dashboard: React.FC = () => {
         <div className="flex items-center gap-3">
           <button 
             onClick={() => window.location.reload()}
-            className="px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-800 border border-slate-700/60 text-xs font-medium text-slate-300 flex items-center gap-1.5 transition-colors"
+            className="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800/80 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700/60 text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center gap-1.5 transition-colors"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             Refresh Radar
@@ -272,16 +275,16 @@ export const Dashboard: React.FC = () => {
                   <stop offset="95%" stopColor="#06b6d4" stopOpacity={0}/>
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
-              <XAxis dataKey="time" stroke="#64748b" tick={{ fontSize: 12, fill: '#94a3b8' }} />
-              <YAxis stroke="#64748b" tick={{ fontSize: 12, fill: '#94a3b8' }} />
+              <CartesianGrid strokeDasharray="3 3" stroke={isLight ? '#e2e8f0' : '#1e293b'} vertical={false} />
+              <XAxis dataKey="time" stroke={isLight ? '#94a3b8' : '#64748b'} tick={{ fontSize: 12, fill: isLight ? '#475569' : '#94a3b8' }} />
+              <YAxis stroke={isLight ? '#94a3b8' : '#64748b'} tick={{ fontSize: 12, fill: isLight ? '#475569' : '#94a3b8' }} />
               <Tooltip 
                 contentStyle={{ 
-                  backgroundColor: 'rgba(15, 23, 42, 0.95)', 
-                  borderColor: '#334155', 
+                  backgroundColor: isLight ? '#ffffff' : 'rgba(15, 23, 42, 0.95)', 
+                  borderColor: isLight ? '#cbd5e1' : '#334155', 
                   borderRadius: '8px',
-                  boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.5)',
-                  color: '#f8fafc',
+                  boxShadow: isLight ? '0 10px 25px -5px rgba(0, 0, 0, 0.1)' : '0 10px 25px -5px rgba(0, 0, 0, 0.5)',
+                  color: isLight ? '#0f172a' : '#f8fafc',
                   fontSize: '12px'
                 }} 
               />
