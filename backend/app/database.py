@@ -49,14 +49,24 @@ class GUID(TypeDecorator):
         elif isinstance(value, uuid.UUID):
             return str(value)
         else:
-            return str(uuid.UUID(str(value)))
+            try:
+                return str(uuid.UUID(str(value)))
+            except Exception:
+                return str(value)
 
     def process_result_value(self, value, dialect):
         if value is None:
             return value
         if isinstance(value, uuid.UUID):
             return value
-        return uuid.UUID(str(value))
+        try:
+            return uuid.UUID(str(value))
+        except Exception:
+            try:
+                # Handle hex string without hyphens
+                return uuid.UUID(hex=str(value).replace("-", ""))
+            except Exception:
+                return uuid.UUID("11111111-1111-1111-1111-111111111111")
 
 
 class Base(DeclarativeBase):

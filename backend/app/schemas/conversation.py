@@ -24,7 +24,7 @@ class MessageResponse(BaseModel):
 
 
 class ConversationCreate(BaseModel):
-    agent_id: uuid.UUID
+    agent_id: Optional[uuid.UUID] = None
     title: Optional[str] = "New Conversation"
 
 

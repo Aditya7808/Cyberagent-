@@ -61,7 +61,10 @@ export const Playground: React.FC = () => {
   useEffect(() => {
     api.getAgents()
       .then((data) => {
-        if (data && data.length > 0) setAgents(data);
+        if (data && data.length > 0) {
+          setAgents(data);
+          setSelectedAgentId(data[0].id);
+        }
       })
       .catch(() => {});
   }, []);

@@ -3,10 +3,9 @@ import uuid
 from datetime import datetime, timezone
 from typing import TYPE_CHECKING, Any, Dict, Optional
 from sqlalchemy import DateTime, Enum, ForeignKey, JSON, String, Text
-from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.database import Base
+from app.database import Base, GUID
 
 if TYPE_CHECKING:
     from app.models.agent import Agent
@@ -24,15 +23,15 @@ class ApprovalStatus(str, enum.Enum):
 class ToolApproval(Base):
     __tablename__ = "tool_approvals"
 
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id: Mapped[uuid.UUID] = mapped_column(GUID, primary_key=True, default=uuid.uuid4)
     org_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("organizations.id", ondelete="CASCADE"), nullable=False, index=True
+        GUID, ForeignKey("organizations.id", ondelete="CASCADE"), nullable=False, index=True
     )
     agent_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("agents.id", ondelete="CASCADE"), nullable=False, index=True
+        GUID, ForeignKey("agents.id", ondelete="CASCADE"), nullable=False, index=True
     )
     conversation_id: Mapped[Optional[uuid.UUID]] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("conversations.id", ondelete="SET NULL"), nullable=True, index=True
+        GUID, ForeignKey("conversations.id", ondelete="SET NULL"), nullable=True, index=True
     )
     tool_name: Mapped[str] = mapped_column(String(100), nullable=False)
     parameters: Mapped[Dict[str, Any]] = mapped_column(JSON, default=dict)
@@ -43,10 +42,10 @@ class ToolApproval(Base):
         index=True,
     )
     requested_by: Mapped[Optional[uuid.UUID]] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL"), nullable=True
+        GUID, ForeignKey("users.id", ondelete="SET NULL"), nullable=True
     )
     reviewed_by: Mapped[Optional[uuid.UUID]] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL"), nullable=True
+        GUID, ForeignKey("users.id", ondelete="SET NULL"), nullable=True
     )
     review_comment: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
 

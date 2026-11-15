@@ -16,9 +16,9 @@ import { Users } from './pages/Users';
 import { useAuth } from './context/AuthContext';
 
 const HomeRoute: React.FC = () => {
-  const { isRole } = useAuth();
-  // End users land directly on their conversational Playground, while Admins/Auditors see Threat Radar
-  if (isRole(['end_user', 'viewer'])) {
+  const { user } = useAuth();
+  // Only non-administrative end-users/viewers land on the conversational playground
+  if (user?.role === 'end_user' || user?.role === 'viewer') {
     return <Navigate to="/playground" replace />;
   }
   return <Dashboard />;

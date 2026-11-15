@@ -3,10 +3,9 @@ import uuid
 from datetime import datetime, timezone
 from typing import TYPE_CHECKING, Any, Dict, List, Optional
 from sqlalchemy import DateTime, Enum, ForeignKey, JSON, String, Text
-from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.database import Base
+from app.database import Base, GUID
 
 if TYPE_CHECKING:
     from app.models.agent import Agent
@@ -35,12 +34,12 @@ class TestOutcome(str, enum.Enum):
 class TestRun(Base):
     __tablename__ = "test_runs"
 
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id: Mapped[uuid.UUID] = mapped_column(GUID, primary_key=True, default=uuid.uuid4)
     agent_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("agents.id", ondelete="CASCADE"), nullable=False, index=True
+        GUID, ForeignKey("agents.id", ondelete="CASCADE"), nullable=False, index=True
     )
     initiated_by: Mapped[Optional[uuid.UUID]] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL"), nullable=True
+        GUID, ForeignKey("users.id", ondelete="SET NULL"), nullable=True
     )
     run_type: Mapped[RunType] = mapped_column(
         Enum(RunType, name="run_type_enum", values_callable=lambda x: [e.value for e in x]),
@@ -71,9 +70,9 @@ class TestRun(Base):
 class TestResult(Base):
     __tablename__ = "test_results"
 
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id: Mapped[uuid.UUID] = mapped_column(GUID, primary_key=True, default=uuid.uuid4)
     run_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("test_runs.id", ondelete="CASCADE"), nullable=False, index=True
+        GUID, ForeignKey("test_runs.id", ondelete="CASCADE"), nullable=False, index=True
     )
     test_case: Mapped[str] = mapped_column(String(255), nullable=False)
     category: Mapped[str] = mapped_column(String(100), nullable=False)
