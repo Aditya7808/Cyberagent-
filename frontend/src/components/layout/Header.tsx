@@ -2,9 +2,7 @@ import React from 'react';
 import {
   LogOut,
   Sun,
-  Moon,
-  ShieldCheck,
-  Shield
+  Moon
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
@@ -21,21 +19,6 @@ export const Header: React.FC = () => {
     return parts.map(p => p[0]).join('').slice(0, 2).toUpperCase();
   };
 
-  const getClearanceBadge = (role?: string) => {
-    switch (role) {
-      case 'super_admin':
-      case 'admin':
-        return 'badge-rose';
-      case 'developer':
-      case 'operator':
-        return 'badge-emerald';
-      case 'auditor':
-        return 'badge-amber';
-      default:
-        return 'badge-indigo';
-    }
-  };
-
   return (
     <header className="h-16 border-b border-slate-200 dark:border-slate-800/80 bg-white/80 dark:bg-slate-950/70 backdrop-blur-xl px-6 flex items-center justify-between sticky top-0 z-20 transition-colors duration-200">
       {/* Active System Indicator */}
@@ -46,15 +29,6 @@ export const Header: React.FC = () => {
 
       {/* Functioning Action Controls */}
       <div className="flex items-center gap-3 md:gap-4">
-        {/* Security Clearance Badge */}
-        <div
-          title={`Active Clearance Level: ${user?.clearance_level || 'LVL-1 [USER]'}`}
-          className={`px-2.5 py-1 rounded-md text-xs font-semibold flex items-center gap-1.5 ${getClearanceBadge(user?.role)}`}
-        >
-          <ShieldCheck className="w-3.5 h-3.5" />
-          <span>{user?.clearance_level || 'LVL-1 [USER]'}</span>
-        </div>
-
         {/* Theme Toggle Button */}
         <button
           onClick={toggleTheme}
