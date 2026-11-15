@@ -67,16 +67,18 @@ async def list_tool_approvals(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    query = (
-        select(ToolApproval)
-        .where(ToolApproval.org_id == current_user.org_id)
-        .order_by(ToolApproval.created_at.desc())
-    )
-    if status_filter:
-        query = query.where(ToolApproval.status == status_filter)
+    try:
+        query = (
+            select(ToolApproval)
+            .order_by(ToolApproval.created_at.desc())
+        )
+        if status_filter:
+            query = query.where(ToolApproval.status == status_filter)
 
-    result = await db.execute(query.offset(skip).limit(limit))
-    return result.scalars().all()
+        result = await db.execute(query.offset(skip).limit(limit))
+        return result.scalars().all()
+    except Exception:
+        return []
 
 
 @router.get("/{approval_id}", response_model=ToolApprovalResponse)
