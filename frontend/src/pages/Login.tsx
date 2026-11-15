@@ -51,21 +51,23 @@ export const Login: React.FC = () => {
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
 
-  // Google OAuth modal for manual or OAuth verification
+  // Google OAuth Configuration Modal state
   const [showGoogleModal, setShowGoogleModal] = useState(false);
-  const [googleEmailInput, setGoogleEmailInput] = useState('');
-  const [googleNameInput, setGoogleNameInput] = useState('');
+  const [googleClientIdInput, setGoogleClientIdInput] = useState('');
+  const [googleClientId, setGoogleClientId] = useState<string>(() => {
+    return import.meta.env.VITE_GOOGLE_CLIENT_ID || localStorage.getItem('sentinel_google_client_id') || '';
+  });
 
-  // Google Identity Services (GSI) Auto-Hook
+  // Google Identity Services (GSI) Live Hook
   useEffect(() => {
-    const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+    if (!googleClientId) return;
 
     const script = document.createElement('script');
     script.src = 'https://accounts.google.com/gsi/client';
     script.async = true;
     script.defer = true;
     script.onload = () => {
-      if ((window as any).google?.accounts?.id && googleClientId) {
+      if ((window as any).google?.accounts?.id) {
         try {
           (window as any).google.accounts.id.initialize({
             client_id: googleClientId,
@@ -74,19 +76,23 @@ export const Login: React.FC = () => {
                 setLoading(true);
                 setError('');
                 try {
+                  // Validates cryptographic Google token against Google's tokeninfo API
                   await loginWithGoogle(response.credential);
                   navigate('/');
                 } catch (err: any) {
-                  setError(err.message || 'Google OAuth verification failed.');
+                  setError(err.message || 'Google token validation failed with Google servers.');
                 } finally {
                   setLoading(false);
                 }
+              } else {
+                setError('No valid credential returned from Google.');
               }
             },
           });
 
           const btnContainer = document.getElementById('googleNativeBtn');
           if (btnContainer) {
+            btnContainer.innerHTML = '';
             (window as any).google.accounts.id.renderButton(btnContainer, {
               theme: theme === 'dark' ? 'filled_black' : 'outline',
               size: 'large',
@@ -106,7 +112,7 @@ export const Login: React.FC = () => {
         document.body.removeChild(script);
       }
     };
-  }, [theme, loginWithGoogle, navigate]);
+  }, [googleClientId, theme, loginWithGoogle, navigate]);
 
   const handleSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -116,7 +122,7 @@ export const Login: React.FC = () => {
 
     try {
       if (mode === 'login') {
-        // Real database validation: will reject incorrect passwords or emails
+        // Strict database validation: rejects incorrect passwords and unverified/fake emails
         await login(email, password);
         navigate('/');
       } else {
@@ -135,45 +141,26 @@ export const Login: React.FC = () => {
   };
 
   const handleGoogleSignInClick = () => {
-    const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-    if ((window as any).google?.accounts?.id && googleClientId) {
+    if (googleClientId && (window as any).google?.accounts?.id) {
       (window as any).google.accounts.id.prompt();
     } else {
       setShowGoogleModal(true);
     }
   };
 
-  const handleGoogleManualAuth = async (e: React.FormEvent) => {
+  const handleSaveGoogleClientId = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!googleEmailInput.trim() || !googleEmailInput.includes('@')) {
-      setError('Please provide a valid Google account email.');
+    const cleanId = googleClientIdInput.trim();
+    if (!cleanId || !cleanId.includes('.apps.googleusercontent.com')) {
+      setError('Please provide a valid Google OAuth 2.0 Client ID (ending in .apps.googleusercontent.com).');
       return;
     }
-    setLoading(true);
+    localStorage.setItem('sentinel_google_client_id', cleanId);
+    setGoogleClientId(cleanId);
+    setShowGoogleModal(false);
     setError('');
-    try {
-      // Send Google identity payload to backend
-      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1'}/auth/google`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: googleEmailInput.trim(),
-          full_name: googleNameInput.trim() || googleEmailInput.split('@')[0],
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.detail || 'Google account verification failed.');
-      }
-      localStorage.setItem('sentinel_token', data.access_token);
-      localStorage.setItem('sentinel_user', JSON.stringify(data.user));
-      setShowGoogleModal(false);
-      navigate('/');
-    } catch (err: any) {
-      setError(err.message || 'Failed to authenticate via Google.');
-    } finally {
-      setLoading(false);
-    }
+    setSuccessMsg('Google Client ID connected. Initializing Google Sign-In...');
+    setTimeout(() => setSuccessMsg(''), 3000);
   };
 
   const handleSelectDemo = (pEmail: string, pPass: string) => {
@@ -387,72 +374,62 @@ export const Login: React.FC = () => {
         </div>
       </div>
 
-      {/* Google Sign-In Prompt Modal */}
+      {/* Real Google OAuth Setup Modal */}
       {showGoogleModal && (
         <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="enterprise-card p-6 rounded-2xl max-w-sm w-full border border-slate-700 bg-slate-900 shadow-2xl space-y-4">
+          <div className="enterprise-card p-6 rounded-2xl max-w-md w-full border border-slate-700 bg-slate-900 shadow-2xl space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-slate-800">
               <div className="flex items-center gap-2.5">
                 <GoogleIcon className="w-5 h-5" />
-                <h3 className="text-sm font-bold text-white">Google Identity Authentication</h3>
+                <h3 className="text-sm font-bold text-white">Connect Google OAuth 2.0</h3>
               </div>
               <button
                 type="button"
                 onClick={() => setShowGoogleModal(false)}
-                className="text-slate-400 hover:text-white"
+                className="text-slate-400 hover:text-white cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <p className="text-xs text-slate-400">
-              Authenticate using your Google identity. Your profile will be verified and provisioned into Sentinel Zero-Trust directory.
+            <p className="text-xs text-slate-300 leading-relaxed">
+              To authenticate with real Google accounts, connect your <strong>Google Cloud OAuth 2.0 Client ID</strong> (created in Google Cloud Console under APIs & Services &gt; Credentials).
             </p>
 
-            <form onSubmit={handleGoogleManualAuth} className="space-y-3">
+            <form onSubmit={handleSaveGoogleClientId} className="space-y-3.5">
               <div>
-                <label className="text-[11px] font-medium text-slate-300 block mb-1">
-                  Google Account Email
-                </label>
-                <input
-                  type="email"
-                  value={googleEmailInput}
-                  onChange={(e) => setGoogleEmailInput(e.target.value)}
-                  placeholder="yourname@gmail.com"
-                  required
-                  autoFocus
-                  className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
-                />
-              </div>
-
-              <div>
-                <label className="text-[11px] font-medium text-slate-300 block mb-1">
-                  Full Name (Optional)
+                <label className="text-[11px] font-semibold text-slate-300 block mb-1">
+                  Google Client ID
                 </label>
                 <input
                   type="text"
-                  value={googleNameInput}
-                  onChange={(e) => setGoogleNameInput(e.target.value)}
-                  placeholder="e.g. Alex Mercer"
-                  className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+                  value={googleClientIdInput}
+                  onChange={(e) => setGoogleClientIdInput(e.target.value)}
+                  placeholder="e.g. 1234567890-abcdef.apps.googleusercontent.com"
+                  required
+                  autoFocus
+                  className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 font-mono"
                 />
+                <span className="text-[10px] text-slate-400 mt-1 block">
+                  Or configure in <code className="text-indigo-400">frontend/.env</code> as <code className="text-indigo-400">VITE_GOOGLE_CLIENT_ID</code>.
+                </span>
               </div>
 
               <div className="pt-2 flex items-center gap-2 justify-end">
                 <button
                   type="button"
                   onClick={() => setShowGoogleModal(false)}
-                  className="px-3 py-1.5 rounded-lg text-xs text-slate-400 hover:text-white"
+                  className="px-3.5 py-2 rounded-lg text-xs text-slate-400 hover:text-white cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold flex items-center gap-2 cursor-pointer disabled:opacity-50"
+                  className="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold flex items-center gap-2 cursor-pointer disabled:opacity-50 shadow-md shadow-indigo-600/20"
                 >
                   <GoogleIcon className="w-3.5 h-3.5" />
-                  <span>Verify with Google</span>
+                  <span>Connect & Open Google Login</span>
                 </button>
               </div>
             </form>

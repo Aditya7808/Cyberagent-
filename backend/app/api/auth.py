@@ -164,15 +164,16 @@ async def google_auth(req: GoogleAuthRequest, db: AsyncSession = Depends(get_db)
                     info = resp.json()
                     email = info.get("email")
                     full_name = info.get("name") or info.get("given_name")
-                    if info.get("email_verified") in [False, "false"]:
+                    is_verified = str(info.get("email_verified", "")).lower() in ("true", "1")
+                    if not is_verified:
                         raise HTTPException(
                             status_code=status.HTTP_400_BAD_REQUEST,
-                            detail="Google account email is not verified.",
+                            detail="Google account email is not verified by Google.",
                         )
                 else:
                     raise HTTPException(
                         status_code=status.HTTP_401_UNAUTHORIZED,
-                        detail="Invalid Google credentials. Token verification failed.",
+                        detail="Invalid Google credentials. Token verification failed with Google servers.",
                     )
         except HTTPException:
             raise
@@ -196,7 +197,7 @@ async def google_auth(req: GoogleAuthRequest, db: AsyncSession = Depends(get_db)
                 else:
                     raise HTTPException(
                         status_code=status.HTTP_401_UNAUTHORIZED,
-                        detail="Invalid Google OAuth access token.",
+                        detail="Invalid Google OAuth access token. Verification failed with Google servers.",
                     )
         except HTTPException:
             raise
@@ -205,13 +206,10 @@ async def google_auth(req: GoogleAuthRequest, db: AsyncSession = Depends(get_db)
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Google UserInfo service error: {str(e)}",
             )
-    elif req.email:
-        email = str(req.email)
-        full_name = req.full_name
     else:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Missing Google authentication token.",
+            detail="Missing Google authentication token. Genuine Google OAuth token required.",
         )
 
     if not email:

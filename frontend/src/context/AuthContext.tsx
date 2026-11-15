@@ -1,13 +1,13 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { api } from '../lib/api';
 
-export type UserRoleType = 
-  | 'super_admin' 
-  | 'admin' 
-  | 'developer' 
-  | 'operator' 
-  | 'auditor' 
-  | 'end_user' 
+export type UserRoleType =
+  | 'super_admin'
+  | 'admin'
+  | 'developer'
+  | 'operator'
+  | 'auditor'
+  | 'end_user'
   | 'viewer';
 
 export interface UserProfile {

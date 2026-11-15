@@ -52,6 +52,4 @@ class TokenResponse(BaseModel):
 class GoogleAuthRequest(BaseModel):
     credential: Optional[str] = None
     access_token: Optional[str] = None
-    email: Optional[EmailStr] = None
-    full_name: Optional[str] = None
 
