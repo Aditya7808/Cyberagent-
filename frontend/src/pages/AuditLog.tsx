@@ -21,12 +21,16 @@ export const AuditLog: React.FC = () => {
           action: l.action || 'Security Telemetry Event',
           resource: l.resource_type || 'Agent Sandbox',
           actor: l.user_id ? `User: ${l.user_id}` : l.ip_address || 'Gateway Intercept',
-          decision: (l.action && (l.action.includes('block') || l.action.includes('injection')))
+          decision: (l.action && (l.action.includes('block') || l.action.includes('injection') || l.action.includes('unauthorized') || l.action.includes('denied')))
             ? 'Blocked'
+            : (l.action && l.action.includes('reject'))
+            ? 'Rejected'
             : (l.action && l.action.includes('pii'))
             ? 'Masked'
-            : (l.action && l.action.includes('approval'))
+            : (l.action && (l.action.includes('pending') || l.action.includes('requested')))
             ? 'Approval Required'
+            : (l.action && l.action.includes('approved'))
+            ? 'Approved'
             : 'Allowed',
           sha256: l.id ? `${String(l.id).slice(0, 8)}...${String(l.id).slice(-4)}` : 'sha256:verified',
         }));
@@ -52,16 +56,16 @@ export const AuditLog: React.FC = () => {
   };
 
   const filteredLogs = logs.filter(l => {
-    if (filterType === 'blocked') return l.decision.toLowerCase().includes('block');
+    if (filterType === 'blocked') return l.decision.toLowerCase().includes('block') || l.decision.toLowerCase().includes('reject');
     if (filterType === 'masked') return l.decision.toLowerCase().includes('mask');
     return true;
   });
 
   const getDecisionBadge = (decision: string) => {
     const d = decision.toLowerCase();
-    if (d.includes('block')) return 'badge-rose';
+    if (d.includes('block') || d.includes('reject') || d.includes('denied')) return 'badge-rose';
     if (d.includes('mask')) return 'badge-amber';
-    if (d.includes('approval')) return 'badge-indigo';
+    if (d.includes('approval') || d.includes('pending')) return 'badge-indigo';
     return 'badge-emerald';
   };
 
