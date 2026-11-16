@@ -45,8 +45,8 @@ export const Login: React.FC = () => {
 
   const [mode, setMode] = useState<'login' | 'register'>('login');
   const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('root@sentinelai.dev');
-  const [password, setPassword] = useState('SentinelRoot2026!');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
@@ -165,10 +165,13 @@ export const Login: React.FC = () => {
     setTimeout(() => setSuccessMsg(''), 3000);
   };
 
-  const handleSelectDemo = (pEmail: string, pPass: string) => {
+  const handleSelectDemo = (pEmail: string) => {
     setEmail(pEmail);
-    setPassword(pPass);
+    setPassword('');
     setError('');
+    setTimeout(() => {
+      document.getElementById('account-password-input')?.focus();
+    }, 50);
   };
 
   return (
@@ -303,10 +306,11 @@ export const Login: React.FC = () => {
               Account Password
             </label>
             <input
+              id="account-password-input"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••••••"
+              placeholder="Enter password"
               required
               className="w-full bg-slate-900 border border-slate-700/80 rounded-lg px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all shadow-sm font-mono"
             />
@@ -350,22 +354,22 @@ export const Login: React.FC = () => {
         {/* Pre-Seeded Admin Identity Reference Box */}
         <div className="pt-4 border-t border-slate-200 dark:border-slate-800/80 space-y-2">
           <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 text-center uppercase tracking-wider">
-            Pre-Seeded Administrator Access
+            Quick Access
           </div>
           <button
             type="button"
-            onClick={() => handleSelectDemo('root@sentinelai.dev', 'SentinelRoot2026!')}
+            onClick={() => handleSelectDemo('root@sentinelai.dev')}
             className="w-full p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800/80 border border-slate-200 dark:border-slate-800 text-left transition-colors flex items-center justify-between gap-3 cursor-pointer shadow-sm group"
           >
             <div className="flex items-center gap-2.5 min-w-0">
               <div className="w-2.5 h-2.5 rounded-full bg-rose-500 shrink-0" />
               <div className="truncate">
-                <div className="font-semibold text-slate-800 dark:text-slate-200 text-xs">Root Administrator (L5)</div>
+                <div className="font-semibold text-slate-800 dark:text-slate-200 text-xs">Login as a Root User</div>
                 <div className="text-[11px] text-slate-500 truncate">root@sentinelai.dev</div>
               </div>
             </div>
             <span className="text-[11px] font-medium text-indigo-600 dark:text-indigo-400 shrink-0 group-hover:underline">
-              Auto-Fill
+              Select
             </span>
           </button>
         </div>
