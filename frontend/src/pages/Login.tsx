@@ -347,36 +347,27 @@ export const Login: React.FC = () => {
           )}
         </div>
 
-        {/* Demo Credentials Reference Box */}
+        {/* Pre-Seeded Admin Identity Reference Box */}
         <div className="pt-4 border-t border-slate-200 dark:border-slate-800/80 space-y-2">
           <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 text-center uppercase tracking-wider">
-            Pre-Seeded Security Identities
+            Pre-Seeded Administrator Access
           </div>
-          <div className="grid grid-cols-2 gap-2 text-xs">
-            <button
-              type="button"
-              onClick={() => handleSelectDemo('root@sentinelai.dev', 'SentinelRoot2026!')}
-              className="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800/80 border border-slate-200 dark:border-slate-800 text-left transition-colors flex items-center gap-2 cursor-pointer shadow-sm"
-            >
-              <div className="w-2 h-2 rounded-full bg-rose-500 shrink-0" />
+          <button
+            type="button"
+            onClick={() => handleSelectDemo('root@sentinelai.dev', 'SentinelRoot2026!')}
+            className="w-full p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800/80 border border-slate-200 dark:border-slate-800 text-left transition-colors flex items-center justify-between gap-3 cursor-pointer shadow-sm group"
+          >
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-2.5 h-2.5 rounded-full bg-rose-500 shrink-0" />
               <div className="truncate">
-                <div className="font-semibold text-slate-800 dark:text-slate-200 text-[11px]">Root Admin (L5)</div>
-                <div className="text-[10px] text-slate-500 truncate">root@sentinelai.dev</div>
+                <div className="font-semibold text-slate-800 dark:text-slate-200 text-xs">Root Administrator (L5)</div>
+                <div className="text-[11px] text-slate-500 truncate">root@sentinelai.dev</div>
               </div>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => handleSelectDemo('dev@sentinelai.dev', 'SentinelDev2026!')}
-              className="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800/80 border border-slate-200 dark:border-slate-800 text-left transition-colors flex items-center gap-2 cursor-pointer shadow-sm"
-            >
-              <div className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
-              <div className="truncate">
-                <div className="font-semibold text-slate-800 dark:text-slate-200 text-[11px]">AI Developer (L3)</div>
-                <div className="text-[10px] text-slate-500 truncate">dev@sentinelai.dev</div>
-              </div>
-            </button>
-          </div>
+            </div>
+            <span className="text-[11px] font-medium text-indigo-600 dark:text-indigo-400 shrink-0 group-hover:underline">
+              Auto-Fill
+            </span>
+          </button>
         </div>
       </div>
 
