@@ -4,15 +4,18 @@ import {
   Download,
   FileText,
   Clock,
-  Hash
+  Hash,
+  RefreshCw
 } from 'lucide-react';
 import { api } from '../lib/api';
 
 export const AuditLog: React.FC = () => {
   const [filterType, setFilterType] = useState('all');
   const [logs, setLogs] = useState<any[]>([]);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const fetchLogs = () => {
+    setIsRefreshing(true);
     api.getAuditLogs()
       .then((data) => {
         const formatted = (data || []).map((l: any) => ({
@@ -36,11 +39,16 @@ export const AuditLog: React.FC = () => {
         }));
         setLogs(formatted);
       })
-      .catch(() => setLogs([]));
+      .catch(() => setLogs([]))
+      .finally(() => {
+        setTimeout(() => setIsRefreshing(false), 400);
+      });
   };
 
   useEffect(() => {
     fetchLogs();
+    const interval = setInterval(fetchLogs, 8000);
+    return () => clearInterval(interval);
   }, []);
 
   const handleExport = (format: 'json' | 'csv') => {
@@ -83,6 +91,15 @@ export const AuditLog: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2.5">
+          <button
+            onClick={fetchLogs}
+            disabled={isRefreshing}
+            className="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 transition-all cursor-pointer shadow-sm disabled:opacity-60"
+            title="Refresh Audit Logs"
+          >
+            <RefreshCw className={`w-4 h-4 text-slate-500 dark:text-slate-400 ${isRefreshing ? 'animate-spin' : ''}`} />
+            Refresh
+          </button>
           <button
             onClick={() => handleExport('json')}
             className="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 transition-all cursor-pointer shadow-sm"
