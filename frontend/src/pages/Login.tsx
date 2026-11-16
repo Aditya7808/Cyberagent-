@@ -53,9 +53,9 @@ export const Login: React.FC = () => {
 
   // Google OAuth Configuration Modal state
   const [showGoogleModal, setShowGoogleModal] = useState(false);
-  const [googleClientIdInput, setGoogleClientIdInput] = useState('');
+  const [googleClientIdInput, setGoogleClientIdInput] = useState('456524101892-iovu195eards01hk1gk8dk44f3f1jqdt.apps.googleusercontent.com');
   const [googleClientId, setGoogleClientId] = useState<string>(() => {
-    return import.meta.env.VITE_GOOGLE_CLIENT_ID || localStorage.getItem('sentinel_google_client_id') || '';
+    return import.meta.env.VITE_GOOGLE_CLIENT_ID || localStorage.getItem('sentinel_google_client_id') || '456524101892-iovu195eards01hk1gk8dk44f3f1jqdt.apps.googleusercontent.com';
   });
 
   // Google Identity Services (GSI) Live Hook
