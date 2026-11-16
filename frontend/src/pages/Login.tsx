@@ -53,6 +53,7 @@ export const Login: React.FC = () => {
 
   // Google OAuth Configuration Modal state
   const [showGoogleModal, setShowGoogleModal] = useState(false);
+  const [isGoogleNativeLoaded, setIsGoogleNativeLoaded] = useState(false);
   const [googleClientIdInput, setGoogleClientIdInput] = useState('456524101892-iovu195eards01hk1gk8dk44f3f1jqdt.apps.googleusercontent.com');
   const [googleClientId, setGoogleClientId] = useState<string>(() => {
     return import.meta.env.VITE_GOOGLE_CLIENT_ID || localStorage.getItem('sentinel_google_client_id') || '456524101892-iovu195eards01hk1gk8dk44f3f1jqdt.apps.googleusercontent.com';
@@ -99,6 +100,7 @@ export const Login: React.FC = () => {
               width: 360,
               text: 'continue_with',
             });
+            setIsGoogleNativeLoaded(true);
           }
         } catch (e) {
           console.warn('Google GSI init notice:', e);
@@ -320,41 +322,43 @@ export const Login: React.FC = () => {
 
         {/* Divider */}
         <div className="relative flex py-1 items-center">
-          <div className="flex-grow border-t border-slate-800"></div>
-          <span className="flex-shrink mx-3 text-[10px] font-semibold text-slate-500 uppercase tracking-wider">
+          <div className="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
+          <span className="flex-shrink mx-3 text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
             Or Continue With
           </span>
-          <div className="flex-grow border-t border-slate-800"></div>
+          <div className="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
         </div>
 
-        {/* Real Google Auth Button */}
-        <div>
-          <div id="googleNativeBtn" className="flex justify-center" />
-          <button
-            type="button"
-            onClick={handleGoogleSignInClick}
-            disabled={loading}
-            className="w-full py-2.5 px-4 rounded-lg bg-slate-900 hover:bg-slate-800/90 text-white text-xs font-semibold transition-all flex items-center justify-center gap-2.5 border border-slate-700 shadow-sm cursor-pointer disabled:opacity-50 hover:border-slate-600"
-          >
-            <GoogleIcon className="w-4 h-4" />
-            <span>Sign in with Google</span>
-          </button>
+        {/* Single Genuine Google Auth Block */}
+        <div className="space-y-1.5">
+          <div id="googleNativeBtn" className="flex justify-center w-full min-h-[44px]" />
+          {!isGoogleNativeLoaded && (
+            <button
+              type="button"
+              onClick={handleGoogleSignInClick}
+              disabled={loading}
+              className="w-full py-2.5 px-4 rounded-lg bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800/90 text-slate-800 dark:text-white text-xs font-semibold transition-all flex items-center justify-center gap-2.5 border border-slate-300 dark:border-slate-700 shadow-sm cursor-pointer disabled:opacity-50"
+            >
+              <GoogleIcon className="w-4 h-4" />
+              <span>Continue with Google</span>
+            </button>
+          )}
         </div>
 
         {/* Demo Credentials Reference Box */}
-        <div className="pt-4 border-t border-slate-800/80 space-y-2">
-          <div className="text-[11px] font-semibold text-slate-400 text-center uppercase tracking-wider">
+        <div className="pt-4 border-t border-slate-200 dark:border-slate-800/80 space-y-2">
+          <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 text-center uppercase tracking-wider">
             Pre-Seeded Security Identities
           </div>
           <div className="grid grid-cols-2 gap-2 text-xs">
             <button
               type="button"
               onClick={() => handleSelectDemo('root@sentinelai.dev', 'SentinelRoot2026!')}
-              className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800/80 border border-slate-800 text-left transition-colors flex items-center gap-2 cursor-pointer"
+              className="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800/80 border border-slate-200 dark:border-slate-800 text-left transition-colors flex items-center gap-2 cursor-pointer shadow-sm"
             >
               <div className="w-2 h-2 rounded-full bg-rose-500 shrink-0" />
               <div className="truncate">
-                <div className="font-semibold text-slate-200 text-[11px]">Root Admin (L5)</div>
+                <div className="font-semibold text-slate-800 dark:text-slate-200 text-[11px]">Root Admin (L5)</div>
                 <div className="text-[10px] text-slate-500 truncate">root@sentinelai.dev</div>
               </div>
             </button>
@@ -362,11 +366,11 @@ export const Login: React.FC = () => {
             <button
               type="button"
               onClick={() => handleSelectDemo('dev@sentinelai.dev', 'SentinelDev2026!')}
-              className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800/80 border border-slate-800 text-left transition-colors flex items-center gap-2 cursor-pointer"
+              className="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800/80 border border-slate-200 dark:border-slate-800 text-left transition-colors flex items-center gap-2 cursor-pointer shadow-sm"
             >
-              <div className="w-2 h-2 rounded-full bg-emerald-400 shrink-0" />
+              <div className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
               <div className="truncate">
-                <div className="font-semibold text-slate-200 text-[11px]">AI Developer (L3)</div>
+                <div className="font-semibold text-slate-800 dark:text-slate-200 text-[11px]">AI Developer (L3)</div>
                 <div className="text-[10px] text-slate-500 truncate">dev@sentinelai.dev</div>
               </div>
             </button>
