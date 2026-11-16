@@ -38,7 +38,13 @@ services:
       - DATABASE_URL=postgresql+asyncpg://sentinel:sentinelpassword@postgres:5432/sentinel_db
       - REDIS_URL=redis://redis:6379/0
       - APP_NAME=SentinelAI
-      - DEBUG=True
+      - DEBUG=False
+      - SECRET_KEY=sentinel-super-secret-key-change-in-production
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - GEMINI_MODEL_ID=${GEMINI_MODEL_ID:-gemini-1.5-pro}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-}
+      - AWS_REGION=${AWS_REGION:-us-east-1}
     depends_on:
       postgres:
         condition: service_healthy
@@ -54,9 +60,7 @@ services:
     container_name: sentinel-frontend
     restart: always
     ports:
-      - "5173:5173"
-    environment:
-      - VITE_API_URL=http://localhost:8000/api/v1
+      - "5173:80"
     depends_on:
       - backend
 
