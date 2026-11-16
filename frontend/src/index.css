@@ -104,24 +104,39 @@ html.light .text-slate-500 {
   color: #64748b !important;
 }
 
-/* Ensure buttons and badges keep their crisp white text on colored backgrounds */
-html.light button.bg-indigo-600,
-html.light button.bg-indigo-500,
-html.light button.bg-emerald-600,
-html.light button.bg-emerald-500,
-html.light button.bg-rose-600,
-html.light button.bg-rose-500,
-html.light button.bg-blue-600,
+/* Ensure solid primary buttons keep their crisp white text on colored backgrounds */
+html.light button.bg-indigo-600:not([class*="/"]),
+html.light button.bg-indigo-500:not([class*="/"]),
+html.light button.bg-emerald-600:not([class*="/"]),
+html.light button.bg-emerald-500:not([class*="/"]),
+html.light button.bg-rose-600:not([class*="/"]),
+html.light button.bg-rose-500:not([class*="/"]),
+html.light button.bg-blue-600:not([class*="/"]),
 html.light .btn-primary,
 html.light .btn-danger,
-html.light .btn-success,
-html.light button[class*="bg-indigo-600"] span,
-html.light button[class*="bg-emerald-600"] span,
-html.light button[class*="bg-rose-600"] span,
-html.light button[class*="bg-indigo-600"] div,
-html.light button[class*="bg-emerald-600"] div,
-html.light button[class*="bg-rose-600"] div {
+html.light .btn-success {
   color: #ffffff !important;
+}
+
+html.light button.bg-indigo-600:not([class*="/"]) span,
+html.light button.bg-emerald-600:not([class*="/"]) span,
+html.light button.bg-rose-600:not([class*="/"]) span {
+  color: #ffffff !important;
+}
+
+/* Ensure light surface buttons always have dark high-contrast text in light mode */
+html.light button.bg-slate-100,
+html.light button.bg-slate-50,
+html.light button.bg-white,
+html.light button.bg-slate-200 {
+  color: #0f172a !important;
+}
+
+html.light button.bg-slate-100 span,
+html.light button.bg-slate-50 span,
+html.light button.bg-white span,
+html.light button.bg-slate-200 span {
+  color: #0f172a !important;
 }
 
 /* Sub-card backgrounds */
