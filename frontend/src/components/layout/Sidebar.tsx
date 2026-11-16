@@ -10,9 +10,7 @@ import {
   Fingerprint,
   Users,
   Shield,
-  Layers,
-  ChevronRight,
-  Cpu
+  ChevronRight
 } from 'lucide-react';
 import { useAuth, UserRoleType } from '../../context/AuthContext';
 
@@ -144,35 +142,6 @@ export const Sidebar: React.FC = () => {
           );
         })}
       </nav>
-
-      {/* AI Engine Status Footer */}
-      <div className="p-3 border-t border-slate-200 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-900/40 space-y-2.5">
-        {/* Engine telemetry strip */}
-        <div className="px-2.5 py-2 rounded-lg bg-slate-100/80 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Cpu className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" />
-            <span className="text-[11px] font-medium text-slate-600 dark:text-slate-300">Heuristic Engine</span>
-          </div>
-          <span className="flex items-center gap-1.5 text-[10px] font-mono font-semibold text-emerald-500 dark:text-emerald-400">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            ONLINE
-          </span>
-        </div>
-
-        {/* Tenant / Organization Footer Card */}
-        <div className="p-2.5 rounded-lg bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 flex items-center justify-between shadow-sm">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-md bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400">
-              <Layers className="w-3.5 h-3.5" />
-            </div>
-            <div>
-              <div className="text-[11px] font-semibold text-slate-800 dark:text-slate-200">Acme Defense Corp</div>
-              <div className="text-[10px] text-slate-400 dark:text-slate-500">Tenant: ACME_CORP_01</div>
-            </div>
-          </div>
-          <span className="w-2 h-2 rounded-full bg-emerald-500" title="Connected" />
-        </div>
-      </div>
     </aside>
   );
 };
