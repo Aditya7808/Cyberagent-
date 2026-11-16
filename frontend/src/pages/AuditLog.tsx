@@ -68,12 +68,12 @@ export const AuditLog: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800/80">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800/80">
         <div>
-          <h1 className="text-xl font-bold text-white tracking-tight">
+          <h1 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">
             Cryptographic Audit & Forensics
           </h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
             Immutable, tamper-evident ledger tracking prompt evaluations, intercept decisions, and human approvals.
           </p>
         </div>
@@ -81,23 +81,23 @@ export const AuditLog: React.FC = () => {
         <div className="flex items-center gap-2.5">
           <button
             onClick={() => handleExport('json')}
-            className="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-semibold text-slate-200 transition-all cursor-pointer"
+            className="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 transition-all cursor-pointer shadow-sm"
           >
-            <Download className="w-4 h-4 text-slate-400" />
+            <Download className="w-4 h-4 text-slate-500 dark:text-slate-400" />
             Export JSON
           </button>
           <button
             onClick={() => handleExport('csv')}
-            className="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-semibold text-slate-200 transition-all cursor-pointer"
+            className="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 transition-all cursor-pointer shadow-sm"
           >
-            <FileText className="w-4 h-4 text-slate-400" />
+            <FileText className="w-4 h-4 text-slate-500 dark:text-slate-400" />
             Export CSV
           </button>
         </div>
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex items-center gap-2 border-b border-slate-800/60 pb-3">
+      <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800/60 pb-3">
         {[
           { id: 'all', label: 'All Audit Events' },
           { id: 'blocked', label: 'Interceptions (Blocked)' },
@@ -109,7 +109,7 @@ export const AuditLog: React.FC = () => {
             className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
               filterType === tab.id
                 ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/20'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/60'
             }`}
           >
             {tab.label}
@@ -118,15 +118,15 @@ export const AuditLog: React.FC = () => {
       </div>
 
       {/* Forensic Table */}
-      <div className="enterprise-card rounded-xl overflow-hidden border border-slate-800">
-        <div className="px-5 py-3.5 border-b border-slate-800/80 bg-slate-900/60 flex items-center justify-between text-xs text-slate-400 font-medium">
+      <div className="enterprise-card rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800">
+        <div className="px-5 py-3.5 border-b border-slate-200 dark:border-slate-800/80 bg-slate-50 dark:bg-slate-900/60 flex items-center justify-between text-xs text-slate-600 dark:text-slate-400 font-medium">
           <span>SHA-256 Verified Immutable Records</span>
           <span className="badge-indigo px-2.5 py-0.5 rounded text-[11px] font-semibold">
             SOC2 Type II • HIPAA • ISO 27001
           </span>
         </div>
 
-        <div className="divide-y divide-slate-800/60">
+        <div className="divide-y divide-slate-200 dark:divide-slate-800/60">
           {filteredLogs.length === 0 ? (
             <div className="py-14 text-center text-slate-500 text-xs flex flex-col items-center justify-center">
               <Fingerprint className="w-9 h-9 text-indigo-400/50 mb-2.5" />
@@ -139,12 +139,12 @@ export const AuditLog: React.FC = () => {
             filteredLogs.map(log => (
               <div
                 key={log.id}
-                className="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-slate-800/20 transition-colors"
+                className="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-slate-50 dark:hover:bg-slate-800/20 transition-colors"
               >
                 <div className="space-y-1.5">
                   <div className="flex items-center gap-2.5">
                     <span className="font-semibold text-slate-900 dark:text-white text-sm">{log.action}</span>
-                    <span className="text-xs text-slate-400 flex items-center gap-1">
+                    <span className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1">
                       <Clock className="w-3 h-3 text-slate-500" />
                       {log.time}
                     </span>

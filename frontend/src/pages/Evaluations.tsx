@@ -67,12 +67,12 @@ export const Evaluations: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800/80">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800/80">
         <div>
-          <h1 className="text-xl font-bold text-white tracking-tight">
+          <h1 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">
             Model Reliability & Golden Benchmarks
           </h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
             Continuous validation against ground-truth safety, hallucination, and PII datasets.
           </p>
         </div>
@@ -99,64 +99,64 @@ export const Evaluations: React.FC = () => {
       {/* Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="enterprise-card p-4 rounded-xl">
-          <div className="text-xs font-medium text-slate-400">Policy Compliance</div>
-          <div className="text-2xl font-bold text-emerald-400 mt-1.5">
+          <div className="text-xs font-medium text-slate-600 dark:text-slate-400">Policy Compliance</div>
+          <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1.5">
             {metrics.policy_compliance_rate_percent}%
           </div>
-          <div className="text-xs text-emerald-400 mt-1 font-medium">Zero policy transgressions</div>
+          <div className="text-xs text-emerald-600 dark:text-emerald-400 mt-1 font-medium">Zero policy transgressions</div>
         </div>
 
         <div className="enterprise-card p-4 rounded-xl">
-          <div className="text-xs font-medium text-slate-400">RAG Relevance Score</div>
-          <div className="text-2xl font-bold text-indigo-300 mt-1.5">
+          <div className="text-xs font-medium text-slate-600 dark:text-slate-400">RAG Relevance Score</div>
+          <div className="text-2xl font-bold text-indigo-600 dark:text-indigo-300 mt-1.5">
             {(metrics.rag_relevance_score * 100).toFixed(0)}%
           </div>
-          <div className="text-xs text-indigo-400 mt-1 font-medium">High semantic grounding</div>
+          <div className="text-xs text-indigo-600 dark:text-indigo-400 mt-1 font-medium">High semantic grounding</div>
         </div>
 
         <div className="enterprise-card p-4 rounded-xl">
-          <div className="text-xs font-medium text-slate-400">Attack Breach Rate</div>
-          <div className="text-2xl font-bold text-slate-200 mt-1.5">
+          <div className="text-xs font-medium text-slate-600 dark:text-slate-400">Attack Breach Rate</div>
+          <div className="text-2xl font-bold text-slate-900 dark:text-slate-200 mt-1.5">
             {metrics.attack_success_rate_percent}%
           </div>
-          <div className="text-xs text-slate-500 mt-1">Target threshold: &lt;1.0%</div>
+          <div className="text-xs text-slate-600 dark:text-slate-400 mt-1">Target threshold: &lt;1.0%</div>
         </div>
 
         <div className="enterprise-card p-4 rounded-xl">
-          <div className="text-xs font-medium text-slate-400">System Certification</div>
-          <div className="text-2xl font-bold text-emerald-400 mt-1.5 flex items-center gap-2">
-            <CheckCircle className="w-6 h-6 text-emerald-400" />
+          <div className="text-xs font-medium text-slate-600 dark:text-slate-400">System Certification</div>
+          <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1.5 flex items-center gap-2">
+            <CheckCircle className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
             Verified
           </div>
-          <div className="text-xs text-slate-500 mt-1">All golden assertions verified</div>
+          <div className="text-xs text-slate-600 dark:text-slate-400 mt-1">All golden assertions verified</div>
         </div>
       </div>
 
       {/* Assertions Table */}
-      <div className="enterprise-card rounded-xl overflow-hidden border border-slate-800">
-        <div className="px-5 py-4 border-b border-slate-800/80 bg-slate-900/60 flex items-center justify-between text-sm">
-          <span className="font-semibold text-white">Verified Benchmark Assertions</span>
+      <div className="enterprise-card rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800">
+        <div className="px-5 py-4 border-b border-slate-200 dark:border-slate-800/80 bg-slate-50 dark:bg-slate-900/60 flex items-center justify-between text-sm">
+          <span className="font-semibold text-slate-900 dark:text-white">Verified Benchmark Assertions</span>
           <span className="badge-indigo px-2.5 py-0.5 rounded text-xs font-medium">Automated Evals</span>
         </div>
 
-        <div className="divide-y divide-slate-800/60">
+        <div className="divide-y divide-slate-200 dark:divide-slate-800/60">
           {assertions.map(item => (
             <div
               key={item.id}
-              className="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-slate-800/20 transition-colors"
+              className="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-slate-100/60 dark:hover:bg-slate-800/20 transition-colors"
             >
               <div className="space-y-1.5">
                 <div className="flex items-center gap-2.5">
-                  <span className="text-xs font-mono font-semibold text-slate-300">{item.id}</span>
+                  <span className="text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">{item.id}</span>
                   <span className="badge-indigo px-2 py-0.5 rounded text-xs font-medium">
                     {item.category}
                   </span>
                 </div>
-                <div className="text-sm text-slate-200">{item.probe}</div>
+                <div className="text-sm font-medium text-slate-800 dark:text-slate-200">{item.probe}</div>
               </div>
 
               <div className="flex items-center gap-4 shrink-0">
-                <span className="text-xs text-slate-400 font-medium">Confidence: {(item.score * 100).toFixed(0)}%</span>
+                <span className="text-xs text-slate-600 dark:text-slate-400 font-medium">Confidence: {(item.score * 100).toFixed(0)}%</span>
                 <span className="badge-emerald px-3 py-1 rounded-lg text-xs font-semibold">
                   {item.outcome}
                 </span>

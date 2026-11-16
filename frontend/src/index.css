@@ -59,56 +59,99 @@ html.light .enterprise-bg {
    LIGHT MODE CONTRAST ENFORCEMENT - Zero text fading guarantee
    ========================================================================== */
 
-/* Headings and card text defaults in light mode (exempting buttons and badges) */
+/* ==========================================================================
+   THEME CONTRAST ENFORCEMENT - Light & Night (Dark) Mode Readability
+   ========================================================================== */
+
+/* Light Mode: enforce dark crisp typography */
+html.light body {
+  background-color: #f8fafc;
+  color: #0f172a;
+}
+
 html.light h1:not([class*="text-indigo"]):not([class*="text-emerald"]):not([class*="text-rose"]),
 html.light h2:not([class*="text-indigo"]):not([class*="text-emerald"]):not([class*="text-rose"]),
 html.light h3:not([class*="text-indigo"]):not([class*="text-emerald"]):not([class*="text-rose"]),
 html.light h4:not([class*="text-indigo"]):not([class*="text-emerald"]):not([class*="text-rose"]) {
-  color: #0f172a;
+  color: #0f172a !important;
 }
 
-/* Ensure buttons keep their crisp white text on colored backgrounds */
+/* Ensure text-white inside light mode cards becomes dark readable text (except buttons/badges) */
+html.light .enterprise-card .text-white,
+html.light .enterprise-card span.text-white,
+html.light .enterprise-card div.text-white,
+html.light h1.text-white,
+html.light h2.text-white,
+html.light h3.text-white {
+  color: #0f172a !important;
+}
+
+/* High contrast for slate text in light mode */
+html.light .text-slate-100,
+html.light .text-slate-200 {
+  color: #1e293b !important;
+}
+
+html.light .text-slate-300 {
+  color: #334155 !important;
+}
+
+html.light .text-slate-400 {
+  color: #475569 !important;
+}
+
+html.light .text-slate-500 {
+  color: #64748b !important;
+}
+
+/* Ensure buttons and badges keep their crisp white text on colored backgrounds */
 html.light button.bg-indigo-600,
+html.light button.bg-indigo-500,
 html.light button.bg-emerald-600,
+html.light button.bg-emerald-500,
 html.light button.bg-rose-600,
 html.light button.bg-rose-500,
 html.light button.bg-blue-600,
 html.light .btn-primary,
 html.light .btn-danger,
-html.light .btn-success {
+html.light .btn-success,
+html.light button[class*="bg-indigo-600"] span,
+html.light button[class*="bg-emerald-600"] span,
+html.light button[class*="bg-rose-600"] span,
+html.light button[class*="bg-indigo-600"] div,
+html.light button[class*="bg-emerald-600"] div,
+html.light button[class*="bg-rose-600"] div {
   color: #ffffff !important;
 }
 
-/* High contrast inputs */
-html.light input,
-html.light select,
-html.light textarea {
-  background-color: #ffffff !important;
-  color: #0f172a !important;
-  border-color: #cbd5e1 !important;
-}
-
-html.light input::placeholder,
-html.light textarea::placeholder {
-  color: #94a3b8 !important;
-}
-
 /* Sub-card backgrounds */
+html.light .enterprise-card {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 2px 10px -1px rgba(0, 0, 0, 0.05), 0 1px 3px 0 rgba(0, 0, 0, 0.03) !important;
+}
+
+html.light .enterprise-card:hover {
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 4px 15px -2px rgba(0, 0, 0, 0.08) !important;
+}
+
 html.light .bg-slate-900,
 html.light .bg-slate-900\/60,
 html.light .bg-slate-900\/80,
-html.light .bg-slate-900\/90,
-html.light .bg-slate-950,
-html.light .bg-slate-950\/60,
-html.light .bg-slate-950\/70,
-html.light .bg-slate-950\/80 {
+html.light .bg-slate-900\/90 {
   background-color: #f8fafc !important;
   border-color: #e2e8f0 !important;
   color: #0f172a !important;
 }
 
-html.light .bg-slate-950 {
+html.light .bg-slate-950,
+html.light .bg-slate-950\/60,
+html.light .bg-slate-950\/70,
+html.light .bg-slate-950\/80 {
   background-color: #f1f5f9 !important;
+  border-color: #e2e8f0 !important;
+  color: #0f172a !important;
 }
 
 html.light .border-slate-800,
@@ -118,6 +161,37 @@ html.light .border-slate-700,
 html.light .border-slate-700\/60,
 html.light .border-slate-700\/80 {
   border-color: #e2e8f0 !important;
+}
+
+html.light .divide-slate-800\/60 > * {
+  border-color: #e2e8f0 !important;
+}
+
+/* Dark Mode (Night Mode) High Contrast */
+html.dark body {
+  background-color: #080c14;
+  color: #f8fafc;
+}
+
+html.dark .enterprise-card {
+  background: rgba(15, 23, 42, 0.75);
+  border-color: rgba(30, 41, 59, 0.8);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
+}
+
+html.dark h1,
+html.dark h2,
+html.dark h3,
+html.dark h4 {
+  color: #ffffff;
+}
+
+html.dark .text-slate-400 {
+  color: #94a3b8;
+}
+
+html.dark .text-slate-500 {
+  color: #64748b;
 }
 
 /* Recharts Contrast in Light Mode */

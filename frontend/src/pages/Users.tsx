@@ -138,12 +138,12 @@ export const Users: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800/80">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800/80">
         <div>
-          <h1 className="text-xl font-bold text-white tracking-tight">
+          <h1 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">
             Identity & Access Management (IAM)
           </h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
             Database-backed Zero-Trust directory. Enforce cryptographic role-based access control and security clearances.
           </p>
         </div>
@@ -152,9 +152,9 @@ export const Users: React.FC = () => {
           <button
             onClick={fetchUsers}
             disabled={loading}
-            className="px-3.5 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-sm font-medium text-slate-300 flex items-center gap-2 transition-colors disabled:opacity-50 cursor-pointer"
+            className="px-3.5 py-2 rounded-lg bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-2 transition-colors disabled:opacity-50 cursor-pointer shadow-sm"
           >
-            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin text-indigo-400' : ''}`} />
+            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin text-indigo-500' : ''}`} />
             Sync Directory
           </button>
           <button
@@ -169,68 +169,68 @@ export const Users: React.FC = () => {
 
       {/* Metrics Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="enterprise-card p-4 rounded-xl">
-          <div className="text-xs font-medium text-slate-400">Total Registered Identities</div>
-          <div className="text-2xl font-bold text-white mt-1.5">{users.length}</div>
-          <div className="text-xs text-indigo-400 mt-1 flex items-center gap-1.5 font-medium">
-            <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
+        <div className="enterprise-card p-4 rounded-xl border border-slate-200 dark:border-slate-800">
+          <div className="text-xs font-medium text-slate-500 dark:text-slate-400">Total Registered Identities</div>
+          <div className="text-2xl font-bold text-slate-900 dark:text-white mt-1.5">{users.length}</div>
+          <div className="text-xs text-indigo-600 dark:text-indigo-400 mt-1 flex items-center gap-1.5 font-medium">
+            <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse" />
             Active in SQLite Database
           </div>
         </div>
 
-        <div className="enterprise-card p-4 rounded-xl">
-          <div className="text-xs font-medium text-slate-400">Security Administrators</div>
-          <div className="text-2xl font-bold text-indigo-300 mt-1.5">
+        <div className="enterprise-card p-4 rounded-xl border border-slate-200 dark:border-slate-800">
+          <div className="text-xs font-medium text-slate-500 dark:text-slate-400">Security Administrators</div>
+          <div className="text-2xl font-bold text-indigo-600 dark:text-indigo-300 mt-1.5">
             {users.filter(u => u.role === 'super_admin' || u.role === 'admin').length}
           </div>
-          <div className="text-xs text-slate-400 mt-1">Full HITL write privileges</div>
+          <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">Full HITL write privileges</div>
         </div>
 
-        <div className="enterprise-card p-4 rounded-xl">
-          <div className="text-xs font-medium text-slate-400">AI Engineers & Developers</div>
-          <div className="text-2xl font-bold text-emerald-400 mt-1.5">
+        <div className="enterprise-card p-4 rounded-xl border border-slate-200 dark:border-slate-800">
+          <div className="text-xs font-medium text-slate-500 dark:text-slate-400">AI Engineers & Developers</div>
+          <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1.5">
             {users.filter(u => u.role === 'developer').length}
           </div>
-          <div className="text-xs text-slate-400 mt-1">Agent registry & sandbox access</div>
+          <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">Agent registry & sandbox access</div>
         </div>
 
-        <div className="enterprise-card p-4 rounded-xl">
-          <div className="text-xs font-medium text-slate-400">Authentication Guard</div>
-          <div className="text-2xl font-bold text-emerald-400 mt-1.5">Zero-Trust</div>
-          <div className="text-xs text-slate-400 mt-1">Bcrypt (cost 10) + Signed JWT</div>
+        <div className="enterprise-card p-4 rounded-xl border border-slate-200 dark:border-slate-800">
+          <div className="text-xs font-medium text-slate-500 dark:text-slate-400">Authentication Guard</div>
+          <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1.5">Zero-Trust</div>
+          <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">Bcrypt (cost 10) + Signed JWT</div>
         </div>
       </div>
 
       {/* Alerts */}
       {error && (
-        <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 flex items-center gap-3 text-sm">
-          <AlertTriangle className="w-5 h-5 text-rose-400 shrink-0" />
+        <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-300 flex items-center gap-3 text-sm">
+          <AlertTriangle className="w-5 h-5 text-rose-500 dark:text-rose-400 shrink-0" />
           <span>{error}</span>
         </div>
       )}
 
       {success && (
-        <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 flex items-center gap-3 text-sm">
-          <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
+        <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-300 flex items-center gap-3 text-sm">
+          <CheckCircle2 className="w-5 h-5 text-emerald-500 dark:text-emerald-400 shrink-0" />
           <span>{success}</span>
         </div>
       )}
 
       {/* Directory Table */}
-      <div className="enterprise-card rounded-xl overflow-hidden border border-slate-800">
-        <div className="px-5 py-4 bg-slate-900/60 border-b border-slate-800/80 flex items-center justify-between">
-          <div className="font-semibold text-white flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-indigo-400" />
+      <div className="enterprise-card rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800">
+        <div className="px-5 py-4 bg-slate-50 dark:bg-slate-900/60 border-b border-slate-200 dark:border-slate-800/80 flex items-center justify-between">
+          <div className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+            <ShieldCheck className="w-4 h-4 text-indigo-500 dark:text-indigo-400" />
             Registered Identity Directory
           </div>
-          <span className="text-xs text-slate-400 font-medium">
+          <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
             {users.length} Active Accounts
           </span>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left">
-            <thead className="bg-slate-950/40 text-slate-400 text-xs font-semibold uppercase tracking-wider border-b border-slate-800/60">
+            <thead className="bg-slate-100/60 dark:bg-slate-950/40 text-slate-600 dark:text-slate-400 text-xs font-semibold uppercase tracking-wider border-b border-slate-200 dark:border-slate-800/60">
               <tr>
                 <th className="px-5 py-3.5">User & Email</th>
                 <th className="px-5 py-3.5">Security Clearance</th>
@@ -239,13 +239,13 @@ export const Users: React.FC = () => {
                 <th className="px-5 py-3.5 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/40 text-sm">
+            <tbody className="divide-y divide-slate-200 dark:divide-slate-800/40 text-sm">
               {users.map((u) => {
                 const isCurrent = currentUser?.id === u.id;
                 return (
-                  <tr key={u.id} className="hover:bg-slate-800/30 transition-colors">
+                  <tr key={u.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
                     <td className="px-5 py-4">
-                      <div className="font-semibold text-white flex items-center gap-2">
+                      <div className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
                         {u.full_name}
                         {isCurrent && (
                           <span className="badge-indigo px-2 py-0.5 rounded text-[11px] font-semibold">
@@ -253,8 +253,8 @@ export const Users: React.FC = () => {
                           </span>
                         )}
                       </div>
-                      <div className="text-xs text-slate-400 mt-0.5 flex items-center gap-1.5">
-                        <Mail className="w-3.5 h-3.5 text-slate-500" />
+                      <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 flex items-center gap-1.5">
+                        <Mail className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
                         {u.email}
                       </div>
                     </td>
@@ -271,7 +271,7 @@ export const Users: React.FC = () => {
                         value={u.role}
                         disabled={actionLoading || isCurrent}
                         onChange={(e) => handleRoleChange(u.id, e.target.value)}
-                        className="bg-slate-900 border border-slate-700/80 rounded-lg px-3 py-1.5 text-xs font-medium text-slate-200 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 disabled:opacity-50 cursor-pointer"
+                        className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 rounded-lg px-3 py-1.5 text-xs font-medium text-slate-800 dark:text-slate-200 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 disabled:opacity-50 cursor-pointer shadow-sm"
                       >
                         <option value="super_admin">Level 5 — Root Security Admin</option>
                         <option value="developer">Level 3 — AI Developer</option>
@@ -281,8 +281,8 @@ export const Users: React.FC = () => {
                     </td>
 
                     <td className="px-5 py-4">
-                      <span className="inline-flex items-center gap-1.5 text-emerald-400 text-xs font-medium">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                      <span className="inline-flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 text-xs font-medium">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                         Active
                       </span>
                     </td>
@@ -292,7 +292,7 @@ export const Users: React.FC = () => {
                         <button
                           onClick={() => handleDeleteUser(u.id, u.email)}
                           disabled={actionLoading}
-                          className="p-2 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 hover:border-rose-500/40 transition-colors"
+                          className="p-2 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 dark:text-rose-400 border border-rose-500/20 hover:border-rose-500/40 transition-colors"
                           title="Revoke Identity"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -310,15 +310,15 @@ export const Users: React.FC = () => {
       {/* Modal: Provision New User */}
       {showAddModal && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="w-full max-w-md enterprise-card p-6 rounded-2xl border border-slate-700/80 bg-slate-900 shadow-2xl space-y-5">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-              <div className="font-bold text-white text-base flex items-center gap-2">
-                <UserPlus className="w-5 h-5 text-indigo-400" />
+          <div className="w-full max-w-md enterprise-card p-6 rounded-2xl border border-slate-200 dark:border-slate-700/80 bg-white dark:bg-slate-900 shadow-2xl space-y-5">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+              <div className="font-bold text-slate-900 dark:text-white text-base flex items-center gap-2">
+                <UserPlus className="w-5 h-5 text-indigo-500 dark:text-indigo-400" />
                 Provision New Team Identity
               </div>
               <button
                 onClick={() => setShowAddModal(false)}
-                className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors"
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-white p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -326,7 +326,7 @@ export const Users: React.FC = () => {
 
             <form onSubmit={handleCreateUser} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
                   Full Name / Callsign
                 </label>
                 <input
@@ -335,12 +335,12 @@ export const Users: React.FC = () => {
                   value={newFullName}
                   onChange={(e) => setNewFullName(e.target.value)}
                   placeholder="e.g. Maya Lin"
-                  className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-lg px-3.5 py-2 text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
                   Corporate Email
                 </label>
                 <input
@@ -349,12 +349,12 @@ export const Users: React.FC = () => {
                   value={newEmail}
                   onChange={(e) => setNewEmail(e.target.value)}
                   placeholder="maya@company.com"
-                  className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-lg px-3.5 py-2 text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
                   Temporary Password
                 </label>
                 <input
@@ -363,18 +363,18 @@ export const Users: React.FC = () => {
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   placeholder="Minimum 8 characters"
-                  className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-lg px-3.5 py-2 text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
                   Initial Clearance & Role
                 </label>
                 <select
                   value={newRole}
                   onChange={(e) => setNewRole(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 cursor-pointer"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-lg px-3.5 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 cursor-pointer"
                 >
                   <option value="end_user">Level 1 — Business End-User</option>
                   <option value="developer">Level 3 — AI Developer</option>
@@ -383,11 +383,11 @@ export const Users: React.FC = () => {
                 </select>
               </div>
 
-              <div className="pt-3 flex items-center justify-end gap-3 border-t border-slate-800">
+              <div className="pt-3 flex items-center justify-end gap-3 border-t border-slate-200 dark:border-slate-800">
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-sm font-medium text-slate-300 transition-colors"
+                  className="px-4 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-medium text-slate-700 dark:text-slate-300 transition-colors"
                 >
                   Cancel
                 </button>

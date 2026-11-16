@@ -180,9 +180,9 @@ export const Login: React.FC = () => {
           className="px-3 py-1.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-slate-700/80 text-slate-300 hover:text-white transition-all flex items-center gap-2 shadow-sm text-xs font-semibold cursor-pointer"
         >
           {theme === 'dark' ? (
-            <Sun className="w-4 h-4 text-amber-400" />
-          ) : (
             <Moon className="w-4 h-4 text-indigo-400" />
+          ) : (
+            <Sun className="w-4 h-4 text-amber-500" />
           )}
           <span className="capitalize">{theme === 'dark' ? 'Dark' : 'Light'} Mode</span>
         </button>

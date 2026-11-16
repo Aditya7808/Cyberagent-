@@ -108,12 +108,12 @@ export const RedTeam: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800/80">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800/80">
         <div>
-          <h1 className="text-xl font-bold text-white tracking-tight">
+          <h1 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">
             Adversarial Red Teaming
           </h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
             Automated penetration testing against MITRE ATLAS & OWASP LLM Top 10 threat vectors.
           </p>
         </div>
@@ -172,37 +172,37 @@ export const RedTeam: React.FC = () => {
       {/* Telemetry Scores */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="enterprise-card p-4 rounded-xl">
-          <div className="text-xs font-medium text-slate-400">Total Combat Probes</div>
-          <div className="text-2xl font-bold text-white mt-1.5">{scanSummary.total_attacks}</div>
-          <div className="text-xs text-slate-500 mt-1">Multi-vector payload suite</div>
+          <div className="text-xs font-medium text-slate-600 dark:text-slate-400">Total Combat Probes</div>
+          <div className="text-2xl font-bold text-slate-900 dark:text-white mt-1.5">{scanSummary.total_attacks}</div>
+          <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">Multi-vector payload suite</div>
         </div>
 
         <div className="enterprise-card p-4 rounded-xl">
-          <div className="text-xs font-medium text-slate-400">Attacks Intercepted</div>
-          <div className="text-2xl font-bold text-emerald-400 mt-1.5">{scanSummary.blocked_attacks}</div>
-          <div className="text-xs text-emerald-400 mt-1 font-medium">100% neutralized at perimeter</div>
+          <div className="text-xs font-medium text-slate-600 dark:text-slate-400">Attacks Intercepted</div>
+          <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1.5">{scanSummary.blocked_attacks}</div>
+          <div className="text-xs text-emerald-600 dark:text-emerald-400 mt-1 font-medium">100% neutralized at perimeter</div>
         </div>
 
         <div className="enterprise-card p-4 rounded-xl">
-          <div className="text-xs font-medium text-slate-400">Defensive Resilience</div>
-          <div className="text-2xl font-bold text-indigo-300 mt-1.5">{scanSummary.block_rate_percent}%</div>
-          <div className="text-xs text-indigo-400 mt-1 font-medium">Zero Breaches Detected</div>
+          <div className="text-xs font-medium text-slate-600 dark:text-slate-400">Defensive Resilience</div>
+          <div className="text-2xl font-bold text-indigo-600 dark:text-indigo-300 mt-1.5">{scanSummary.block_rate_percent}%</div>
+          <div className="text-xs text-indigo-600 dark:text-indigo-400 mt-1 font-medium">Zero Breaches Detected</div>
         </div>
 
         <div className="enterprise-card p-4 rounded-xl">
-          <div className="text-xs font-medium text-slate-400">Attack Success Rate</div>
-          <div className="text-2xl font-bold text-slate-200 mt-1.5">{scanSummary.attack_success_rate_percent}%</div>
-          <div className="text-xs text-slate-500 mt-1">Target threshold: &lt;1.0%</div>
+          <div className="text-xs font-medium text-slate-600 dark:text-slate-400">Attack Success Rate</div>
+          <div className="text-2xl font-bold text-slate-900 dark:text-slate-200 mt-1.5">{scanSummary.attack_success_rate_percent}%</div>
+          <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">Target threshold: &lt;1.0%</div>
         </div>
       </div>
 
       {/* Attack Results Table */}
-      <div className="enterprise-card rounded-xl overflow-hidden border border-slate-800">
-        <div className="px-5 py-4 bg-slate-900/60 border-b border-slate-800/80 flex items-center justify-between text-sm">
+      <div className="enterprise-card rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800">
+        <div className="px-5 py-4 bg-slate-50 dark:bg-slate-900/60 border-b border-slate-200 dark:border-slate-800/80 flex items-center justify-between text-sm">
           <div className="flex items-center gap-3">
-            <span className="font-semibold text-white">Active Penetration Results Matrix</span>
+            <span className="font-semibold text-slate-900 dark:text-white">Active Penetration Results Matrix</span>
             {lastScanTime && (
-              <span className="text-[11px] text-slate-400 font-mono flex items-center gap-1.5">
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 font-mono flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 Audited: {lastScanTime}
               </span>
@@ -213,16 +213,16 @@ export const RedTeam: React.FC = () => {
           </span>
         </div>
 
-        <div className="divide-y divide-slate-800/60">
+        <div className="divide-y divide-slate-200 dark:divide-slate-800/60">
           {testResults.map((test) => (
             <div
               key={test.id}
-              className="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-slate-800/20 transition-colors"
+              className="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-slate-100/60 dark:hover:bg-slate-800/20 transition-colors"
             >
               <div className="space-y-1.5">
                 <div className="flex items-center gap-2.5">
-                  <span className="font-semibold text-white text-sm">{test.name}</span>
-                  <span className="px-2 py-0.5 rounded text-xs font-mono bg-slate-800 text-slate-300 border border-slate-700">
+                  <span className="font-semibold text-slate-900 dark:text-white text-sm">{test.name}</span>
+                  <span className="px-2 py-0.5 rounded text-xs font-mono bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
                     {test.mitre_id}
                   </span>
                   <span className={`px-2 py-0.5 rounded text-xs font-semibold ${
@@ -231,12 +231,12 @@ export const RedTeam: React.FC = () => {
                     {test.severity}
                   </span>
                 </div>
-                <div className="text-xs text-slate-400">
-                  Category: <span className="text-slate-300 font-medium">{test.category}</span>
+                <div className="text-xs text-slate-600 dark:text-slate-400">
+                  Category: <span className="text-slate-800 dark:text-slate-300 font-medium">{test.category}</span>
                 </div>
                 <div className="flex flex-wrap gap-1.5 pt-1">
                   {test.detected_vectors.map((vec: string, i: number) => (
-                    <span key={i} className="text-[11px] px-2 py-0.5 rounded-md bg-slate-950/80 text-slate-400 border border-slate-800">
+                    <span key={i} className="text-[11px] px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-950/80 text-slate-700 dark:text-slate-400 border border-slate-200 dark:border-slate-800">
                       Trigger: {vec}
                     </span>
                   ))}

@@ -72,22 +72,22 @@ export const Documents: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800/80">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800/80">
         <div>
-          <h1 className="text-xl font-bold text-white tracking-tight">
+          <h1 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">
             Secure RAG Vector Vault
           </h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
             Multi-tenant document isolation with automatic PII sanitization and role-governed semantic retrieval.
           </p>
         </div>
 
         <div className="flex items-center gap-2.5">
-          <span className="text-xs font-medium text-slate-400">Tenant Filter:</span>
+          <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Tenant Filter:</span>
           <select
             value={selectedTenant}
             onChange={(e) => setSelectedTenant(e.target.value)}
-            className="px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs font-semibold text-slate-200 focus:outline-none focus:border-indigo-500 cursor-pointer"
+            className="px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs font-semibold text-slate-800 dark:text-slate-200 focus:outline-none focus:border-indigo-500 cursor-pointer"
           >
             <option value="all">All Enterprise Tenants</option>
             <option value="Acme">Acme Corporation</option>
@@ -106,12 +106,12 @@ export const Documents: React.FC = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search RAG knowledge base via semantic embeddings query..."
-            className="w-full pl-10 pr-4 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+            className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700/80 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
           />
         </div>
         <button
           type="submit"
-          className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold transition-all shadow-lg shadow-indigo-600/20"
+          className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold transition-all shadow-lg shadow-indigo-600/20 cursor-pointer"
         >
           {isSearching ? 'Querying...' : 'Semantic Search'}
         </button>
@@ -120,9 +120,9 @@ export const Documents: React.FC = () => {
       {/* Documents Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {filteredDocs.map((doc) => (
-          <div key={doc.id} className="enterprise-card p-5 rounded-2xl space-y-4 border border-slate-800 hover:border-indigo-500/30 transition-all">
+          <div key={doc.id} className="enterprise-card p-5 rounded-2xl space-y-4 border border-slate-200 dark:border-slate-800 hover:border-indigo-500/30 transition-all">
             <div className="flex items-center justify-between">
-              <span className="font-semibold text-white text-sm flex items-center gap-2">
+              <span className="font-semibold text-slate-900 dark:text-white text-sm flex items-center gap-2">
                 <FileCode2 className="w-4 h-4 text-indigo-400" />
                 {doc.title}
               </span>
@@ -133,10 +133,10 @@ export const Documents: React.FC = () => {
               </span>
             </div>
 
-            <div className="text-xs text-slate-400 flex items-center justify-between">
+            <div className="text-xs text-slate-600 dark:text-slate-400 flex items-center justify-between">
               <span className="flex items-center gap-1.5">
                 <Building className="w-3.5 h-3.5 text-slate-500" />
-                Tenant: <span className="text-slate-200 font-medium">{doc.tenant}</span>
+                Tenant: <span className="text-slate-800 dark:text-slate-200 font-medium">{doc.tenant}</span>
               </span>
               <span className="text-slate-400 flex items-center gap-1">
                 <HardDrive className="w-3.5 h-3.5 text-slate-500" />

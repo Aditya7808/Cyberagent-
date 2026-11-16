@@ -37,12 +37,12 @@ export const Header: React.FC = () => {
           aria-label="Toggle Theme"
         >
           {theme === 'dark' ? (
-            <Sun className="w-3.5 h-3.5 text-amber-400 transition-transform duration-300 hover:rotate-90" />
+            <Moon className="w-3.5 h-3.5 text-indigo-400" />
           ) : (
-            <Moon className="w-3.5 h-3.5 text-indigo-500 transition-transform duration-300 hover:-rotate-45" />
+            <Sun className="w-3.5 h-3.5 text-amber-500" />
           )}
           <span className="text-[11px] font-medium capitalize">
-            {theme === 'dark' ? 'Dark' : 'Light'}
+            {theme === 'dark' ? 'Dark Mode' : 'Light Mode'}
           </span>
         </button>
 

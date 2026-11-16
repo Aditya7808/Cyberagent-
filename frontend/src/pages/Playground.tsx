@@ -163,23 +163,23 @@ export const Playground: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Console Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800/80">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800/80">
         <div>
-          <h1 className="text-xl font-bold text-white tracking-tight">
+          <h1 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">
             AI Security Gateway & Firewall Playground
           </h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
             Real-time prompt inspection, adversarial evasion testing, and automatic PII scrubbing.
           </p>
         </div>
 
         {/* Target Agent Selector */}
         <div className="flex items-center gap-2.5">
-          <span className="text-xs font-medium text-slate-400 whitespace-nowrap">Target Agent:</span>
+          <span className="text-xs font-medium text-slate-600 dark:text-slate-400 whitespace-nowrap">Target Agent:</span>
           <select
             value={selectedAgentId}
             onChange={(e) => setSelectedAgentId(e.target.value)}
-            className="px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs font-semibold text-slate-200 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 cursor-pointer"
+            className="px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs font-semibold text-slate-800 dark:text-slate-200 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 cursor-pointer"
           >
             <option value="default-agent">DevOps SRE Autonomous Agent</option>
             <option value="financial-bot">Financial Risk Analyst Bot</option>
@@ -190,7 +190,7 @@ export const Playground: React.FC = () => {
 
       {/* Preset Attacks Matrix */}
       <div className="flex flex-wrap items-center gap-2">
-        <span className="text-xs font-semibold text-slate-400 mr-2 flex items-center gap-1.5">
+        <span className="text-xs font-semibold text-slate-600 dark:text-slate-400 mr-2 flex items-center gap-1.5">
           <Terminal className="w-3.5 h-3.5 text-indigo-400" />
           Test Probes:
         </span>
@@ -323,9 +323,9 @@ export const Playground: React.FC = () => {
         </div>
 
         {/* Security Telemetry HUD (Right Sidebar) */}
-        <div className="enterprise-card rounded-2xl p-5 flex flex-col justify-between space-y-6 border border-slate-800">
+        <div className="enterprise-card rounded-2xl p-5 flex flex-col justify-between space-y-6 border border-slate-200 dark:border-slate-800">
           <div>
-            <div className="flex items-center gap-2.5 pb-3 border-b border-slate-800/80 text-sm font-bold text-white">
+            <div className="flex items-center gap-2.5 pb-3 border-b border-slate-200 dark:border-slate-800/80 text-sm font-bold text-slate-900 dark:text-white">
               <ShieldCheck className="w-4 h-4 text-indigo-400" />
               Inspection Telemetry & Checks
             </div>
@@ -333,7 +333,7 @@ export const Playground: React.FC = () => {
             {/* Risk Gauge */}
             <div className="mt-5 space-y-2">
               <div className="flex justify-between text-xs font-medium">
-                <span className="text-slate-400">Adversarial Risk Score</span>
+                <span className="text-slate-600 dark:text-slate-400">Adversarial Risk Score</span>
                 <span className={`font-bold ${
                   (latestSecurityMeta?.input_security?.risk_score || 0) > 0.5
                     ? 'text-rose-400'
@@ -342,7 +342,7 @@ export const Playground: React.FC = () => {
                   {((latestSecurityMeta?.input_security?.risk_score || 0.04) * 100).toFixed(1)}%
                 </span>
               </div>
-              <div className="w-full h-2 rounded-full bg-slate-950 overflow-hidden border border-slate-800">
+              <div className="w-full h-2 rounded-full bg-slate-100 dark:bg-slate-950 overflow-hidden border border-slate-200 dark:border-slate-800">
                 <div
                   className={`h-full transition-all duration-500 ${
                     (latestSecurityMeta?.input_security?.risk_score || 0) > 0.5
@@ -356,28 +356,28 @@ export const Playground: React.FC = () => {
 
             {/* Status Checklist */}
             <div className="mt-6 space-y-2.5 text-xs">
-              <div className="flex items-center justify-between p-3 rounded-xl bg-slate-950/60 border border-slate-800">
-                <span className="text-slate-400 font-medium">AST Heuristics Check</span>
+              <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800">
+                <span className="text-slate-700 dark:text-slate-400 font-medium">AST Heuristics Check</span>
                 <span className="badge-emerald px-2 py-0.5 rounded text-[11px] font-semibold">PASSED</span>
               </div>
-              <div className="flex items-center justify-between p-3 rounded-xl bg-slate-950/60 border border-slate-800">
-                <span className="text-slate-400 font-medium">Perplexity Anomaly</span>
+              <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800">
+                <span className="text-slate-700 dark:text-slate-400 font-medium">Perplexity Anomaly</span>
                 <span className="badge-emerald px-2 py-0.5 rounded text-[11px] font-semibold">NORMAL (0.12)</span>
               </div>
-              <div className="flex items-center justify-between p-3 rounded-xl bg-slate-950/60 border border-slate-800">
-                <span className="text-slate-400 font-medium">PII Redaction Engine</span>
+              <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800">
+                <span className="text-slate-700 dark:text-slate-400 font-medium">PII Redaction Engine</span>
                 <span className="badge-cyan px-2 py-0.5 rounded text-[11px] font-semibold">ARMED</span>
               </div>
-              <div className="flex items-center justify-between p-3 rounded-xl bg-slate-950/60 border border-slate-800">
-                <span className="text-slate-400 font-medium">Tool Execution Gate</span>
+              <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800">
+                <span className="text-slate-700 dark:text-slate-400 font-medium">Tool Execution Gate</span>
                 <span className="badge-amber px-2 py-0.5 rounded text-[11px] font-semibold">ENFORCED</span>
               </div>
             </div>
           </div>
 
           {/* Audit Seal */}
-          <div className="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 text-xs text-slate-400 space-y-1.5">
-            <div className="flex items-center justify-between text-slate-300 font-medium">
+          <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-400 space-y-1.5">
+            <div className="flex items-center justify-between text-slate-800 dark:text-slate-300 font-medium">
               <span className="flex items-center gap-1.5">
                 <Lock className="w-3.5 h-3.5 text-indigo-400" />
                 Tamper-Evident SHA-256
