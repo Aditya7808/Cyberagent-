@@ -104,11 +104,13 @@ export const Sidebar: React.FC = () => {
   return (
     <aside className="w-64 border-r border-slate-200 dark:border-slate-800/80 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl flex flex-col h-screen sticky top-0 z-30 select-none transition-colors duration-200">
       {/* Brand Header */}
-      <div className="h-16 flex items-center px-5 gap-3 border-b border-slate-200 dark:border-slate-800/80">
-        <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 flex items-center justify-center text-white shadow-md shadow-indigo-500/20 ring-1 ring-white/20">
-          <Shield className="w-5 h-5 fill-white/20" />
-        </div>
-        <div>
+      <div className="h-16 flex items-center px-4 gap-3 border-b border-slate-200 dark:border-slate-800/80">
+        <img
+          src="/sentinel-logo-mark.png"
+          alt="SentinelAI Emblem"
+          className="w-8 h-9 object-contain drop-shadow-sm select-none"
+        />
+        <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5">
             <span className="font-bold text-base tracking-tight text-slate-900 dark:text-white">
               Sentinel<span className="text-indigo-600 dark:text-indigo-400">AI</span>
@@ -117,7 +119,7 @@ export const Sidebar: React.FC = () => {
               v2.0
             </span>
           </div>
-          <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+          <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium truncate">
             AI Agent Security Control
           </div>
         </div>

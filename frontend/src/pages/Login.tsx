@@ -193,14 +193,16 @@ export const Login: React.FC = () => {
       <div className="w-full max-w-md enterprise-card p-8 rounded-2xl relative shadow-2xl space-y-6">
         {/* Brand Header */}
         <div className="flex flex-col items-center text-center space-y-2.5">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 flex items-center justify-center text-white shadow-lg shadow-indigo-500/25 ring-1 ring-white/20">
-            <Shield className="w-6 h-6 fill-white/20" />
-          </div>
+          <img
+            src="/sentinel-logo-mark.png"
+            alt="SentinelAI Emblem"
+            className="w-14 h-16 object-contain drop-shadow-md select-none"
+          />
           <div>
-            <h1 className="text-xl font-bold tracking-tight text-white">
-              Sentinel<span className="text-indigo-400">AI</span>
+            <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+              Sentinel<span className="text-indigo-600 dark:text-indigo-400">AI</span>
             </h1>
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">
               Zero-Trust Autonomous Agent Security & Governance
             </p>
           </div>
