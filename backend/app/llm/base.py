@@ -58,17 +58,32 @@ class BaseLLM(ABC):
 def get_llm_provider(model_id: str = "", **kwargs: Any) -> BaseLLM:
     """
     Factory function to instantiate the correct LLM provider.
-    Falls back to MockLLM when no AWS credentials or model_id starts with 'mock'.
+    Supports Google Gemini (Gemini Pro/Flash), Amazon Bedrock, or falls back to MockLLM.
     """
+    from app.config import get_settings
     from app.llm.mock import MockLLM
     from app.llm.bedrock import BedrockLLM
+    from app.llm.gemini import GeminiLLM
 
-    if not model_id or model_id.startswith("mock"):
-        return MockLLM(model_id=model_id or "mock-default", **kwargs)
+    settings = get_settings()
 
-    try:
-        return BedrockLLM(model_id=model_id, **kwargs)
-    except Exception:
-        # If Bedrock init fails (no creds), fall back to mock
-        return MockLLM(model_id=f"mock-fallback-{model_id}", **kwargs)
+    # 1. Check for explicit mock request
+    if model_id and model_id.startswith("mock"):
+        return MockLLM(model_id=model_id, **kwargs)
+
+    # 2. Check for Google Gemini configuration or model specification
+    gemini_key = getattr(settings, "GEMINI_API_KEY", "")
+    if gemini_key or (model_id and "gemini" in model_id.lower()):
+        effective_model = model_id if (model_id and "gemini" in model_id.lower()) else getattr(settings, "GEMINI_MODEL_ID", "gemini-1.5-pro")
+        return GeminiLLM(model_id=effective_model, api_key=gemini_key, **kwargs)
+
+    # 3. Check for AWS Bedrock configuration
+    if getattr(settings, "AWS_ACCESS_KEY_ID", "") or (model_id and ("claude" in model_id.lower() or "bedrock" in model_id.lower())):
+        try:
+            return BedrockLLM(model_id=model_id or settings.AWS_BEDROCK_MODEL_ID, **kwargs)
+        except Exception:
+            return MockLLM(model_id=f"mock-fallback-{model_id}", **kwargs)
+
+    # 4. Default zero-config fallback to MockLLM
+    return MockLLM(model_id=model_id or "mock-default", **kwargs)
 

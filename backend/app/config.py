@@ -16,6 +16,10 @@ class Settings(BaseSettings):
     AWS_ACCESS_KEY_ID: str = ""
     AWS_SECRET_ACCESS_KEY: str = ""
     S3_BUCKET_NAME: str = "sentinel-ai-documents-dev"
+
+    # Google Gemini API
+    GEMINI_API_KEY: str = ""
+    GEMINI_MODEL_ID: str = "gemini-1.5-pro"
     
     # Cognito / Auth
     COGNITO_USER_POOL_ID: str = ""
